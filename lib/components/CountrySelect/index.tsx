@@ -29,6 +29,9 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   onSelect,
   theme = 'light',
   language = DEFAULT_LANGUAGE,
+  disabledBackdropPress,
+  removedBackdrop,
+  onBackdropPress,
   ...props
 }) => {
   const styles = createStyles(theme);
@@ -119,8 +122,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         style={[
           styles.backdrop,
           {alignItems: 'center', justifyContent: 'center'},
+          removedBackdrop && {backgroundColor: 'transparent'},
         ]}
-        onPress={onClose}>
+        disabled={disabledBackdropPress || removedBackdrop}
+        onPress={onBackdropPress || onClose}>
         <Pressable style={styles.popupContainer}>
           <View style={styles.popupContent}>
             <View style={styles.searchContainer}>

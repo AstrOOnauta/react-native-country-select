@@ -8,4 +8,7 @@ export interface ICountrySelectProps extends ModalProps {
   onSelect: (country: ICountry) => void;
   theme?: 'light' | 'dark';
   language?: ICountrySelectLanguages;
+  disabledBackdropPress?: boolean;
+  removedBackdrop?: boolean;
+  onBackdropPress?: () => void;
 }
