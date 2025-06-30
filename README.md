@@ -193,16 +193,24 @@ export default function App() {
 
 ## CountrySelect Props
 
-| Prop                  | Type                        | Required | Default | Description                                                |
-| --------------------- | --------------------------- | -------- | ------- | ---------------------------------------------------------- |
-| visible               | boolean                     | Yes      | false   | Controls the visibility of the country picker modal        |
-| onClose               | () => void                  | Yes      | -       | Callback function called when the modal is closed          |
-| onSelect              | (country: ICountry) => void | Yes      | -       | Callback function called when a country is selected        |
-| theme                 | 'light' \| 'dark'           | No       | 'light' | Theme for the country picker                               |
-| language              | ICountrySelectLanguages     | No       | 'eng'   | Language for country names (see supported languages below) |
-| disabledBackdropPress | boolean                     | No       | false   | Whether to disable backdrop press to close                 |
-| removedBackdrop       | boolean                     | No       | false   | Whether to remove the backdrop completely                  |
-| onBackdropPress       | () => void                  | No       | -       | Custom callback for backdrop press                         |
+| Prop                         | Type                                  | Required | Default             | Description                                                |
+| ---------------------------- | ------------------------------------- | -------- | ------------------- | ---------------------------------------------------------- |
+| visible                      | boolean                               | Yes      | false               | Controls the visibility of the country picker modal        |
+| onClose                      | () => void                            | Yes      | -                   | Callback function called when the modal is closed          |
+| onSelect                     | (country: ICountry) => void           | Yes      | -                   | Callback function called when a country is selected        |
+| popularCountries             | string[]                              | No       | []                  | Array of country codes to show in popular section          |
+| visibleCountries             | ICountryCca2[]                        | No       | []                  | Array of country codes to show (whitelist)                 |
+| hiddenCountries              | ICountryCca2[]                        | No       | []                  | Array of country codes to hide (blacklist)                 |
+| theme                        | 'light' \| 'dark'                     | No       | 'light'             | Theme for the country picker                               |
+| language                     | ICountrySelectLanguages               | No       | 'eng'               | Language for country names (see supported languages below) |
+| disabledBackdropPress        | boolean                               | No       | false               | Whether to disable backdrop press to close                 |
+| removedBackdrop              | boolean                               | No       | false               | Whether to remove the backdrop completely                  |
+| onBackdropPress              | () => void                            | No       | -                   | Custom callback for backdrop press                         |
+| countryItemComponent         | (item: ICountry) => ReactElement      | No       | -                   | Custom component for country items                         |
+| sectionTitleComponent        | (item: ISectionTitle) => ReactElement | No       | -                   | Custom component for section titles                        |
+| popularCountriesTitle        | string                                | No       | 'Popular Countries' | Popular Countries section title                            |
+| allCountriesTitle            | string                                | No       | 'All Countries'     | All Countries section title                                |
+| showsVerticalScrollIndicator | boolean                               | No       | false               | displays a horizontal scroll indicator                     |
 
 <br>
 
