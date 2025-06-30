@@ -8,6 +8,7 @@ import {
   Pressable,
   ListRenderItem,
   Modal,
+  Text,
 } from 'react-native';
 
 import {CountryItem} from '../CountryItem';
@@ -19,6 +20,7 @@ import {
   ICountry,
   ICountrySelectProps,
   ICountrySelectLanguages,
+  IListItem,
 } from '../../interface';
 
 const DEFAULT_LANGUAGE: ICountrySelectLanguages = 'eng';
@@ -28,10 +30,18 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   onClose,
   onSelect,
   theme = 'light',
+  popularCountries = [],
+  visibleCountries = [],
+  hiddenCountries = [],
   language = DEFAULT_LANGUAGE,
   disabledBackdropPress,
   removedBackdrop,
   onBackdropPress,
+  sectionTitleComponent,
+  countryItemComponent,
+  popularCountriesTitle,
+  allCountriesTitle,
+  showsVerticalScrollIndicator = false,
   ...props
 }) => {
   const styles = createStyles(theme);
@@ -72,6 +82,18 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     if (query.length > 0) {
       let countriesData = countries as unknown as ICountry[];
 
+      if (visibleCountries.length > 0) {
+        countriesData = (countries as unknown as ICountry[]).filter(country =>
+          visibleCountries.includes(country.cca2),
+        );
+      }
+
+      if (hiddenCountries.length > 0) {
+        countriesData = (countries as unknown as ICountry[]).filter(
+          country => !hiddenCountries.includes(country.cca2),
+        );
+      }
+
       const filteredCountries = countriesData.filter(country => {
         const countryName = getCountryNameInLanguage(country);
         const callingCode = country.idd.root.toLowerCase();
@@ -88,15 +110,84 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
     let allCountries = countries as unknown as ICountry[];
 
-    const result: ICountry[] = allCountries;
+    if (visibleCountries.length > 0) {
+      allCountries = (countries as unknown as ICountry[]).filter(country =>
+        visibleCountries.includes(country.cca2),
+      );
+    }
+
+    if (hiddenCountries.length > 0) {
+      allCountries = (countries as unknown as ICountry[]).filter(
+        country => !hiddenCountries.includes(country.cca2),
+      );
+    }
+
+    const popularCountriesData = sortCountriesAlphabetically(
+      allCountries.filter(country => popularCountries.includes(country.cca2)),
+    );
+
+    const otherCountriesData = sortCountriesAlphabetically(
+      allCountries.filter(country => !popularCountries.includes(country.cca2)),
+    );
+
+    const result: IListItem[] = [];
+
+    if (popularCountriesData.length > 0) {
+      result.push({
+        isSection: true as const,
+        title:
+          translations.popularCountriesTitle[
+            language as ICountrySelectLanguages
+          ],
+      });
+      result.push(...popularCountriesData);
+      result.push({
+        isSection: true as const,
+        title:
+          translations.allCountriesTitle[language as ICountrySelectLanguages],
+      });
+    }
+
+    result.push(...otherCountriesData);
 
     return result;
-  }, [searchQuery]);
+  }, [
+    searchQuery,
+    popularCountries,
+    language,
+    visibleCountries,
+    hiddenCountries,
+  ]);
 
-  const keyExtractor = useCallback((item: ICountry) => item.cca2, []);
+  const keyExtractor = useCallback(
+    (item: IListItem) => ('isSection' in item ? item.title : item.cca2),
+    [],
+  );
 
-  const renderItem: ListRenderItem<ICountry> = useCallback(
-    ({item}) => {
+  const renderItem: ListRenderItem<IListItem> = useCallback(
+    ({item, index}) => {
+      if ('isSection' in item) {
+        if (sectionTitleComponent) {
+          return sectionTitleComponent(item);
+        }
+        return (
+          <Text
+            testID="countrySelectSectionTitle"
+            accessibilityRole="header"
+            style={styles.sectionTitle}>
+            {popularCountriesTitle && index === 0
+              ? popularCountriesTitle
+              : allCountriesTitle && index > 0
+              ? allCountriesTitle
+              : item.title}
+          </Text>
+        );
+      }
+
+      if (countryItemComponent) {
+        return countryItemComponent(item as ICountry);
+      }
+
       return (
         <CountryItem
           item={item as ICountry}
@@ -107,7 +198,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         />
       );
     },
-    [onSelect, onClose, styles, language],
+    [
+      onSelect,
+      onClose,
+      styles,
+      language,
+      countryItemComponent,
+      sectionTitleComponent,
+    ],
   );
 
   return (
@@ -155,6 +253,9 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
               keyExtractor={keyExtractor}
               renderItem={renderItem}
               keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={
+                showsVerticalScrollIndicator || false
+              }
             />
           </View>
         </Pressable>
