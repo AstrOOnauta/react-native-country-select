@@ -1,0 +1,16 @@
+# Dependency directory
+node_modules
+package-lock.json
+
+# Logs
+*.log
+npm-debug.log
+
+# Runtime data
+tmp
+
+# NPM CI Release by Github Actions
+.github/
+
+# Gitignore
+.gitignore

@@ -1,0 +1,42 @@
+{
+  "name": "react-native-country-select",
+  "version": "0.1.1",
+  "description": "🌍 A lightweight and customizable country picker for React Native with modern UI, flags, search engine, and i18n support. Includes TypeScript types, offline support and no dependencies.",
+  "main": "lib/index.tsx",
+  "types": "lib/index.d.ts",
+  "keywords": [
+    "react-native",
+    "cross-platform",
+    "ios",
+    "android",
+    "web",
+    "flags",
+    "countries",
+    "country-picker",
+    "country-select",
+    "country-codes",
+    "i18n",
+    "international",
+    "offline-support",
+    "custom-lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AstrOOnauta/react-native-country-select.git"
+  },
+  "author": "AstrOOnauta (https://github.com/AstrOOnauta)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AstrOOnauta/react-native-country-select/issues"
+  },
+  "homepage": "https://github.com/AstrOOnauta/react-native-country-select#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}
