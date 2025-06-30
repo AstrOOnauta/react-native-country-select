@@ -30,6 +30,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   onClose,
   onSelect,
   theme = 'light',
+  countrySelectStyle,
   popularCountries = [],
   visibleCountries = [],
   hiddenCountries = [],
@@ -174,7 +175,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           <Text
             testID="countrySelectSectionTitle"
             accessibilityRole="header"
-            style={styles.sectionTitle}>
+            style={[
+              styles.sectionTitle,
+              countrySelectStyle?.popup?.sectionTitle,
+            ]}>
             {popularCountriesTitle && index === 0
               ? popularCountriesTitle
               : allCountriesTitle && index > 0
@@ -195,6 +199,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           onClose={onClose}
           theme={theme}
           language={language}
+          countrySelectStyle={countrySelectStyle}
         />
       );
     },
@@ -220,19 +225,35 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         style={[
           styles.backdrop,
           {alignItems: 'center', justifyContent: 'center'},
+          countrySelectStyle?.popup?.backdrop,
           removedBackdrop && {backgroundColor: 'transparent'},
         ]}
         disabled={disabledBackdropPress || removedBackdrop}
         onPress={onBackdropPress || onClose}>
-        <Pressable style={styles.popupContainer}>
-          <View style={styles.popupContent}>
-            <View style={styles.searchContainer}>
+        <Pressable
+          style={[
+            styles.popupContainer,
+            countrySelectStyle?.popup?.popupContainer,
+          ]}>
+          <View
+            style={[
+              styles.popupContent,
+              countrySelectStyle?.popup?.popupContent,
+            ]}>
+            <View
+              style={[
+                styles.searchContainer,
+                countrySelectStyle?.popup?.searchContainer,
+              ]}>
               <TextInput
                 testID="countrySelectSearchInput"
                 accessibilityRole="text"
                 accessibilityLabel="Country Select Search Input"
                 accessibilityHint="Type to search for a country"
-                style={styles.searchInput}
+                style={[
+                  styles.searchInput,
+                  countrySelectStyle?.popup?.searchInput,
+                ]}
                 placeholder={
                   translations.searchPlaceholder[
                     language as ICountrySelectLanguages

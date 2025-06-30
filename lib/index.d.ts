@@ -5,6 +5,7 @@ import {
   ICountryCca2,
   ICountryItemProps,
   ICountrySelectProps,
+  ICountrySelectStyle,
   ICountrySelectLanguages,
 } from './interface';
 
@@ -17,5 +18,6 @@ export {
   ICountryCca2,
   ICountryItemProps,
   ICountrySelectProps,
+  ICountrySelectStyle,
   ICountrySelectLanguages,
 };

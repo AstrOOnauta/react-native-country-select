@@ -1,14 +1,17 @@
+import React from 'react';
 import {ModalProps} from 'react-native';
 
 import {ICountry} from './country';
 import {ICountryCca2} from './countryCca2';
 import {ISectionTitle} from './sectionTitle';
+import {ICountrySelectStyle} from './countrySelectStyles';
 import {ICountrySelectLanguages} from './countrySelectLanguages';
 
 export interface ICountrySelectProps extends ModalProps {
   visible: boolean;
   onClose: () => void;
   onSelect: (country: ICountry) => void;
+  countrySelectStyle?: ICountrySelectStyle;
   theme?: 'light' | 'dark';
   popularCountries?: string[];
   visibleCountries?: ICountryCca2[];

@@ -31,6 +31,7 @@ export const createStyles = (theme: 'light' | 'dark') =>
       flex: 1,
       borderRadius: 8,
       paddingHorizontal: 16,
+      minHeight: 44,
       fontSize: 16,
       borderColor: theme === 'dark' ? '#F3F3F3' : '#303030',
       borderWidth: 1,
