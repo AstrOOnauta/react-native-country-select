@@ -1,3 +1,11 @@
+<br>
+
+<div align = "center">
+  <img src="lib/assets/images/preview.png" alt="React Native International Phone Number Input Lib preview">
+</div>
+
+<br>
+
 <h1 align="center">React Native Country Select</h1>
 
 <p>
@@ -199,11 +207,14 @@ export default function App() {
 | onClose                      | () => void                            | Yes      | -                   | Callback function called when the modal is closed          |
 | onSelect                     | (country: ICountry) => void           | Yes      | -                   | Callback function called when a country is selected        |
 | countrySelectStyle           | ICountrySelectStyle                   | No       | -                   | Custom styles for the country picker                       |
+| isFullScreen                 | boolean                               | No       | false               | Whether the modal should be full screen                    |
 | popularCountries             | string[]                              | No       | []                  | Array of country codes to show in popular section          |
 | visibleCountries             | ICountryCca2[]                        | No       | []                  | Array of country codes to show (whitelist)                 |
 | hiddenCountries              | ICountryCca2[]                        | No       | []                  | Array of country codes to hide (blacklist)                 |
 | theme                        | 'light' \| 'dark'                     | No       | 'light'             | Theme for the country picker                               |
 | language                     | ICountrySelectLanguages               | No       | 'eng'               | Language for country names (see supported languages below) |
+| showSearchInput              | boolean                               | No       | true                | Whether to show the search input field                     |
+| searchPlaceholder            | string                                | No       | 'Search country...' | Placeholder text for search input                          |
 | disabledBackdropPress        | boolean                               | No       | false               | Whether to disable backdrop press to close                 |
 | removedBackdrop              | boolean                               | No       | false               | Whether to remove the backdrop completely                  |
 | onBackdropPress              | () => void                            | No       | -                   | Custom callback for backdrop press                         |
