@@ -35,6 +35,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   visibleCountries = [],
   hiddenCountries = [],
   language = DEFAULT_LANGUAGE,
+  showSearchInput = true,
+  searchPlaceholder,
   disabledBackdropPress,
   removedBackdrop,
   onBackdropPress,
@@ -245,24 +247,27 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
                 styles.searchContainer,
                 countrySelectStyle?.popup?.searchContainer,
               ]}>
-              <TextInput
-                testID="countrySelectSearchInput"
-                accessibilityRole="text"
-                accessibilityLabel="Country Select Search Input"
-                accessibilityHint="Type to search for a country"
-                style={[
-                  styles.searchInput,
-                  countrySelectStyle?.popup?.searchInput,
-                ]}
-                placeholder={
-                  translations.searchPlaceholder[
-                    language as ICountrySelectLanguages
-                  ]
-                }
-                placeholderTextColor={styles.searchInputPlaceholder.color}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-              />
+              {showSearchInput && (
+                <TextInput
+                  testID="countrySelectSearchInput"
+                  accessibilityRole="text"
+                  accessibilityLabel="Country Select Search Input"
+                  accessibilityHint="Type to search for a country"
+                  style={[
+                    styles.searchInput,
+                    countrySelectStyle?.popup?.searchInput,
+                  ]}
+                  placeholder={
+                    searchPlaceholder ||
+                    translations.searchPlaceholder[
+                      language as ICountrySelectLanguages
+                    ]
+                  }
+                  placeholderTextColor={styles.searchInputPlaceholder.color}
+                  value={searchQuery}
+                  onChangeText={setSearchQuery}
+                />
+              )}
             </View>
 
             <FlatList

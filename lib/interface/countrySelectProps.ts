@@ -17,6 +17,8 @@ export interface ICountrySelectProps extends ModalProps {
   visibleCountries?: ICountryCca2[];
   hiddenCountries?: ICountryCca2[];
   language?: ICountrySelectLanguages;
+  showSearchInput?: boolean;
+  searchPlaceholder?: string;
   disabledBackdropPress?: boolean;
   removedBackdrop?: boolean;
   onBackdropPress?: () => void;
