@@ -2,6 +2,8 @@ import {StyleProp, TextStyle, ViewStyle} from 'react-native';
 
 interface IBaseModalStyle {
   backdrop?: StyleProp<ViewStyle>;
+  closeButton?: StyleProp<ViewStyle>;
+  closeButtonText?: StyleProp<TextStyle>;
   searchContainer?: StyleProp<ViewStyle>;
   searchInput?: StyleProp<TextStyle>;
   searchInputPlaceholder?: {

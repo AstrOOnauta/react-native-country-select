@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StatusBar, StyleSheet} from 'react-native';
 
 export const createStyles = (theme: 'light' | 'dark') =>
   StyleSheet.create({
@@ -7,6 +7,7 @@ export const createStyles = (theme: 'light' | 'dark') =>
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     popupContainer: {
+      paddingTop: StatusBar.currentHeight,
       width: '90%',
       maxWidth: 600,
       height: '60%',
@@ -79,6 +80,19 @@ export const createStyles = (theme: 'light' | 'dark') =>
       fontSize: 16,
       fontWeight: '600',
       paddingVertical: 8,
+      color: theme === 'dark' ? '#FFFFFF' : '#000000',
+    },
+    closeButton: {
+      marginRight: 10,
+      paddingHorizontal: 18,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme === 'dark' ? '#303030' : '#F5F5F5',
+      borderRadius: 12,
+    },
+    closeButtonText: {
+      fontSize: 24,
+      lineHeight: 28,
       color: theme === 'dark' ? '#FFFFFF' : '#000000',
     },
   });

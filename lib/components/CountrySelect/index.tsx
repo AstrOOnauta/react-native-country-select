@@ -9,6 +9,7 @@ import {
   ListRenderItem,
   Modal,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 
 import {CountryItem} from '../CountryItem';
@@ -30,6 +31,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   onClose,
   onSelect,
   theme = 'light',
+  isFullScreen = false,
   countrySelectStyle,
   popularCountries = [],
   visibleCountries = [],
@@ -236,6 +238,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           style={[
             styles.popupContainer,
             countrySelectStyle?.popup?.popupContainer,
+            isFullScreen && {flex: 1, width: '100%', height: '100%'},
           ]}>
           <View
             style={[
@@ -247,6 +250,23 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
                 styles.searchContainer,
                 countrySelectStyle?.popup?.searchContainer,
               ]}>
+              {isFullScreen && (
+                <TouchableOpacity
+                  style={[
+                    styles.closeButton,
+                    countrySelectStyle?.popup?.closeButton,
+                  ]}
+                  activeOpacity={0.6}
+                  onPress={onClose}>
+                  <Text
+                    style={[
+                      styles.closeButtonText,
+                      countrySelectStyle?.popup?.closeButtonText,
+                    ]}>
+                    {'\u00D7'}
+                  </Text>
+                </TouchableOpacity>
+              )}
               {showSearchInput && (
                 <TextInput
                   testID="countrySelectSearchInput"

@@ -13,6 +13,7 @@ export interface ICountrySelectProps extends ModalProps {
   onSelect: (country: ICountry) => void;
   countrySelectStyle?: ICountrySelectStyle;
   theme?: 'light' | 'dark';
+  isFullScreen?: boolean;
   popularCountries?: string[];
   visibleCountries?: ICountryCca2[];
   hiddenCountries?: ICountryCca2[];
