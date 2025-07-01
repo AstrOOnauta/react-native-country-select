@@ -198,6 +198,7 @@ export default function App() {
 | visible                      | boolean                               | Yes      | false               | Controls the visibility of the country picker modal        |
 | onClose                      | () => void                            | Yes      | -                   | Callback function called when the modal is closed          |
 | onSelect                     | (country: ICountry) => void           | Yes      | -                   | Callback function called when a country is selected        |
+| countrySelectStyle           | ICountrySelectStyle                   | No       | -                   | Custom styles for the country picker                       |
 | popularCountries             | string[]                              | No       | []                  | Array of country codes to show in popular section          |
 | visibleCountries             | ICountryCca2[]                        | No       | []                  | Array of country codes to show (whitelist)                 |
 | hiddenCountries              | ICountryCca2[]                        | No       | []                  | Array of country codes to hide (blacklist)                 |
