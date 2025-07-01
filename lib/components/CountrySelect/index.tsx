@@ -101,12 +101,20 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
       const filteredCountries = countriesData.filter(country => {
         const countryName = getCountryNameInLanguage(country);
+        const normalizedCountryName = normalizeCountryName(
+          countryName.toLowerCase(),
+        );
+        const normalizedQuery = normalizeCountryName(query);
         const callingCode = country.idd.root.toLowerCase();
         const flag = country.flag.toLowerCase();
+        const countryCode = country.cca2.toLowerCase();
+
         return (
-          countryName.includes(query) ||
+          normalizedCountryName.includes(normalizedQuery) ||
+          countryName.toLowerCase().includes(query) ||
           callingCode.includes(query) ||
-          flag.includes(query)
+          flag.includes(query) ||
+          countryCode.includes(query)
         );
       });
 
