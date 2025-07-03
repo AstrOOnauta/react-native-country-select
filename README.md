@@ -73,6 +73,51 @@ yarn add react-native-country-select
 
 <br>
 
+## Additional config to WEB
+
+- ### Using React Native CLI:
+
+Create a `react-native.config.js` file at the root of your react-native project with:
+
+```bash
+module.exports = {
+  project: {
+    ios: {},
+    android: {},
+  },
+  assets: [
+    './node_modules/react-native-country-select/lib/assets/fonts',
+  ],
+};
+```
+
+Then link the font to your native projects with:
+
+```bash
+npx react-native-asset
+```
+
+- ### Using Expo:
+
+1. Install [expo-fonts](https://docs.expo.dev/versions/latest/sdk/font/): `npx expo install expo-font`;
+2. Initialize the `expo-font`:
+
+```bash
+  import { useFonts } from 'expo-font';
+
+  ...
+
+  useFonts({
+    'TwemojiMozilla': require('./node_modules/react-native-country-select/lib/assets/fonts/TwemojiMozilla.woff2'),
+  });
+
+  ...
+```
+
+> Observation: you need to recompile your project after adding new fonts.
+
+<br>
+
 ## Basic Usage
 
 - Class Component
