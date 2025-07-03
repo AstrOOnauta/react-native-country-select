@@ -13,6 +13,7 @@ export const CountryItem = memo<ICountryItemProps>(
     onClose,
     theme = 'light',
     language,
+    modalType,
     countrySelectStyle,
   }) => {
     const styles = createStyles(theme);
@@ -23,23 +24,40 @@ export const CountryItem = memo<ICountryItemProps>(
         accessibilityRole="button"
         accessibilityLabel="Country Select Item"
         accessibilityHint="Click to select a country"
-        style={[styles.countryItem, countrySelectStyle?.popup?.countryItem]}
+        style={[
+          styles.countryItem,
+          modalType === 'popup'
+            ? countrySelectStyle?.popup?.countryItem
+            : countrySelectStyle?.bottomSheet?.countryItem,
+        ]}
         onPress={() => {
           onSelect(item);
           onClose();
         }}>
         <Text
           testID="countrySelectItemFlag"
-          style={[styles.flag, countrySelectStyle?.popup?.flag]}>
+          style={[
+            styles.flag,
+            modalType === 'popup'
+              ? countrySelectStyle?.popup?.flag
+              : countrySelectStyle?.bottomSheet?.flag,
+          ]}>
           {item.flag}
         </Text>
         <View
-          style={[styles.countryInfo, countrySelectStyle?.popup?.countryInfo]}>
+          style={[
+            styles.countryInfo,
+            modalType === 'popup'
+              ? countrySelectStyle?.popup?.countryInfo
+              : countrySelectStyle?.bottomSheet?.countryInfo,
+          ]}>
           <Text
             testID="countrySelectItemCallingCode"
             style={[
               styles.callingCode,
-              countrySelectStyle?.popup?.callingCode,
+              modalType === 'popup'
+                ? countrySelectStyle?.popup?.callingCode
+                : countrySelectStyle?.bottomSheet?.callingCode,
             ]}>
             {item.idd.root}
           </Text>
@@ -47,7 +65,9 @@ export const CountryItem = memo<ICountryItemProps>(
             testID="countrySelectItemName"
             style={[
               styles.countryName,
-              countrySelectStyle?.popup?.countryName,
+              modalType === 'popup'
+                ? countrySelectStyle?.popup?.countryName
+                : countrySelectStyle?.bottomSheet?.countryName,
             ]}>
             {item?.translations[language]?.common ||
               item?.translations[DEFAULT_LANGUAGE]?.common}

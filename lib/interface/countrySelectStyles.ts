@@ -23,6 +23,12 @@ interface IPopupStyle extends IBaseModalStyle {
   popupContent?: StyleProp<ViewStyle>;
 }
 
+interface IBottomSheetStyle extends IBaseModalStyle {
+  sheetContainer?: StyleProp<ViewStyle>;
+  sheetContent?: StyleProp<ViewStyle>;
+}
+
 export interface ICountrySelectStyle {
   popup?: IPopupStyle;
+  bottomSheet?: IBottomSheetStyle;
 }

@@ -8,5 +8,6 @@ export interface ICountryItemProps {
   onClose: () => void;
   language: ICountrySelectLanguages;
   theme?: 'light' | 'dark';
+  modalType?: 'bottomSheet' | 'popup';
   countrySelectStyle?: ICountrySelectStyle;
 }
