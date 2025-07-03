@@ -47,11 +47,13 @@
 
 ## Features
 
-- 📱 Cross-platform: works with iOS, Android and Expo;
-- 🎨 Lib with custom and modern UI;
-- 👨‍💻 Functional and class component support;
-- 🈶 32 languages supported;
-- ♿ Accessibility.
+- 📱 **Cross-Platform** – Works seamlessly on **iOS, Android and Web**;
+- 🧩 **Flexible Integration** – Supports both **React Native CLI & Expo**;
+- 🎨 **Modern UI** - Custom component with sleek design;
+- 👨‍💻 **Component Versatility** - Works with **functional & class components**;
+- 🈶 **internationalization** - Supports **32 languages**;
+- 🧪 **Test Ready** – Smooth testing integration;
+- ♿ **Accessibility** – Accessibility standards to screen readers.
 
 <br>
 
@@ -201,28 +203,34 @@ export default function App() {
 
 ## CountrySelect Props
 
-| Prop                         | Type                                  | Required | Default             | Description                                                |
-| ---------------------------- | ------------------------------------- | -------- | ------------------- | ---------------------------------------------------------- |
-| visible                      | boolean                               | Yes      | false               | Controls the visibility of the country picker modal        |
-| onClose                      | () => void                            | Yes      | -                   | Callback function called when the modal is closed          |
-| onSelect                     | (country: ICountry) => void           | Yes      | -                   | Callback function called when a country is selected        |
-| countrySelectStyle           | ICountrySelectStyle                   | No       | -                   | Custom styles for the country picker                       |
-| isFullScreen                 | boolean                               | No       | false               | Whether the modal should be full screen                    |
-| popularCountries             | string[]                              | No       | []                  | Array of country codes to show in popular section          |
-| visibleCountries             | ICountryCca2[]                        | No       | []                  | Array of country codes to show (whitelist)                 |
-| hiddenCountries              | ICountryCca2[]                        | No       | []                  | Array of country codes to hide (blacklist)                 |
-| theme                        | 'light' \| 'dark'                     | No       | 'light'             | Theme for the country picker                               |
-| language                     | ICountrySelectLanguages               | No       | 'eng'               | Language for country names (see supported languages below) |
-| showSearchInput              | boolean                               | No       | true                | Whether to show the search input field                     |
-| searchPlaceholder            | string                                | No       | 'Search country...' | Placeholder text for search input                          |
-| disabledBackdropPress        | boolean                               | No       | false               | Whether to disable backdrop press to close                 |
-| removedBackdrop              | boolean                               | No       | false               | Whether to remove the backdrop completely                  |
-| onBackdropPress              | () => void                            | No       | -                   | Custom callback for backdrop press                         |
-| countryItemComponent         | (item: ICountry) => ReactElement      | No       | -                   | Custom component for country items                         |
-| sectionTitleComponent        | (item: ISectionTitle) => ReactElement | No       | -                   | Custom component for section titles                        |
-| popularCountriesTitle        | string                                | No       | 'Popular Countries' | Popular Countries section title                            |
-| allCountriesTitle            | string                                | No       | 'All Countries'     | All Countries section title                                |
-| showsVerticalScrollIndicator | boolean                               | No       | false               | displays a horizontal scroll indicator                     |
+| Prop                         | Type                                                                    | Required | Default             | Description                                                |
+| ---------------------------- | ----------------------------------------------------------------------- | -------- | ------------------- | ---------------------------------------------------------- |
+| visible                      | boolean                                                                 | Yes      | false               | Controls the visibility of the country picker modal        |
+| onClose                      | () => void                                                              | Yes      | -                   | Callback function called when the modal is closed          |
+| onSelect                     | (country: [ICountry](lib/interfaces/country.ts)) => void                | Yes      | -                   | Callback function called when a country is selected        |
+| modalType                    | 'bottomSheet' \| 'popup'                                                | No       | 'bottomSheet'       | Type of modal to display                                   |
+| countrySelectStyle           | [ICountrySelectStyle](lib/interfaces/countrySelectStyles.ts)            | No       | -                   | Custom styles for the country picker                       |
+| isFullScreen                 | boolean                                                                 | No       | false               | Whether the modal should be full screen                    |
+| popularCountries             | string[]                                                                | No       | []                  | Array of country codes to show in popular section          |
+| visibleCountries             | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                  | Array of country codes to show (whitelist)                 |
+| hiddenCountries              | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                  | Array of country codes to hide (blacklist)                 |
+| theme                        | 'light' \| 'dark'                                                       | No       | 'light'             | Theme for the country picker                               |
+| language                     | [ICountrySelectLanguages](lib/interfaces/countrySelectLanguages.ts)     | No       | 'eng'               | Language for country names (see supported languages below) |
+| showSearchInput              | boolean                                                                 | No       | true                | Whether to show the search input field                     |
+| searchPlaceholder            | string                                                                  | No       | 'Search country...' | Placeholder text for search input                          |
+| minBottomsheetHeight         | number \| string                                                        | No       | 30%                 | Minimum height for bottom sheet modal                      |
+| maxBottomsheetHeight         | number \| string                                                        | No       | 80%                 | Maximum height for bottom sheet modal                      |
+| initialBottomsheetHeight     | number \| string                                                        | No       | 50%                 | Initial height for bottom sheet modal                      |
+| disabledBackdropPress        | boolean                                                                 | No       | false               | Whether to disable backdrop press to close                 |
+| removedBackdrop              | boolean                                                                 | No       | false               | Whether to remove the backdrop completely                  |
+| onBackdropPress              | () => void                                                              | No       | -                   | Custom callback for backdrop press                         |
+| countryItemComponent         | (item: [ICountry](lib/interfaces/country.ts)) => ReactElement           | No       | -                   | Custom component for country items                         |
+| sectionTitleComponent        | (item: [ISectionTitle](lib/interfaces/sectionTitle.ts)) => ReactElement | No       | -                   | Custom component for section titles                        |
+| closeButtonComponent         | () => ReactElement                                                      | No       | -                   | Custom component for closeButton                           |
+| showCloseButton              | boolean                                                                 | No       | false               | Whether to show the close button                           |
+| popularCountriesTitle        | string                                                                  | No       | 'Popular Countries' | Popular Countries section title                            |
+| allCountriesTitle            | string                                                                  | No       | 'All Countries'     | All Countries section title                                |
+| showsVerticalScrollIndicator | boolean                                                                 | No       | false               | Displays a horizontal scroll indicator                     |
 
 <br>
 
@@ -274,8 +282,11 @@ When utilizing this package, you may need to target the CountrySelect component 
 
 ```js
 const countrySelect = getByTestId('countrySelectSearchInput');
+const countrySelectBackdrop = getByTestId('countrySelectBackdrop');
 const countrySelectList = getByTestId('countrySelectList');
+const countrySelectSearchInput = getByTestId('countrySelectSearchInput');
 const countrySelectItem = getByTestId('countrySelectItem');
+const countrySelectCloseButton = getByTestId('countrySelectCloseButton');
 ```
 
 <br>
