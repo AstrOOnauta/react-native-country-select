@@ -379,7 +379,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
   const renderCloseButton = () => {
     if (closeButtonComponent) {
-      return closeButtonComponent;
+      return closeButtonComponent();
     }
 
     return (

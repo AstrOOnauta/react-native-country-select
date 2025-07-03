@@ -29,7 +29,7 @@ export interface ICountrySelectProps extends ModalProps {
   onBackdropPress?: () => void;
   countryItemComponent?: (item: ICountry) => React.ReactElement;
   sectionTitleComponent?: (item: ISectionTitle) => React.ReactElement;
-  closeButtonComponent?: React.ReactElement;
+  closeButtonComponent?: () => React.ReactElement;
   popularCountriesTitle?: string;
   allCountriesTitle?: string;
   showsVerticalScrollIndicator?: boolean;
