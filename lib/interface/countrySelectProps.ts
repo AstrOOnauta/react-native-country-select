@@ -33,4 +33,5 @@ export interface ICountrySelectProps extends ModalProps {
   popularCountriesTitle?: string;
   allCountriesTitle?: string;
   showsVerticalScrollIndicator?: boolean;
+  countryNotFoundMessage?: string;
 }

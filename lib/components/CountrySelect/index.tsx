@@ -65,6 +65,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   popularCountriesTitle,
   allCountriesTitle,
   showsVerticalScrollIndicator = false,
+  countryNotFoundMessage,
   ...props
 }) => {
   const {height: windowHeight} = useWindowDimensions();
@@ -296,7 +297,6 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         );
       });
 
-      // Ordenar os países filtrados alfabeticamente
       return sortCountriesAlphabetically(filteredCountries);
     }
 
@@ -432,6 +432,30 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   };
 
   const renderFlatList = () => {
+    if (getCountries.length === 0) {
+      return (
+        <View
+          style={[
+            styles.countryNotFoundContainer,
+            modalType === 'popup'
+              ? countrySelectStyle?.popup?.countryNotFoundContainer
+              : countrySelectStyle?.bottomSheet?.countryNotFoundContainer,
+          ]}>
+          <Text
+            style={[
+              styles.countryNotFoundMessage,
+              modalType === 'popup'
+                ? countrySelectStyle?.popup?.countryNotFoundMessage
+                : countrySelectStyle?.bottomSheet?.countryNotFoundMessage,
+            ]}>
+            {countryNotFoundMessage ||
+              translations.searchNotFoundMessage[
+                language as ICountrySelectLanguages
+              ]}
+          </Text>
+        </View>
+      );
+    }
     return (
       <FlatList
         testID="countrySelectList"

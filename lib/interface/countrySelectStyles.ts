@@ -16,6 +16,8 @@ interface IBaseModalStyle {
   countryInfo?: StyleProp<ViewStyle>;
   callingCode?: StyleProp<TextStyle>;
   countryName?: StyleProp<TextStyle>;
+  countryNotFoundContainer?: StyleProp<ViewStyle>;
+  countryNotFoundMessage?: StyleProp<TextStyle>;
 }
 
 interface IPopupStyle extends IBaseModalStyle {

@@ -3,7 +3,8 @@ import {ICountrySelectLanguages} from '../interface';
 type TranslationKey =
   | 'searchPlaceholder'
   | 'popularCountriesTitle'
-  | 'allCountriesTitle';
+  | 'allCountriesTitle'
+  | 'searchNotFoundMessage';
 type TranslationMap = Record<
   TranslationKey,
   Record<ICountrySelectLanguages, string>
@@ -114,5 +115,40 @@ export const translations: TranslationMap = {
     zho: '所有国家',
     'zho-Hans': '所有国家',
     'zho-Hant': '所有國家',
+  },
+  searchNotFoundMessage: {
+    ara: 'لا توجد دول مطابقة',
+    bel: 'Краіны не знойдзены',
+    bre: "N'en eo bet",
+    bul: 'Няма намерени държави',
+    ces: 'Nebyly nalezeny žádné země',
+    deu: 'Keine Länder gefunden',
+    ell: 'Δεν βρέθηκαν χώρες',
+    eng: 'No countries found',
+    est: 'Riikuid ei leitud',
+    fin: 'Maita ei löytynyt',
+    fra: 'Aucun pays trouvé',
+    heb: 'לא נמצאו מדינות',
+    hrv: 'Nema pronađenih zemalja',
+    hun: 'Nem található ország',
+    ita: 'Nessun paese trovato',
+    jpn: '国が見つかりません',
+    kor: '국가를 찾을 수 없습니다',
+    nld: 'Geen landen gevonden',
+    per: 'هیچ کشوری یافت نشد',
+    pol: 'Nie znaleziono krajów',
+    por: 'Nenhum país encontrado',
+    ron: 'Nu s-au găsit țări',
+    rus: 'Страны не найдены',
+    slk: 'Nenašli sa žiadne krajiny',
+    spa: 'No se encontró ningún país',
+    srp: 'Нису пронађене државе',
+    swe: 'Inga länder hittades',
+    tur: 'Hiçbir ülke bulunamadı',
+    ukr: 'Країни не знайдено',
+    urd: 'کوئی ملک نہیں ملا',
+    zho: '没有找到国家',
+    'zho-Hans': '没有找到国家',
+    'zho-Hant': '找不到國家',
   },
 } as const;
