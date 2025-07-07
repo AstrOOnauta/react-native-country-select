@@ -42,7 +42,7 @@ export const CountryItem = memo<ICountryItemProps>(
               ? countrySelectStyle?.popup?.flag
               : countrySelectStyle?.bottomSheet?.flag,
           ]}>
-          {item.flag}
+          {item.flag || item.cca2}
         </Text>
         <View
           style={[
