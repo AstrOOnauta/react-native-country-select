@@ -52,6 +52,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   language = DEFAULT_LANGUAGE,
   showSearchInput = true,
   searchPlaceholder,
+  searchPlaceholderTextColor,
+  searchSelectionColor,
   showCloseButton = false,
   minBottomsheetHeight,
   maxBottomsheetHeight,
@@ -406,9 +408,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           translations.searchPlaceholder[language as ICountrySelectLanguages]
         }
         placeholderTextColor={
-          countrySelectStyle?.searchInputPlaceholder?.color ||
-          styles.searchInputPlaceholder.color
+          searchPlaceholderTextColor ||
+          (theme === 'dark' ? '#FFFFFF80' : '#00000080')
         }
+        selectionColor={searchSelectionColor}
         value={searchQuery}
         onChangeText={setSearchQuery}
       />

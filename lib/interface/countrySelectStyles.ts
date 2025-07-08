@@ -8,9 +8,6 @@ export interface ICountrySelectStyle {
   closeButtonText?: StyleProp<TextStyle>;
   searchContainer?: StyleProp<ViewStyle>;
   searchInput?: StyleProp<TextStyle>;
-  searchInputPlaceholder?: {
-    color: string;
-  };
   sectionTitle?: StyleProp<TextStyle>;
   list?: StyleProp<ViewStyle>;
   countryItem?: StyleProp<ViewStyle>;

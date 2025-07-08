@@ -20,6 +20,8 @@ export interface ICountrySelectProps extends ModalProps {
   language?: ICountrySelectLanguages;
   showSearchInput?: boolean;
   searchPlaceholder?: string;
+  searchPlaceholderTextColor?: string;
+  searchSelectionColor?: string;
   showCloseButton?: boolean;
   minBottomsheetHeight?: number | string;
   maxBottomsheetHeight?: number | string;
