@@ -263,21 +263,29 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   const getCountries = useMemo(() => {
     const query = searchQuery.toLowerCase();
 
+    let countriesData = countries as unknown as ICountry[];
+
+    if (visibleCountries.length > 0 && hiddenCountries.length > 0) {
+      countriesData = (countries as unknown as ICountry[]).filter(
+        country =>
+          visibleCountries.includes(country.cca2) &&
+          !hiddenCountries.includes(country.cca2),
+      );
+    }
+
+    if (visibleCountries.length > 0 && hiddenCountries.length === 0) {
+      countriesData = (countries as unknown as ICountry[]).filter(country =>
+        visibleCountries.includes(country.cca2),
+      );
+    }
+
+    if (hiddenCountries.length > 0 && visibleCountries.length === 0) {
+      countriesData = (countries as unknown as ICountry[]).filter(
+        country => !hiddenCountries.includes(country.cca2),
+      );
+    }
+
     if (query.length > 0) {
-      let countriesData = countries as unknown as ICountry[];
-
-      if (visibleCountries.length > 0) {
-        countriesData = (countries as unknown as ICountry[]).filter(country =>
-          visibleCountries.includes(country.cca2),
-        );
-      }
-
-      if (hiddenCountries.length > 0) {
-        countriesData = (countries as unknown as ICountry[]).filter(
-          country => !hiddenCountries.includes(country.cca2),
-        );
-      }
-
       const filteredCountries = countriesData.filter(country => {
         const countryName = getCountryNameInLanguage(country);
         const normalizedCountryName = normalizeCountryName(
@@ -300,26 +308,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       return sortCountriesAlphabetically(filteredCountries);
     }
 
-    let allCountries = countries as unknown as ICountry[];
-
-    if (visibleCountries.length > 0) {
-      allCountries = (countries as unknown as ICountry[]).filter(country =>
-        visibleCountries.includes(country.cca2),
-      );
-    }
-
-    if (hiddenCountries.length > 0) {
-      allCountries = (countries as unknown as ICountry[]).filter(
-        country => !hiddenCountries.includes(country.cca2),
-      );
-    }
-
     const popularCountriesData = sortCountriesAlphabetically(
-      allCountries.filter(country => popularCountries.includes(country.cca2)),
+      countriesData.filter(country => popularCountries.includes(country.cca2)),
     );
 
     const otherCountriesData = sortCountriesAlphabetically(
-      allCountries.filter(country => !popularCountries.includes(country.cca2)),
+      countriesData.filter(country => !popularCountries.includes(country.cca2)),
     );
 
     const result: IListItem[] = [];
