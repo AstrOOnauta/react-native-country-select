@@ -69,7 +69,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   ...props
 }) => {
   const {height: windowHeight} = useWindowDimensions();
-  const styles = createStyles(theme);
+  const styles = createStyles(theme, modalType, isFullScreen);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
@@ -388,14 +388,11 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         accessibilityRole="button"
         accessibilityLabel="Country Select Modal Close Button"
         accessibilityHint="Click to close the Country Select modal"
-        style={[styles.closeButton, countrySelectStyle?.popup?.closeButton]}
+        style={[styles.closeButton, countrySelectStyle?.closeButton]}
         activeOpacity={0.6}
         onPress={onClose}>
         <Text
-          style={[
-            styles.closeButtonText,
-            countrySelectStyle?.popup?.closeButtonText,
-          ]}>
+          style={[styles.closeButtonText, countrySelectStyle?.closeButtonText]}>
           {'\u00D7'}
         </Text>
       </TouchableOpacity>
@@ -409,20 +406,13 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         accessibilityRole="text"
         accessibilityLabel="Country Select Search Input"
         accessibilityHint="Type to search for a country"
-        style={[
-          styles.searchInput,
-          modalType === 'popup'
-            ? countrySelectStyle?.popup?.searchInput
-            : countrySelectStyle?.bottomSheet?.searchInput,
-        ]}
+        style={[styles.searchInput, countrySelectStyle?.searchInput]}
         placeholder={
           searchPlaceholder ||
           translations.searchPlaceholder[language as ICountrySelectLanguages]
         }
         placeholderTextColor={
-          (modalType === 'popup'
-            ? countrySelectStyle?.popup?.searchInputPlaceholder?.color
-            : countrySelectStyle?.bottomSheet?.searchInputPlaceholder?.color) ||
+          countrySelectStyle?.searchInputPlaceholder?.color ||
           styles.searchInputPlaceholder.color
         }
         value={searchQuery}
@@ -437,16 +427,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         <View
           style={[
             styles.countryNotFoundContainer,
-            modalType === 'popup'
-              ? countrySelectStyle?.popup?.countryNotFoundContainer
-              : countrySelectStyle?.bottomSheet?.countryNotFoundContainer,
+            countrySelectStyle?.countryNotFoundContainer,
           ]}>
           <Text
             style={[
               styles.countryNotFoundMessage,
-              modalType === 'popup'
-                ? countrySelectStyle?.popup?.countryNotFoundMessage
-                : countrySelectStyle?.bottomSheet?.countryNotFoundMessage,
+              countrySelectStyle?.countryNotFoundMessage,
             ]}>
             {countryNotFoundMessage ||
               translations.searchNotFoundMessage[
@@ -482,12 +468,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           <Text
             testID="countrySelectSectionTitle"
             accessibilityRole="header"
-            style={[
-              styles.sectionTitle,
-              modalType === 'popup'
-                ? countrySelectStyle?.popup?.sectionTitle
-                : countrySelectStyle?.bottomSheet?.sectionTitle,
-            ]}>
+            style={[styles.sectionTitle, countrySelectStyle?.sectionTitle]}>
             {popularCountriesTitle && index === 0
               ? popularCountriesTitle
               : allCountriesTitle && index > 0
@@ -508,7 +489,6 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           onClose={onClose}
           theme={theme}
           language={language}
-          modalType={modalType}
           countrySelectStyle={countrySelectStyle}
         />
       );
@@ -541,14 +521,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           style={[
             styles.backdrop,
             {alignItems: 'center', justifyContent: 'center'},
-            countrySelectStyle?.popup?.backdrop,
+            countrySelectStyle?.backdrop,
             removedBackdrop && {backgroundColor: 'transparent'},
           ]}
           onPress={onBackdropPress || onClose}>
           <Pressable
             style={[
-              styles.popupContainer,
-              countrySelectStyle?.popup?.popupContainer,
+              styles.container,
+              countrySelectStyle?.container,
               isFullScreen && {
                 flex: 1,
                 width: '100%',
@@ -557,8 +537,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
             ]}>
             <View
               style={[
-                styles.popupContent,
-                countrySelectStyle?.popup?.popupContent,
+                styles.content,
+                countrySelectStyle?.content,
                 isFullScreen && {
                   borderRadius: 0,
                 },
@@ -567,7 +547,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
                 <View
                   style={[
                     styles.searchContainer,
-                    countrySelectStyle?.popup?.searchContainer,
+                    countrySelectStyle?.searchContainer,
                   ]}>
                   {(isFullScreen || showCloseButton) && renderCloseButton()}
                   {showSearchInput && renderSearchInput()}
@@ -593,6 +573,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       <View
         style={[
           styles.backdrop,
+          countrySelectStyle?.backdrop,
           removedBackdrop && {backgroundColor: 'transparent'},
         ]}>
         <Pressable
@@ -604,13 +585,16 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           style={{flex: 1}}
           onPress={onBackdropPress || onClose}
         />
-        <View style={styles.sheetContainer} pointerEvents="auto">
+        <View
+          style={[styles.container, countrySelectStyle?.container]}
+          pointerEvents="auto">
           <View {...handlePanResponder.panHandlers} style={styles.dragHandle}>
             <View style={styles.dragIndicator} />
           </View>
           <Animated.View
             style={[
-              styles.sheetContent,
+              styles.content,
+              countrySelectStyle?.content,
               {
                 height: sheetHeight,
                 minHeight: bottomSheetSize.minHeight,
@@ -618,7 +602,11 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
               },
             ]}>
             {(showSearchInput || showCloseButton) && (
-              <View style={styles.searchContainer}>
+              <View
+                style={[
+                  styles.searchContainer,
+                  countrySelectStyle?.searchContainer,
+                ]}>
                 {showCloseButton && renderCloseButton()}
                 {showSearchInput && renderSearchInput()}
               </View>
