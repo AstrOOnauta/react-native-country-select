@@ -71,15 +71,15 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   countryNotFoundMessage,
   ...props
 }) => {
-  const {height: windowHeight} = useWindowDimensions();
+  const [modalHeight, setModalHeight] = useState(useWindowDimensions().height);
   const styles = createStyles(theme, modalType, isFullScreen);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [bottomSheetSize, setBottomSheetSize] = useState({
-    minHeight: MIN_HEIGHT_PERCENTAGE * windowHeight,
-    maxHeight: MAX_HEIGHT_PERCENTAGE * windowHeight,
-    initialHeight: INITIAL_HEIGHT_PERCENTAGE * windowHeight,
+    minHeight: MIN_HEIGHT_PERCENTAGE * modalHeight,
+    maxHeight: MAX_HEIGHT_PERCENTAGE * modalHeight,
+    initialHeight: INITIAL_HEIGHT_PERCENTAGE * modalHeight,
   });
 
   const sheetHeight = useRef(
@@ -94,7 +94,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     }
 
     const DRAG_HANDLE_HEIGHT = 20;
-    const availableHeight = windowHeight - DRAG_HANDLE_HEIGHT;
+    const availableHeight = modalHeight - DRAG_HANDLE_HEIGHT;
 
     const parsedMinHeight = parseHeight(minBottomsheetHeight, availableHeight);
     const parsedMaxHeight = parseHeight(maxBottomsheetHeight, availableHeight);
@@ -113,7 +113,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     minBottomsheetHeight,
     maxBottomsheetHeight,
     initialBottomsheetHeight,
-    windowHeight,
+    modalHeight,
     modalType,
   ]);
 
@@ -135,12 +135,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     }
 
     if (isKeyboardVisible) {
-      sheetHeight.setValue(
-        parseHeight(bottomSheetSize.maxHeight, windowHeight),
-      );
+      sheetHeight.setValue(parseHeight(bottomSheetSize.maxHeight, modalHeight));
       lastHeight.current = bottomSheetSize.maxHeight;
     } else {
-      sheetHeight.setValue(parseHeight(lastHeight.current, windowHeight));
+      sheetHeight.setValue(parseHeight(lastHeight.current, modalHeight));
     }
   }, [isKeyboardVisible, modalType]);
 
@@ -573,7 +571,11 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           styles.backdrop,
           countrySelectStyle?.backdrop,
           removedBackdrop && {backgroundColor: 'transparent'},
-        ]}>
+        ]}
+        onLayout={event => {
+          const {height} = event.nativeEvent.layout;
+          setModalHeight(height);
+        }}>
         <Pressable
           testID="countrySelectBackdrop"
           accessibilityRole="button"
