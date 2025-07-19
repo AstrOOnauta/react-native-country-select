@@ -4,6 +4,8 @@ export interface ICountrySelectStyle {
   backdrop?: StyleProp<ViewStyle>;
   container?: StyleProp<ViewStyle>;
   content?: StyleProp<ViewStyle>;
+  dragHandleContainer?: StyleProp<ViewStyle>;
+  dragHandleIndicator?: StyleProp<ViewStyle>;
   closeButton?: StyleProp<ViewStyle>;
   closeButtonText?: StyleProp<TextStyle>;
   searchContainer?: StyleProp<ViewStyle>;

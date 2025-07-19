@@ -29,6 +29,7 @@ export interface ICountrySelectProps extends ModalProps {
   disabledBackdropPress?: boolean;
   removedBackdrop?: boolean;
   onBackdropPress?: () => void;
+  dragHandleIndicatorComponent?: () => React.ReactElement;
   countryItemComponent?: (item: ICountry) => React.ReactElement;
   sectionTitleComponent?: (item: ISectionTitle) => React.ReactElement;
   closeButtonComponent?: () => React.ReactElement;

@@ -61,6 +61,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   disabledBackdropPress,
   removedBackdrop,
   onBackdropPress,
+  dragHandleIndicatorComponent,
   sectionTitleComponent,
   countryItemComponent,
   closeButtonComponent,
@@ -585,8 +586,22 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         <View
           style={[styles.container, countrySelectStyle?.container]}
           pointerEvents="auto">
-          <View {...handlePanResponder.panHandlers} style={styles.dragHandle}>
-            <View style={styles.dragIndicator} />
+          <View
+            {...handlePanResponder.panHandlers}
+            style={[
+              styles.dragHandleContainer,
+              countrySelectStyle?.dragHandleContainer,
+            ]}>
+            {dragHandleIndicatorComponent ? (
+              dragHandleIndicatorComponent()
+            ) : (
+              <View
+                style={[
+                  styles.dragHandleIndicator,
+                  countrySelectStyle?.dragHandleIndicator,
+                ]}
+              />
+            )}
           </View>
           <Animated.View
             style={[
