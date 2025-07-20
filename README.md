@@ -271,6 +271,7 @@ export default function App() {
 | disabledBackdropPress        | boolean                                                                 | No       | false                | Whether to disable backdrop press to close                       |
 | removedBackdrop              | boolean                                                                 | No       | false                | Whether to remove the backdrop completely                        |
 | onBackdropPress              | () => void                                                              | No       | -                    | Custom callback for backdrop press                               |
+| dragHandleIndicatorComponent | () => ReactElement                                                      | -        | -                    | Custom component for drag handle indicator on bottom sheet       |
 | countryItemComponent         | (item: [ICountry](lib/interfaces/country.ts)) => ReactElement           | No       | -                    | Custom component for country items                               |
 | sectionTitleComponent        | (item: [ISectionTitle](lib/interfaces/sectionTitle.ts)) => ReactElement | No       | -                    | Custom component for section titles                              |
 | closeButtonComponent         | () => ReactElement                                                      | No       | -                    | Custom component for closeButton                                 |
