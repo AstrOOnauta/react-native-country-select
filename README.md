@@ -248,38 +248,48 @@ export default function App() {
 
 ## CountrySelect Props
 
-| Prop                         | Type                                                                    | Required | Default              | Description                                                      |
-| ---------------------------- | ----------------------------------------------------------------------- | -------- | -------------------- | ---------------------------------------------------------------- |
-| visible                      | boolean                                                                 | Yes      | false                | Controls the visibility of the country picker modal              |
-| onClose                      | () => void                                                              | Yes      | -                    | Callback function called when the modal is closed                |
-| onSelect                     | (country: [ICountry](lib/interfaces/country.ts)) => void                | Yes      | -                    | Callback function called when a country is selected              |
-| modalType                    | 'bottomSheet' \| 'popup'                                                | No       | 'bottomSheet'        | Type of modal to display                                         |
-| countrySelectStyle           | [ICountrySelectStyle](lib/interfaces/countrySelectStyles.ts)            | No       | -                    | Custom styles for the country picker                             |
-| isFullScreen                 | boolean                                                                 | No       | false                | Whether the modal should be full screen                          |
-| popularCountries             | string[]                                                                | No       | []                   | Array of country codes to show in popular section                |
-| visibleCountries             | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                   | Array of country codes to show (whitelist)                       |
-| hiddenCountries              | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                   | Array of country codes to hide (blacklist)                       |
-| theme                        | 'light' \| 'dark'                                                       | No       | 'light'              | Theme for the country picker                                     |
-| language                     | [ICountrySelectLanguages](lib/interfaces/countrySelectLanguages.ts)     | No       | 'eng'                | Language for country names (see supported languages below)       |
-| showSearchInput              | boolean                                                                 | No       | true                 | Whether to show the search input field                           |
-| searchPlaceholder            | string                                                                  | No       | 'Search country...'  | Placeholder text for search input                                |
-| searchPlaceholderTextColor   | string                                                                  | No       | '#00000080'          | Placeholder text color for search input                          |
-| searchSelectionColor         | string                                                                  | No       | default              | Highlight, selection handle and cursor color of the search input |
-| minBottomsheetHeight         | number \| string                                                        | No       | 30%                  | Minimum height for bottom sheet modal                            |
-| maxBottomsheetHeight         | number \| string                                                        | No       | 80%                  | Maximum height for bottom sheet modal                            |
-| initialBottomsheetHeight     | number \| string                                                        | No       | 50%                  | Initial height for bottom sheet modal                            |
-| disabledBackdropPress        | boolean                                                                 | No       | false                | Whether to disable backdrop press to close                       |
-| removedBackdrop              | boolean                                                                 | No       | false                | Whether to remove the backdrop completely                        |
-| onBackdropPress              | () => void                                                              | No       | -                    | Custom callback for backdrop press                               |
-| dragHandleIndicatorComponent | () => ReactElement                                                      | -        | -                    | Custom component for drag handle indicator on bottom sheet       |
-| countryItemComponent         | (item: [ICountry](lib/interfaces/country.ts)) => ReactElement           | No       | -                    | Custom component for country items                               |
-| sectionTitleComponent        | (item: [ISectionTitle](lib/interfaces/sectionTitle.ts)) => ReactElement | No       | -                    | Custom component for section titles                              |
-| closeButtonComponent         | () => ReactElement                                                      | No       | -                    | Custom component for closeButton                                 |
-| showCloseButton              | boolean                                                                 | No       | false                | Whether to show the close button                                 |
-| popularCountriesTitle        | string                                                                  | No       | 'Popular Countries'  | Popular Countries section title                                  |
-| allCountriesTitle            | string                                                                  | No       | 'All Countries'      | All Countries section title                                      |
-| showsVerticalScrollIndicator | boolean                                                                 | No       | false                | Displays a horizontal scroll indicator                           |
-| countryNotFoundMessage       | string                                                                  | No       | "No countries found" | Country not found in search                                      |
+| Prop                            | Type                                                                    | Required | Default              | Description                                                      |
+| ------------------------------- | ----------------------------------------------------------------------- | -------- | -------------------- | ---------------------------------------------------------------- |
+| visible                         | boolean                                                                 | Yes      | false                | Controls the visibility of the country picker modal              |
+| onClose                         | () => void                                                              | Yes      | -                    | Callback function called when the modal is closed                |
+| onSelect                        | (country: [ICountry](lib/interfaces/country.ts)) => void                | Yes      | -                    | Callback function called when a country is selected              |
+| modalType                       | 'bottomSheet' \| 'popup'                                                | No       | 'bottomSheet'        | Type of modal to display                                         |
+| countrySelectStyle              | [ICountrySelectStyle](lib/interfaces/countrySelectStyles.ts)            | No       | -                    | Custom styles for the country picker                             |
+| isFullScreen                    | boolean                                                                 | No       | false                | Whether the modal should be full screen                          |
+| popularCountries                | string[]                                                                | No       | []                   | Array of country codes to show in popular section                |
+| visibleCountries                | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                   | Array of country codes to show (whitelist)                       |
+| hiddenCountries                 | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                   | Array of country codes to hide (blacklist)                       |
+| theme                           | 'light' \| 'dark'                                                       | No       | 'light'              | Theme for the country picker                                     |
+| language                        | [ICountrySelectLanguages](lib/interfaces/countrySelectLanguages.ts)     | No       | 'eng'                | Language for country names (see supported languages below)       |
+| showSearchInput                 | boolean                                                                 | No       | true                 | Whether to show the search input field                           |
+| searchPlaceholder               | string                                                                  | No       | 'Search country...'  | Placeholder text for search input                                |
+| searchPlaceholderTextColor      | string                                                                  | No       | '#00000080'          | Placeholder text color for search input                          |
+| searchSelectionColor            | string                                                                  | No       | default              | Highlight, selection handle and cursor color of the search input |
+| minBottomsheetHeight            | number \| string                                                        | No       | 30%                  | Minimum height for bottom sheet modal                            |
+| maxBottomsheetHeight            | number \| string                                                        | No       | 80%                  | Maximum height for bottom sheet modal                            |
+| initialBottomsheetHeight        | number \| string                                                        | No       | 50%                  | Initial height for bottom sheet modal                            |
+| disabledBackdropPress           | boolean                                                                 | No       | false                | Whether to disable backdrop press to close                       |
+| removedBackdrop                 | boolean                                                                 | No       | false                | Whether to remove the backdrop completely                        |
+| onBackdropPress                 | () => void                                                              | No       | -                    | Custom callback for backdrop press                               |
+| dragHandleIndicatorComponent    | () => ReactElement                                                      | -        | -                    | Custom component for drag handle indicator on bottom sheet       |
+| countryItemComponent            | (item: [ICountry](lib/interfaces/country.ts)) => ReactElement           | No       | -                    | Custom component for country items                               |
+| sectionTitleComponent           | (item: [ISectionTitle](lib/interfaces/sectionTitle.ts)) => ReactElement | No       | -                    | Custom component for section titles                              |
+| closeButtonComponent            | () => ReactElement                                                      | No       | -                    | Custom component for closeButton                                 |
+| showCloseButton                 | boolean                                                                 | No       | false                | Whether to show the close button                                 |
+| popularCountriesTitle           | string                                                                  | No       | 'Popular Countries'  | Popular Countries section title                                  |
+| allCountriesTitle               | string                                                                  | No       | 'All Countries'      | All Countries section title                                      |
+| showsVerticalScrollIndicator    | boolean                                                                 | No       | false                | Displays a horizontal scroll indicator                           |
+| countryNotFoundMessage          | string                                                                  | No       | "No countries found" | Country not found in search                                      |
+| accessibilityLabelBackdrop      | string                                                                  | No       | -                    | Accessibility label for the backdrop                             |
+| accessibilityHintBackdrop       | string                                                                  | No       | -                    | Accessibility hint for the backdrop                              |
+| accessibilityLabelCloseButton   | string                                                                  | No       | -                    | Accessibility label for the close button                         |
+| accessibilityHintCloseButton    | string                                                                  | No       | -                    | Accessibility hint for the close button                          |
+| accessibilityLabelSearchInput   | string                                                                  | No       | -                    | Accessibility label for the search input                         |
+| accessibilityHintSearchInput    | string                                                                  | No       | -                    | Accessibility hint for the search input                          |
+| accessibilityLabelCountriesList | string                                                                  | No       | -                    | Accessibility label for the countries list                       |
+| accessibilityHintCountriesList  | string                                                                  | No       | -                    | Accessibility hint for the countries list                        |
+| accessibilityLabelCountryItem   | string                                                                  | No       | -                    | Accessibility label for individual country items                 |
+| accessibilityHintCountryItem    | string                                                                  | No       | -                    | Accessibility hint for individual country items                  |
 
 <br>
 
