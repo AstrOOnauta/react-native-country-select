@@ -9,4 +9,6 @@ export interface ICountryItemProps {
   language: ICountrySelectLanguages;
   theme?: 'light' | 'dark';
   countrySelectStyle?: ICountrySelectStyle;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
 }

@@ -37,4 +37,14 @@ export interface ICountrySelectProps extends ModalProps {
   allCountriesTitle?: string;
   showsVerticalScrollIndicator?: boolean;
   countryNotFoundMessage?: string;
+  accessibilityLabelBackdrop?: string;
+  accessibilityHintBackdrop?: string;
+  accessibilityLabelCloseButton?: string;
+  accessibilityHintCloseButton?: string;
+  accessibilityLabelSearchInput?: string;
+  accessibilityHintSearchInput?: string;
+  accessibilityLabelCountriesList?: string;
+  accessibilityHintCountriesList?: string;
+  accessibilityLabelCountryItem?: string;
+  accessibilityHintCountryItem?: string;
 }

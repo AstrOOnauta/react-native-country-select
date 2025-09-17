@@ -69,6 +69,16 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   allCountriesTitle,
   showsVerticalScrollIndicator = false,
   countryNotFoundMessage,
+  accessibilityLabelBackdrop,
+  accessibilityHintBackdrop,
+  accessibilityLabelCloseButton,
+  accessibilityHintCloseButton,
+  accessibilityLabelSearchInput,
+  accessibilityHintSearchInput,
+  accessibilityLabelCountriesList,
+  accessibilityHintCountriesList,
+  accessibilityLabelCountryItem,
+  accessibilityHintCountryItem,
   ...props
 }) => {
   const [modalHeight, setModalHeight] = useState(useWindowDimensions().height);
@@ -381,8 +391,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       <TouchableOpacity
         testID="countrySelectCloseButton"
         accessibilityRole="button"
-        accessibilityLabel="Country Select Modal Close Button"
-        accessibilityHint="Click to close the Country Select modal"
+        accessibilityLabel={
+          accessibilityLabelCloseButton ||
+          translations.accessibilityLabelCloseButton[language]
+        }
+        accessibilityHint={
+          accessibilityHintCloseButton ||
+          translations.accessibilityHintCloseButton[language]
+        }
         style={[styles.closeButton, countrySelectStyle?.closeButton]}
         activeOpacity={0.6}
         onPress={onClose}>
@@ -399,8 +415,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       <TextInput
         testID="countrySelectSearchInput"
         accessibilityRole="text"
-        accessibilityLabel="Country Select Search Input"
-        accessibilityHint="Type to search for a country"
+        accessibilityLabel={
+          accessibilityLabelSearchInput ||
+          translations.accessibilityLabelSearchInput[language]
+        }
+        accessibilityHint={
+          accessibilityHintSearchInput ||
+          translations.accessibilityHintSearchInput[language]
+        }
         style={[styles.searchInput, countrySelectStyle?.searchInput]}
         placeholder={
           searchPlaceholder ||
@@ -442,8 +464,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       <FlatList
         testID="countrySelectList"
         accessibilityRole="list"
-        accessibilityLabel="Country Select List"
-        accessibilityHint="List of countries"
+        accessibilityLabel={
+          accessibilityLabelCountriesList ||
+          translations.accessibilityLabelCountriesList[language]
+        }
+        accessibilityHint={
+          accessibilityHintCountriesList ||
+          translations.accessibilityHintCountriesList[language]
+        }
         data={getCountries}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
@@ -486,6 +514,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           theme={theme}
           language={language}
           countrySelectStyle={countrySelectStyle}
+          accessibilityLabel={
+            accessibilityLabelCountryItem ||
+            translations.accessibilityLabelCountryItem[language]
+          }
+          accessibilityHint={
+            accessibilityHintCountryItem ||
+            translations.accessibilityHintCountryItem[language]
+          }
         />
       );
     },
@@ -511,8 +547,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         <Pressable
           testID="countrySelectBackdrop"
           accessibilityRole="button"
-          accessibilityLabel="Country Select Modal Backdrop"
-          accessibilityHint="Click to close the Country Select modal"
+          accessibilityLabel={
+            accessibilityLabelBackdrop ||
+            translations.accessibilityLabelBackdrop[language]
+          }
+          accessibilityHint={
+            accessibilityHintBackdrop ||
+            translations.accessibilityHintBackdrop[language]
+          }
           disabled={disabledBackdropPress || removedBackdrop}
           style={[
             styles.backdrop,
@@ -581,8 +623,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         <Pressable
           testID="countrySelectBackdrop"
           accessibilityRole="button"
-          accessibilityLabel="Country Select Modal Backdrop"
-          accessibilityHint="Click to close the Country Select modal"
+          accessibilityLabel={
+            accessibilityLabelBackdrop ||
+            translations.accessibilityLabelBackdrop[language]
+          }
+          accessibilityHint={
+            accessibilityHintBackdrop ||
+            translations.accessibilityHintBackdrop[language]
+          }
           disabled={disabledBackdropPress || removedBackdrop}
           style={{flex: 1}}
           onPress={onBackdropPress || onClose}

@@ -2,6 +2,7 @@ import React, {memo} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 
 import {createStyles} from '../styles';
+import {translations} from '../../utils/getTranslation';
 import {ICountryItemProps, ICountrySelectLanguages} from '../../interface';
 
 const DEFAULT_LANGUAGE: ICountrySelectLanguages = 'eng';
@@ -14,6 +15,8 @@ export const CountryItem = memo<ICountryItemProps>(
     theme = 'light',
     language,
     countrySelectStyle,
+    accessibilityLabel,
+    accessibilityHint,
   }) => {
     const styles = createStyles(theme);
 
@@ -21,8 +24,14 @@ export const CountryItem = memo<ICountryItemProps>(
       <TouchableOpacity
         testID="countrySelectItem"
         accessibilityRole="button"
-        accessibilityLabel="Country Select Item"
-        accessibilityHint="Click to select a country"
+        accessibilityLabel={
+          accessibilityLabel ||
+          translations.accessibilityLabelCountryItem[language]
+        }
+        accessibilityHint={
+          accessibilityHint ||
+          translations.accessibilityHintCountryItem[language]
+        }
         style={[styles.countryItem, countrySelectStyle?.countryItem]}
         onPress={() => {
           onSelect(item);
