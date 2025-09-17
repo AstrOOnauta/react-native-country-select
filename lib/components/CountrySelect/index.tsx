@@ -521,7 +521,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
             removedBackdrop && {backgroundColor: 'transparent'},
           ]}
           onPress={onBackdropPress || onClose}>
-          <Pressable
+          <View
             style={[
               styles.container,
               countrySelectStyle?.container,
@@ -530,7 +530,9 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
                 width: '100%',
                 height: '100%',
               },
-            ]}>
+            ]}
+            onStartShouldSetResponder={() => true}
+            onResponderGrant={() => {}}>
             <View
               style={[
                 styles.content,
@@ -552,7 +554,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
               {renderFlatList()}
             </View>
-          </Pressable>
+          </View>
         </Pressable>
       </Modal>
     );
