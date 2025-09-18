@@ -544,60 +544,62 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         onRequestClose={onClose}
         statusBarTranslucent
         {...props}>
-        <Pressable
-          testID="countrySelectBackdrop"
-          accessibilityRole="button"
-          accessibilityLabel={
-            accessibilityLabelBackdrop ||
-            translations.accessibilityLabelBackdrop[language]
-          }
-          accessibilityHint={
-            accessibilityHintBackdrop ||
-            translations.accessibilityHintBackdrop[language]
-          }
-          disabled={disabledBackdropPress || removedBackdrop}
+        <View
+          testID="countrySelectContainer"
           style={[
-            styles.backdrop,
-            {alignItems: 'center', justifyContent: 'center'},
-            countrySelectStyle?.backdrop,
-            removedBackdrop && {backgroundColor: 'transparent'},
-          ]}
-          onPress={onBackdropPress || onClose}>
-          <View
+            styles.container,
+            countrySelectStyle?.container,
+            isFullScreen && {
+              flex: 1,
+              width: '100%',
+              height: '100%',
+            },
+          ]}>
+          <Pressable
+            testID="countrySelectBackdrop"
+            accessibilityRole="button"
+            accessibilityLabel={
+              accessibilityLabelBackdrop ||
+              translations.accessibilityLabelBackdrop[language]
+            }
+            accessibilityHint={
+              accessibilityHintBackdrop ||
+              translations.accessibilityHintBackdrop[language]
+            }
+            disabled={disabledBackdropPress || removedBackdrop}
             style={[
-              styles.container,
-              countrySelectStyle?.container,
+              styles.backdrop,
+              {alignItems: 'center', justifyContent: 'center'},
+              countrySelectStyle?.backdrop,
+              removedBackdrop && {backgroundColor: 'transparent'},
+            ]}
+            onPress={onBackdropPress || onClose}
+          />
+          <View
+            testID="countrySelectContent"
+            style={[
+              styles.content,
+              countrySelectStyle?.content,
               isFullScreen && {
-                flex: 1,
+                borderRadius: 0,
                 width: '100%',
                 height: '100%',
               },
-            ]}
-            onStartShouldSetResponder={() => true}
-            onResponderGrant={() => {}}>
-            <View
-              style={[
-                styles.content,
-                countrySelectStyle?.content,
-                isFullScreen && {
-                  borderRadius: 0,
-                },
-              ]}>
-              {(isFullScreen || showSearchInput || showCloseButton) && (
-                <View
-                  style={[
-                    styles.searchContainer,
-                    countrySelectStyle?.searchContainer,
-                  ]}>
-                  {(isFullScreen || showCloseButton) && renderCloseButton()}
-                  {showSearchInput && renderSearchInput()}
-                </View>
-              )}
+            ]}>
+            {(isFullScreen || showSearchInput || showCloseButton) && (
+              <View
+                style={[
+                  styles.searchContainer,
+                  countrySelectStyle?.searchContainer,
+                ]}>
+                {(isFullScreen || showCloseButton) && renderCloseButton()}
+                {showSearchInput && renderSearchInput()}
+              </View>
+            )}
 
-              {renderFlatList()}
-            </View>
+            {renderFlatList()}
           </View>
-        </Pressable>
+        </View>
       </Modal>
     );
   }
@@ -611,11 +613,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       statusBarTranslucent
       {...props}>
       <View
-        style={[
-          styles.backdrop,
-          countrySelectStyle?.backdrop,
-          removedBackdrop && {backgroundColor: 'transparent'},
-        ]}
+        testID="countrySelectContainer"
+        style={[styles.container, countrySelectStyle?.container]}
         onLayout={event => {
           const {height} = event.nativeEvent.layout;
           setModalHeight(height);
@@ -632,12 +631,24 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
             translations.accessibilityHintBackdrop[language]
           }
           disabled={disabledBackdropPress || removedBackdrop}
-          style={{flex: 1}}
+          style={[
+            styles.backdrop,
+            countrySelectStyle?.backdrop,
+            removedBackdrop && {backgroundColor: 'transparent'},
+          ]}
           onPress={onBackdropPress || onClose}
         />
-        <View
-          style={[styles.container, countrySelectStyle?.container]}
-          pointerEvents="auto">
+        <Animated.View
+          testID="countrySelectContent"
+          style={[
+            styles.content,
+            countrySelectStyle?.content,
+            {
+              height: sheetHeight,
+              minHeight: bottomSheetSize.minHeight,
+              maxHeight: bottomSheetSize.maxHeight,
+            },
+          ]}>
           <View
             {...handlePanResponder.panHandlers}
             style={[
@@ -655,30 +666,19 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
               />
             )}
           </View>
-          <Animated.View
-            style={[
-              styles.content,
-              countrySelectStyle?.content,
-              {
-                height: sheetHeight,
-                minHeight: bottomSheetSize.minHeight,
-                maxHeight: bottomSheetSize.maxHeight,
-              },
-            ]}>
-            {(showSearchInput || showCloseButton) && (
-              <View
-                style={[
-                  styles.searchContainer,
-                  countrySelectStyle?.searchContainer,
-                ]}>
-                {showCloseButton && renderCloseButton()}
-                {showSearchInput && renderSearchInput()}
-              </View>
-            )}
+          {(showSearchInput || showCloseButton) && (
+            <View
+              style={[
+                styles.searchContainer,
+                countrySelectStyle?.searchContainer,
+              ]}>
+              {showCloseButton && renderCloseButton()}
+              {showSearchInput && renderSearchInput()}
+            </View>
+          )}
 
-            <Animated.View style={{flex: 1}}>{renderFlatList()}</Animated.View>
-          </Animated.View>
-        </View>
+          <Animated.View style={{flex: 1}}>{renderFlatList()}</Animated.View>
+        </Animated.View>
       </View>
     </Modal>
   );
