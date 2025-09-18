@@ -478,6 +478,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         getItemLayout={getItemLayout}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={showsVerticalScrollIndicator || false}
+        style={[styles.list, countrySelectStyle?.list]}
       />
     );
   };
