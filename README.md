@@ -246,7 +246,32 @@ export default function App() {
 
 <br>
 
-## CountrySelect Props
+### Modal Styles ([modalStyles](https://github.com/AstrOOnauta/react-native-country-select/blob/main/lib/interface/countrySelectStyles.ts))
+
+| Property                   | Type      | Description               |
+| -------------------------- | --------- | ------------------------- |
+| `backdrop`                 | ViewStyle | Modal background overlay  |
+| `container`                | ViewStyle | Modal main container      |
+| `content`                  | ViewStyle | Modal content area        |
+| `dragHandleContainer`      | ViewStyle | Drag Handle area          |
+| `dragHandleIndicator`      | ViewStyle | Drag Handle Indicator     |
+| `searchContainer`          | ViewStyle | Search input wrapper      |
+| `searchInput`              | TextStyle | Search input field        |
+| `list`                     | ViewStyle | Countries list container  |
+| `countryItem`              | ViewStyle | Individual country row    |
+| `flag`                     | TextStyle | Country flag in list      |
+| `countryInfo`              | ViewStyle | Country details container |
+| `callingCode`              | TextStyle | Calling code in list      |
+| `countryName`              | TextStyle | Country name in list      |
+| `sectionTitle`             | TextStyle | Section headers           |
+| `closeButton`              | ViewStyle | Close button container    |
+| `closeButtonText`          | TextStyle | Close button text         |
+| `countryNotFoundContainer` | ViewStyle | No results container      |
+| `countryNotFoundMessage`   | TextStyle | No results message        |
+
+<br>
+
+## CountrySelect Props ([countrySelectProps](https://github.com/AstrOOnauta/react-native-country-select/blob/main/lib/interface/countrySelectProps.ts))
 
 | Prop                         | Type                                                                    | Required | Default              | Description                                                      |
 | ---------------------------- | ----------------------------------------------------------------------- | -------- | -------------------- | ---------------------------------------------------------------- |
@@ -330,7 +355,8 @@ The `language` prop supports the following values:
 When utilizing this package, you may need to target the CountrySelect component in your automated tests. To facilitate this, we provide a testID props for the CountrySelect component. The testID can be integrated with popular testing libraries such as @testing-library/react-native or Maestro. This enables you to efficiently locate and interact with CountrySelect elements within your tests, ensuring a robust and reliable testing experience.
 
 ```js
-const countrySelect = getByTestId('countrySelectSearchInput');
+const countrySelectModalContainer = getByTestId('countrySelectContainer');
+const countrySelectModalContent = getByTestId('countrySelectContent');
 const countrySelectBackdrop = getByTestId('countrySelectBackdrop');
 const countrySelectList = getByTestId('countrySelectList');
 const countrySelectSearchInput = getByTestId('countrySelectSearchInput');
