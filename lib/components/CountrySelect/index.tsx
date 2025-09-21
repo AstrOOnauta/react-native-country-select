@@ -272,7 +272,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   };
 
   const getCountries = useMemo(() => {
-    const query = searchQuery.toLowerCase();
+    const query = searchQuery.toLowerCase().trim();
 
     let countriesData = countries as unknown as ICountry[];
 
