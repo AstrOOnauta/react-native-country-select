@@ -1,13 +1,15 @@
+import {IThemeProps} from './theme';
 import {ICountrySelectStyle} from './countrySelectStyles';
 import {ICountrySelectLanguages} from './countrySelectLanguages';
+import {IListItem} from './itemList';
 
 export interface AlphabeticFilterProps {
-  alphabet: string[];
+  theme?: IThemeProps;
   activeLetter: string | null;
-  letterToIndex: Record<string, number>;
-  onPressLetter: (letter: string) => void;
-  theme?: 'light' | 'dark';
+  onPressLetter: (index: number) => void;
   language: ICountrySelectLanguages;
+  countries: IListItem[];
+  allCountriesStartIndex: number;
   countrySelectStyle?: ICountrySelectStyle;
   accessibilityLabelAlphabetFilter?: string;
   accessibilityHintAlphabetFilter?: string;

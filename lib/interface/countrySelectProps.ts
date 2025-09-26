@@ -1,18 +1,19 @@
 import * as React from 'react';
 import {ModalProps} from 'react-native';
-import {ICountry} from './country';
-import {ICountryCca2} from './countryCca2';
-import {ICountrySelectLanguages} from './countrySelectLanguages';
-import {ICountrySelectStyle} from './countrySelectStyles';
-import {ISectionTitle} from './sectionTitle';
 
-export interface ICountrySelectProps extends ModalProps {
+import {ICountry} from './country';
+import {IThemeProps} from './theme';
+import {ICountryCca2} from './countryCca2';
+import {ISectionTitle} from './sectionTitle';
+import {ICountrySelectStyle} from './countrySelectStyles';
+import {ICountrySelectLanguages} from './countrySelectLanguages';
+
+export interface ICountrySelectProps extends ModalProps, IThemeProps {
   visible: boolean;
   onClose: () => void;
   onSelect: (country: ICountry) => void;
   modalType?: 'bottomSheet' | 'popup';
   countrySelectStyle?: ICountrySelectStyle;
-  theme?: 'light' | 'dark';
   isFullScreen?: boolean;
   popularCountries?: string[];
   visibleCountries?: ICountryCca2[];

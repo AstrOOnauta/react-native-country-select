@@ -1,10 +1,11 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useMemo, useRef} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 
 import {createStyles} from '../styles';
 import {translations} from '../../utils/getTranslation';
+import {createAlphabet} from '../../utils/createAlphabet';
 import {AlphabeticFilterProps} from '../../interface/alfabeticFilterProps';
 
 const ALPHABET_VIEWPORT_HEIGHT = 0;
@@ -12,12 +13,12 @@ const ALPHABET_ITEM_SIZE = 28;
 const ALPHABET_VERTICAL_PADDING = 12;
 
 export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
-  alphabet,
   activeLetter,
-  letterToIndex,
   onPressLetter,
   theme = 'light',
   language,
+  countries,
+  allCountriesStartIndex,
   countrySelectStyle,
   accessibilityLabelAlphabetFilter,
   accessibilityHintAlphabetFilter,
@@ -27,7 +28,27 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
   const styles = createStyles(theme);
   const alphabetScrollRef = useRef<ScrollView>(null);
 
-  const letterIndexMap = useMemo(() => letterToIndex, [letterToIndex]);
+  const letterIndexMap = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (let i = allCountriesStartIndex; i < countries.length; i++) {
+      const item = countries[i];
+      if ('isSection' in item) {
+        continue;
+      }
+      const country: any = item as any;
+      const name =
+        country?.translations?.[language]?.common ||
+        country?.name?.common ||
+        '';
+      const first = (name?.[0] || '').toUpperCase();
+      if (first && map[first] === undefined) {
+        map[first] = i;
+      }
+    }
+    return map;
+  }, [countries, allCountriesStartIndex, language]);
+
+  const alphabet = createAlphabet();
 
   const scrollAlphabetToLetter = (letter: string) => {
     const letterIdx = alphabet.indexOf(letter);
@@ -77,7 +98,10 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
             <TouchableOpacity
               key={letter}
               onPress={() => {
-                onPressLetter(letter);
+                const idx = letterIndexMap[letter];
+                if (idx !== undefined) {
+                  onPressLetter(idx);
+                }
                 scrollAlphabetToLetter(letter);
               }}
               style={[
