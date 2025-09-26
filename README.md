@@ -287,6 +287,7 @@ export default function App() {
 | theme                        | 'light' \| 'dark'                                                       | No       | 'light'              | Theme for the country picker                                     |
 | language                     | [ICountrySelectLanguages](lib/interfaces/countrySelectLanguages.ts)     | No       | 'eng'                | Language for country names (see supported languages below)       |
 | showSearchInput              | boolean                                                                 | No       | true                 | Whether to show the search input field                           |
+| showAlphabetFilter           | boolean                                                                 | No       | false                | Whether to show the alphabetic filter on modal                   |
 | searchPlaceholder            | string                                                                  | No       | 'Search country...'  | Placeholder text for search input                                |
 | searchPlaceholderTextColor   | string                                                                  | No       | '#00000080'          | Placeholder text color for search input                          |
 | searchSelectionColor         | string                                                                  | No       | default              | Highlight, selection handle and cursor color of the search input |
@@ -381,7 +382,11 @@ Ensure your app is inclusive and usable by everyone by leveraging built-in React
 - `accessibilityLabelCountriesList`: Accessibility label for the countries list;
 - `accessibilityHintCountriesList`: Accessibility hint for the countries list;
 - `accessibilityLabelCountryItem`: Accessibility label for individual country items;
-- `accessibilityHintCountryItem`: Accessibility hint for individual country.
+- `accessibilityHintCountryItem`: Accessibility hint for individual country;
+- `accessibilityLabelAlphabetFilter`: Accessibility label for alphabet filter list;
+- `accessibilityHintAlphabetFilter`: Accessibility hint for alphabet filter list;
+- `accessibilityLabelAlphabetLetter`: Accessibility label for individual alphabet filter letter;
+- `accessibilityHintAlphabetLetter`: Accessibility hint for individual alphabet filter letter.
 
 <br>
 
