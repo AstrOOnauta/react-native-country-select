@@ -19,4 +19,11 @@ export interface ICountrySelectStyle {
   countryName?: StyleProp<TextStyle>;
   countryNotFoundContainer?: StyleProp<ViewStyle>;
   countryNotFoundMessage?: StyleProp<TextStyle>;
+  alphabetContainer?: StyleProp<ViewStyle>;
+  alphabetLetter?: StyleProp<ViewStyle>;
+  alphabetLetterText?: StyleProp<TextStyle>;
+  alphabetLetterActive?: StyleProp<ViewStyle>;
+  alphabetLetterDisabled?: StyleProp<ViewStyle>;
+  alphabetLetterTextActive?: StyleProp<TextStyle>;
+  alphabetLetterTextDisabled?: StyleProp<TextStyle>;
 }

@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 
 import {CountryItem} from '../CountryItem';
+import {AlphabeticFilter} from '../AlphabeticFilter';
 
 import {createStyles} from '../styles';
 import parseHeight from '../../utils/parseHeight';
@@ -51,6 +52,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   hiddenCountries = [],
   language = DEFAULT_LANGUAGE,
   showSearchInput = true,
+  showAlphabetFilter = false,
   searchPlaceholder,
   searchPlaceholderTextColor,
   searchSelectionColor,
@@ -79,24 +81,30 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   accessibilityHintCountriesList,
   accessibilityLabelCountryItem,
   accessibilityHintCountryItem,
+  accessibilityLabelAlphabetFilter,
+  accessibilityHintAlphabetFilter,
+  accessibilityLabelAlphabetLetter,
+  accessibilityHintAlphabetLetter,
   ...props
 }) => {
   const [modalHeight, setModalHeight] = useState(useWindowDimensions().height);
-  const styles = createStyles(theme, modalType, isFullScreen);
-
   const [searchQuery, setSearchQuery] = useState('');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [activeLetter, setActiveLetter] = useState<string | null>(null);
   const [bottomSheetSize, setBottomSheetSize] = useState({
     minHeight: MIN_HEIGHT_PERCENTAGE * modalHeight,
     maxHeight: MAX_HEIGHT_PERCENTAGE * modalHeight,
     initialHeight: INITIAL_HEIGHT_PERCENTAGE * modalHeight,
   });
 
+  const flatListRef = useRef<FlatList<IListItem>>(null);
   const sheetHeight = useRef(
     new Animated.Value(bottomSheetSize.initialHeight),
   ).current;
   const lastHeight = useRef(bottomSheetSize.initialHeight);
   const dragStartY = useRef(0);
+
+  const styles = createStyles(theme, modalType, isFullScreen);
 
   useEffect(() => {
     if (modalType === 'popup') {
@@ -271,7 +279,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     });
   };
 
-  const getCountries = useMemo(() => {
+  const countriesList = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
 
     let countriesData = countries as unknown as ICountry[];
@@ -356,30 +364,88 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     hiddenCountries,
   ]);
 
+  // Precompute item heights and offsets for accurate scrollToIndex, including section headers
+  const itemHeights = useMemo(() => {
+    return countriesList.map(item =>
+      'isSection' in item ? SECTION_HEADER_HEIGHT : ITEM_HEIGHT,
+    );
+  }, [countriesList]);
+
+  const cumulativeOffsets = useMemo(() => {
+    let runningTotal = 0;
+    return itemHeights.map(h => {
+      const offset = runningTotal;
+      runningTotal += h;
+      return offset;
+    });
+  }, [itemHeights]);
+
+  // Compute the index right after the "All Countries" section header (independent of localized/custom title)
+  const allCountriesStartIndex = useMemo(() => {
+    // Collect indices of section headers
+    const sectionIndices: number[] = [];
+    for (let i = 0; i < countriesList.length; i++) {
+      if ('isSection' in countriesList[i]) {
+        sectionIndices.push(i);
+      }
+    }
+    // If there are at least two sections, the second one corresponds to "All Countries"
+    if (sectionIndices.length >= 2) {
+      return sectionIndices[1] + 1;
+    }
+    // Otherwise, list has no popular section; start at top
+    return 0;
+  }, [countriesList]);
+
   const keyExtractor = useCallback(
     (item: IListItem) => ('isSection' in item ? item.title : item.cca2),
     [],
   );
 
   const getItemLayout = useCallback(
-    (data: IListItem[] | null | undefined, index: number) => {
-      let offset = 0;
-      let length = ITEM_HEIGHT;
-
-      if (data) {
-        const item = data[index];
-        if ('isSection' in item) {
-          length = SECTION_HEADER_HEIGHT;
-        }
-      }
-
-      return {
-        length,
-        offset: offset + index * ITEM_HEIGHT,
-        index,
-      };
+    (_data: IListItem[] | null | undefined, index: number) => {
+      const length = itemHeights[index] ?? ITEM_HEIGHT;
+      const offset = cumulativeOffsets[index] ?? index * ITEM_HEIGHT;
+      return {length, offset, index};
     },
+    [itemHeights, cumulativeOffsets],
+  );
+
+  // Alphabet letters from A to Z
+  const alphabet = useMemo(
+    () => Array.from({length: 26}, (_v, i) => String.fromCharCode(65 + i)),
     [],
+  );
+
+  // Build a map of first index for each starting letter
+  const letterToIndex = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (let i = allCountriesStartIndex; i < countriesList.length; i++) {
+      const item = countriesList[i];
+      if ('isSection' in item) {
+        continue;
+      }
+      const name = getCountryNameInLanguage(item as ICountry);
+      const first = (name?.[0] || '').toUpperCase();
+      if (first && map[first] === undefined) {
+        map[first] = i;
+      }
+    }
+    return map;
+  }, [language, allCountriesStartIndex, countriesList]);
+
+  const handlePressLetter = useCallback(
+    (letter: string) => {
+      const index = letterToIndex[letter];
+      if (index !== undefined) {
+        flatListRef.current?.scrollToIndex({
+          index,
+          animated: true,
+          viewPosition: 0,
+        });
+      }
+    },
+    [letterToIndex],
   );
 
   const renderCloseButton = () => {
@@ -440,7 +506,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   };
 
   const renderFlatList = () => {
-    if (getCountries.length === 0) {
+    if (countriesList.length === 0) {
       return (
         <View
           style={[
@@ -462,6 +528,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     }
     return (
       <FlatList
+        ref={flatListRef}
         testID="countrySelectList"
         accessibilityRole="list"
         accessibilityLabel={
@@ -472,13 +539,14 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           accessibilityHintCountriesList ||
           translations.accessibilityHintCountriesList[language]
         }
-        data={getCountries}
+        data={countriesList}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         getItemLayout={getItemLayout}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={showsVerticalScrollIndicator || false}
         style={[styles.list, countrySelectStyle?.list]}
+        onViewableItemsChanged={onViewableItemsChanged}
       />
     );
   };
@@ -535,6 +603,46 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       sectionTitleComponent,
     ],
   );
+
+  const onViewableItemsChanged = useRef(
+    ({
+      viewableItems,
+    }: {
+      viewableItems: Array<{item: IListItem; index: number | null}>;
+    }) => {
+      let updated: string | null = null;
+      for (const v of viewableItems) {
+        const it = v.item;
+        const idx = v.index ?? -1;
+        if (!('isSection' in it) && idx >= allCountriesStartIndex) {
+          const name = getCountryNameInLanguage(it as ICountry);
+          if (name) {
+            updated = name[0].toUpperCase();
+          }
+          break;
+        }
+      }
+      setActiveLetter(updated);
+    },
+  ).current;
+
+  const renderAlphabetFilter = () => {
+    return (
+      <AlphabeticFilter
+        alphabet={alphabet}
+        activeLetter={activeLetter}
+        letterToIndex={letterToIndex}
+        onPressLetter={handlePressLetter}
+        theme={theme}
+        language={language}
+        countrySelectStyle={countrySelectStyle}
+        accessibilityLabelAlphabetFilter={accessibilityLabelAlphabetFilter}
+        accessibilityHintAlphabetFilter={accessibilityHintAlphabetFilter}
+        accessibilityLabelAlphabetLetter={accessibilityLabelAlphabetLetter}
+        accessibilityHintAlphabetLetter={accessibilityHintAlphabetLetter}
+      />
+    );
+  };
 
   if (modalType === 'popup' || isFullScreen) {
     return (
@@ -597,8 +705,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
                 {showSearchInput && renderSearchInput()}
               </View>
             )}
-
-            {renderFlatList()}
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <View style={{flex: 1}}>{renderFlatList()}</View>
+              {showAlphabetFilter && <View>{renderAlphabetFilter()}</View>}
+            </View>
           </View>
         </View>
       </Modal>
@@ -678,7 +788,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
             </View>
           )}
 
-          <Animated.View style={{flex: 1}}>{renderFlatList()}</Animated.View>
+          <Animated.View style={{flex: 1, flexDirection: 'row'}}>
+            <View style={{flex: 1}}>{renderFlatList()}</View>
+            {showAlphabetFilter && <View>{renderAlphabetFilter()}</View>}
+          </Animated.View>
         </Animated.View>
       </View>
     </Modal>

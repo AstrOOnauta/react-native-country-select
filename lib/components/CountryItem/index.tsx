@@ -26,11 +26,19 @@ export const CountryItem = memo<ICountryItemProps>(
         accessibilityRole="button"
         accessibilityLabel={
           accessibilityLabel ||
-          translations.accessibilityLabelCountryItem[language]
+          translations.accessibilityLabelCountryItem[language] +
+            ` ${
+              item.translations[language]?.common ||
+              item.translations[DEFAULT_LANGUAGE]?.common
+            }`
         }
         accessibilityHint={
           accessibilityHint ||
-          translations.accessibilityHintCountryItem[language]
+          translations.accessibilityHintCountryItem[language] +
+            ` ${
+              item.translations[language]?.common ||
+              item.translations[DEFAULT_LANGUAGE]?.common
+            }`
         }
         style={[styles.countryItem, countrySelectStyle?.countryItem]}
         onPress={() => {

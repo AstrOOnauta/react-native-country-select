@@ -19,6 +19,7 @@ export interface ICountrySelectProps extends ModalProps {
   hiddenCountries?: ICountryCca2[];
   language?: ICountrySelectLanguages;
   showSearchInput?: boolean;
+  showAlphabetFilter?: boolean;
   searchPlaceholder?: string;
   searchPlaceholderTextColor?: string;
   searchSelectionColor?: string;
@@ -47,4 +48,8 @@ export interface ICountrySelectProps extends ModalProps {
   accessibilityHintCountriesList?: string;
   accessibilityLabelCountryItem?: string;
   accessibilityHintCountryItem?: string;
+  accessibilityLabelAlphabetFilter?: string;
+  accessibilityHintAlphabetFilter?: string;
+  accessibilityLabelAlphabetLetter?: string;
+  accessibilityHintAlphabetLetter?: string;
 }
