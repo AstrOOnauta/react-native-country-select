@@ -1,7 +1,7 @@
 <br>
 
 <div align = "center">
-  <img src="lib/assets/images/preview.png" alt="React Native International Phone Number Input Lib preview">
+  <img src="lib/assets/images/preview.png" alt="React Native Country Picker and Select Lib preview">
 </div>
 
 <br>
@@ -9,7 +9,7 @@
 <h1 align="center">React Native Country Select</h1>
 
 <p>
-  🌍 A lightweight and customizable country picker for React Native with modern UI, flags, search engine, and i18n support. Includes TypeScript types, offline support and no dependencies.
+  🌍 React Native country picker with flags, search, TypeScript, i18n, and offline support. Lightweight, customizable, and designed with a modern UI.
 </p>
 
 <br>
