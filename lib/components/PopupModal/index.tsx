@@ -1,12 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Modal, Pressable, View} from 'react-native';
+import {
+  Modal,
+  ModalProps,
+  NativeSyntheticEvent,
+  Pressable,
+  View,
+} from 'react-native';
 
 import {ICountrySelectStyle} from '../../interface';
 
-type PopupModalProps = {
+interface PopupModalProps extends ModalProps {
   visible: boolean;
-  onRequestClose: () => void;
+  onRequestClose: (event: NativeSyntheticEvent<any>) => void;
   statusBarTranslucent?: boolean;
   removedBackdrop?: boolean;
   disabledBackdropPress?: boolean;
@@ -17,7 +23,7 @@ type PopupModalProps = {
   countrySelectStyle?: ICountrySelectStyle;
   header?: React.ReactNode;
   children: React.ReactNode;
-};
+}
 
 export const PopupModal: React.FC<PopupModalProps> = ({
   visible,
@@ -32,6 +38,7 @@ export const PopupModal: React.FC<PopupModalProps> = ({
   countrySelectStyle,
   header,
   children,
+  ...props
 }) => {
   return (
     <Modal
@@ -39,7 +46,8 @@ export const PopupModal: React.FC<PopupModalProps> = ({
       transparent
       animationType="fade"
       onRequestClose={onRequestClose}
-      statusBarTranslucent={statusBarTranslucent}>
+      statusBarTranslucent={statusBarTranslucent}
+      {...props}>
       <View
         testID="countrySelectContainer"
         style={[styles.container, countrySelectStyle?.container]}>

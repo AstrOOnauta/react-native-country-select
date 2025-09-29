@@ -390,7 +390,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           }
           styles={styles}
           countrySelectStyle={countrySelectStyle}
-          header={HeaderModal}>
+          header={HeaderModal}
+          {...props}>
           {ContentModal}
         </FullscreenModal>
       );
@@ -414,7 +415,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         }
         styles={styles}
         countrySelectStyle={countrySelectStyle}
-        header={HeaderModal}>
+        header={HeaderModal}
+        {...props}>
         {ContentModal}
       </PopupModal>
     );
@@ -442,7 +444,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       maxBottomsheetHeight={maxBottomsheetHeight}
       initialBottomsheetHeight={initialBottomsheetHeight}
       dragHandleIndicatorComponent={dragHandleIndicatorComponent}
-      header={HeaderModal}>
+      header={HeaderModal}
+      {...props}>
       {ContentModal}
     </BottomSheetModal>
   );

@@ -3,18 +3,20 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Animated,
   Modal,
+  ModalProps,
   Pressable,
   View,
   PanResponder,
   Keyboard,
+  NativeSyntheticEvent,
 } from 'react-native';
 
 import parseHeight from '../../utils/parseHeight';
 import {ICountrySelectStyle} from '../../interface';
 
-type BottomSheetModalProps = {
+interface BottomSheetModalProps extends ModalProps {
   visible: boolean;
-  onRequestClose: () => void;
+  onRequestClose: (event: NativeSyntheticEvent<any>) => void;
   statusBarTranslucent?: boolean;
   removedBackdrop?: boolean;
   disabledBackdropPress?: boolean;
@@ -29,7 +31,7 @@ type BottomSheetModalProps = {
   dragHandleIndicatorComponent?: () => React.ReactElement;
   header?: React.ReactNode;
   children: React.ReactNode;
-};
+}
 
 const MIN_HEIGHT_PERCENTAGE = 0.3;
 const MAX_HEIGHT_PERCENTAGE = 0.9;
@@ -52,6 +54,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
   dragHandleIndicatorComponent,
   header,
   children,
+  ...props
 }) => {
   const [modalHeight, setModalHeight] = useState(0);
   const [bottomSheetSize, setBottomSheetSize] = useState({
@@ -131,7 +134,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
               toValue: 0,
               duration: 200,
               useNativeDriver: false,
-            }).start(onRequestClose);
+            }).start();
             return;
           }
           const finalHeight = Math.min(
@@ -156,12 +159,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
           }).start();
         },
       }),
-    [
-      bottomSheetSize.minHeight,
-      bottomSheetSize.maxHeight,
-      sheetHeight,
-      onRequestClose,
-    ],
+    [bottomSheetSize.minHeight, bottomSheetSize.maxHeight, sheetHeight],
   );
   return (
     <Modal
@@ -169,7 +167,8 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
       transparent
       animationType="slide"
       onRequestClose={onRequestClose}
-      statusBarTranslucent={statusBarTranslucent}>
+      statusBarTranslucent={statusBarTranslucent}
+      {...props}>
       <View
         testID="countrySelectContainer"
         style={[styles.container, countrySelectStyle?.container]}
