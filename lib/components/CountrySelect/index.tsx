@@ -22,9 +22,6 @@ import {
   IThemeProps,
 } from '../../interface';
 
-const ITEM_HEIGHT = 56;
-const SECTION_HEADER_HEIGHT = 40;
-
 export const CountrySelect: React.FC<ICountrySelectProps> = ({
   visible,
   onClose,
@@ -78,6 +75,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
 
   const flatListRef = useRef<FlatList<IListItem>>(null);
+  const isProgrammaticScroll = useRef(false);
 
   const styles = createStyles(theme, modalType, isFullScreen);
   const selectedCountries =
@@ -101,22 +99,6 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     hiddenCountries,
   ]);
 
-  // Precompute item heights and offsets for accurate scrollToIndex, including section headers
-  const itemHeights = useMemo(() => {
-    return countriesList.map(item =>
-      'isSection' in item ? SECTION_HEADER_HEIGHT : ITEM_HEIGHT,
-    );
-  }, [countriesList]);
-
-  const cumulativeOffsets = useMemo(() => {
-    let runningTotal = 0;
-    return itemHeights.map(h => {
-      const offset = runningTotal;
-      runningTotal += h;
-      return offset;
-    });
-  }, [itemHeights]);
-
   // Compute the index right after the "All Countries" section header (independent of localized/custom title)
   const allCountriesStartIndex = useMemo(() => {
     // Collect indices of section headers
@@ -139,22 +121,35 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     [],
   );
 
-  const getItemLayout = useCallback(
-    (_data: IListItem[] | null | undefined, index: number) => {
-      const length = itemHeights[index] ?? ITEM_HEIGHT;
-      const offset = cumulativeOffsets[index] ?? index * ITEM_HEIGHT;
-      return {length, offset, index};
-    },
-    [itemHeights, cumulativeOffsets],
-  );
+  const handlePressLetter = useCallback(
+    (index: number) => {
+      // Mark programmatic scroll to avoid onViewableItemsChanged flicker
+      isProgrammaticScroll.current = true;
 
-  const handlePressLetter = useCallback((index: number) => {
-    flatListRef.current?.scrollToIndex({
-      index,
-      animated: true,
-      viewPosition: 0,
-    });
-  }, []);
+      // Pre-set active letter immediately based on the first non-section item at or after index
+      let computedLetter: string | null = null;
+      for (let i = index; i < countriesList.length; i++) {
+        const item = countriesList[i];
+        if (!('isSection' in item)) {
+          const name = (item as ICountry)?.translations[language]?.common || '';
+          if (name) {
+            computedLetter = name[0].toUpperCase();
+          }
+          break;
+        }
+      }
+      if (computedLetter) {
+        setActiveLetter(computedLetter);
+      }
+
+      flatListRef.current?.scrollToIndex({
+        index,
+        animated: true,
+        viewPosition: 0,
+      });
+    },
+    [countriesList, language],
+  );
 
   const handleCloseModal = () => {
     setSearchQuery('');
@@ -222,6 +217,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     }: {
       viewableItems: Array<{item: IListItem; index: number | null}>;
     }) => {
+      if (isProgrammaticScroll.current) {
+        // Ignore transient updates while we are animating to a specific index
+        return;
+      }
       let updated: string | null = null;
       for (const v of viewableItems) {
         const it = v.item;
@@ -275,11 +274,32 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         data={countriesList}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
-        getItemLayout={getItemLayout}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={showsVerticalScrollIndicator || false}
         style={[styles.list, countrySelectStyle?.list]}
         onViewableItemsChanged={onViewableItemsChanged}
+        onMomentumScrollEnd={() => {
+          isProgrammaticScroll.current = false;
+        }}
+        onScrollEndDrag={() => {
+          // Fallback if momentum does not trigger
+          isProgrammaticScroll.current = false;
+        }}
+        onScrollToIndexFailed={({index, averageItemLength}) => {
+          // Simple recovery: estimate offset, then retry scrollToIndex after measurement
+          const estimatedOffset = Math.max(0, (averageItemLength || 0) * index);
+          flatListRef.current?.scrollToOffset({
+            offset: estimatedOffset,
+            animated: false,
+          });
+          setTimeout(() => {
+            flatListRef.current?.scrollToIndex({
+              index,
+              animated: true,
+              viewPosition: 0,
+            });
+          }, 100);
+        }}
       />
     );
   };

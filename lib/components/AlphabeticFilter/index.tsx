@@ -1,3 +1,4 @@
+/* eslint-disable no-undef-init */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useMemo, useRef} from 'react';
@@ -7,6 +8,7 @@ import {createStyles} from '../styles';
 import {translations} from '../../utils/getTranslation';
 import {createAlphabet} from '../../utils/createAlphabet';
 import {AlphabeticFilterProps} from '../../interface/alfabeticFilterProps';
+import {normalizeCountryName} from '../../utils/normalizeCountryName';
 
 const ALPHABET_VIEWPORT_HEIGHT = 0;
 const ALPHABET_ITEM_SIZE = 28;
@@ -36,10 +38,8 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
         continue;
       }
       const country: any = item as any;
-      const name =
-        country?.translations?.[language]?.common ||
-        country?.name?.common ||
-        '';
+      // Use English/common name to anchor alphabet jumps consistently
+      const name = country?.name?.common || '';
       const first = (name?.[0] || '').toUpperCase();
       if (first && map[first] === undefined) {
         map[first] = i;
@@ -98,9 +98,32 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
             <TouchableOpacity
               key={letter}
               onPress={() => {
-                const idx = letterIndexMap[letter];
-                if (idx !== undefined) {
-                  onPressLetter(idx);
+                // Compute first index for this letter using normalized display name (same as sorting)
+                const lower = letter.toLowerCase();
+                let idxToGo: number | undefined = undefined;
+                for (
+                  let i = allCountriesStartIndex;
+                  i < countries.length;
+                  i++
+                ) {
+                  const it = countries[i] as any;
+                  if ('isSection' in it) {
+                    continue;
+                  }
+                  const displayName =
+                    it?.translations?.[language]?.common ||
+                    it?.name?.common ||
+                    '';
+                  const normalized = normalizeCountryName(
+                    displayName.toLowerCase(),
+                  );
+                  if (normalized.startsWith(lower)) {
+                    idxToGo = i;
+                    break;
+                  }
+                }
+                if (idxToGo !== undefined) {
+                  onPressLetter(idxToGo);
                 }
                 scrollAlphabetToLetter(letter);
               }}
