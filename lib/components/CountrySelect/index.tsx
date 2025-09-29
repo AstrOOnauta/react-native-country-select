@@ -358,7 +358,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     showSearchInput || showCloseButton ? (
       <View
         style={[styles.searchContainer, countrySelectStyle?.searchContainer]}>
-        {showCloseButton && renderCloseButton()}
+        {(showCloseButton || isFullScreen) && renderCloseButton()}
         {showSearchInput && renderSearchInput()}
       </View>
     ) : null;
