@@ -280,6 +280,8 @@ export default function App() {
 | onSelect                     | (country: [ICountry](lib/interfaces/country.ts)) => void                | Yes      | -                    | Callback function called when a country is selected              |
 | modalType                    | 'bottomSheet' \| 'popup'                                                | No       | 'bottomSheet'        | Type of modal to display                                         |
 | countrySelectStyle           | [ICountrySelectStyle](lib/interfaces/countrySelectStyles.ts)            | No       | -                    | Custom styles for the country picker                             |
+| isMultiSelect                | boolean                                                                 | No       | false                | Whether the user can select multiple options                     |
+| selectedCountries            | [ICountry[]](lib/interfaces/country.ts)                                 | No       | -                    | Array of countries to show in multi select mode                  |
 | isFullScreen                 | boolean                                                                 | No       | false                | Whether the modal should be full screen                          |
 | popularCountries             | string[]                                                                | No       | []                   | Array of country codes to show in popular section                |
 | visibleCountries             | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                   | Array of country codes to show (whitelist)                       |
