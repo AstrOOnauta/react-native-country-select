@@ -61,7 +61,7 @@ interface ICountrySelectSingleProps extends ICountrySelectBaseProps {
 
 interface ICountrySelectMultiProps extends ICountrySelectBaseProps {
   isMultiSelect: true;
-  selectedCountries?: ICountry[];
+  selectedCountries: ICountry[];
   onSelect: (country: ICountry[]) => void;
 }
 

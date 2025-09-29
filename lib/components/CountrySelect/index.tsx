@@ -157,28 +157,44 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     onClose();
   };
 
-  const handleSelectCountry = (country: ICountry) => {
-    if (isMultiSelect) {
-      const isAlreadySelected =
-        selectedCountries.length &&
-        selectedCountries.some(c => c.cca2 === country.cca2);
-      if (isAlreadySelected) {
-        (onSelect as (countries: ICountry[]) => void)(
-          selectedCountries.filter(c => c.cca2 !== country.cca2),
-        );
+  // Memoized set of selected country codes for fast lookups
+  const selectedCountryCodes = useMemo(() => {
+    if (selectedCountries.length === 0) {
+      return new Set<string>();
+    }
+    const set = new Set<string>();
+    for (const c of selectedCountries) {
+      set.add(c.cca2);
+    }
+    return set;
+  }, [selectedCountries]);
+
+  const isCountrySelected = useCallback(
+    (cca2: string) => selectedCountryCodes.has(cca2),
+    [selectedCountryCodes],
+  );
+
+  const handleSelectCountry = useCallback(
+    (country: ICountry) => {
+      if (isMultiSelect) {
+        if (isCountrySelected(country.cca2)) {
+          (onSelect as (countries: ICountry[]) => void)(
+            selectedCountries.filter(c => c.cca2 !== country.cca2),
+          );
+          return;
+        }
+        (onSelect as (countries: ICountry[]) => void)([
+          ...selectedCountries,
+          country,
+        ]);
         return;
       }
 
-      (onSelect as (countries: ICountry[]) => void)([
-        ...selectedCountries,
-        country,
-      ]);
-      return;
-    }
-
-    (onSelect as (country: ICountry) => void)(country);
-    onClose();
-  };
+      (onSelect as (country: ICountry) => void)(country);
+      onClose();
+    },
+    [isMultiSelect, isCountrySelected, selectedCountries],
+  );
 
   const renderCloseButton = () => {
     if (closeButtonComponent) {
@@ -328,14 +344,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         return countryItemComponent(item as ICountry);
       }
 
+      const countryItem = item as ICountry;
+      const selected = isMultiSelect && isCountrySelected(countryItem.cca2);
       return (
         <CountryItem
-          country={item as ICountry}
-          isSelected={
-            isMultiSelect &&
-            selectedCountries.length > 0 &&
-            selectedCountries.some(c => c.cca2 === (item as ICountry).cca2)
-          }
+          country={countryItem}
+          isSelected={selected}
           onSelect={handleSelectCountry}
           theme={theme as IThemeProps}
           language={language}
@@ -346,13 +360,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       );
     },
     [
-      onSelect,
-      onClose,
       styles,
       language,
       countryItemComponent,
       sectionTitleComponent,
-      selectedCountries,
+      isMultiSelect,
+      isCountrySelected,
     ],
   );
 
