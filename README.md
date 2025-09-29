@@ -246,6 +246,46 @@ export default function App() {
 
 <br>
 
+- Multi Select Country
+
+```tsx
+import React, {useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+
+import CountrySelect, {ICountry} from 'react-native-country-select';
+
+export default function App() {
+  const [showPicker, setShowPicker] = useState<boolean>(false);
+  const [selectedCountries, setSelectedCountries] = useState<ICountry[]>([]);
+
+  const handleCountrySelect = (countries: ICountry[]) => {
+    setSelectedCountries(countries);
+  };
+
+  return (
+    <View
+      style={{
+        flex: 1,
+      }}>
+      <TouchableOpacity onPress={() => setShowPicker(true)}>
+        <Text>Select Countries</Text>
+      </TouchableOpacity>
+      <Text>Countries: {selectedCountries.length}</Text>
+
+      <CountrySelect
+        visible={showPicker}
+        isMultiSelect
+        selectedCountries={selectedCountries}
+        onSelect={handleCountrySelect}
+        onClose={() => setShowPicker(false)}
+      />
+    </View>
+  );
+}
+```
+
+<br>
+
 ### Modal Styles ([modalStyles](https://github.com/AstrOOnauta/react-native-country-select/blob/main/lib/interface/countrySelectStyles.ts))
 
 | Property                   | Type      | Description               |
