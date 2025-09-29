@@ -31,6 +31,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   onSelect,
   modalType = 'bottomSheet',
   theme = 'light',
+  isMultiSelect = false,
   isFullScreen = false,
   countrySelectStyle,
   popularCountries = [],
@@ -71,6 +72,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   accessibilityHintAlphabetFilter,
   accessibilityLabelAlphabetLetter,
   accessibilityHintAlphabetLetter,
+  ...props
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
@@ -78,6 +80,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   const flatListRef = useRef<FlatList<IListItem>>(null);
 
   const styles = createStyles(theme, modalType, isFullScreen);
+  const selectedCountries =
+    isMultiSelect && 'selectedCountries' in props
+      ? props.selectedCountries ?? []
+      : [];
 
   const countriesList = useMemo(() => {
     return getCountriesList({
@@ -153,6 +159,29 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   const handleCloseModal = () => {
     setSearchQuery('');
     setActiveLetter(null);
+    onClose();
+  };
+
+  const handleSelectCountry = (country: ICountry) => {
+    if (isMultiSelect) {
+      const isAlreadySelected =
+        selectedCountries.length &&
+        selectedCountries.some(c => c.cca2 === country.cca2);
+      if (isAlreadySelected) {
+        (onSelect as (countries: ICountry[]) => void)(
+          selectedCountries.filter(c => c.cca2 !== country.cca2),
+        );
+        return;
+      }
+
+      (onSelect as (countries: ICountry[]) => void)([
+        ...selectedCountries,
+        country,
+      ]);
+      return;
+    }
+
+    (onSelect as (country: ICountry) => void)(country);
     onClose();
   };
 
@@ -282,8 +311,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       return (
         <CountryItem
           country={item as ICountry}
-          onSelect={onSelect}
-          onClose={handleCloseModal}
+          isSelected={
+            isMultiSelect &&
+            selectedCountries.length > 0 &&
+            selectedCountries.some(c => c.cca2 === (item as ICountry).cca2)
+          }
+          onSelect={handleSelectCountry}
           theme={theme as IThemeProps}
           language={language}
           countrySelectStyle={countrySelectStyle}
@@ -299,6 +332,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       language,
       countryItemComponent,
       sectionTitleComponent,
+      selectedCountries,
     ],
   );
 

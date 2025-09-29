@@ -8,8 +8,8 @@ import {ICountryItemProps} from '../../interface';
 export const CountryItem = memo<ICountryItemProps>(
   ({
     country,
+    isSelected,
     onSelect,
-    onClose,
     theme = 'light',
     language = 'eng',
     countrySelectStyle,
@@ -32,11 +32,12 @@ export const CountryItem = memo<ICountryItemProps>(
           translations.accessibilityHintCountryItem[language] +
             ` ${country.translations[language]?.common}`
         }
-        style={[styles.countryItem, countrySelectStyle?.countryItem]}
-        onPress={() => {
-          onSelect(country);
-          onClose();
-        }}>
+        style={[
+          styles.countryItem,
+          countrySelectStyle?.countryItem,
+          isSelected && styles.countryItemSelected,
+        ]}
+        onPress={() => onSelect(country)}>
         <Text
           testID="countrySelectItemFlag"
           style={[styles.flag, countrySelectStyle?.flag]}>
@@ -45,12 +46,20 @@ export const CountryItem = memo<ICountryItemProps>(
         <View style={[styles.countryInfo, countrySelectStyle?.countryInfo]}>
           <Text
             testID="countrySelectItemCallingCode"
-            style={[styles.callingCode, countrySelectStyle?.callingCode]}>
+            style={[
+              styles.callingCode,
+              countrySelectStyle?.callingCode,
+              isSelected && styles.callingCodeSelected,
+            ]}>
             {country.idd.root}
           </Text>
           <Text
             testID="countrySelectItemName"
-            style={[styles.countryName, countrySelectStyle?.countryName]}>
+            style={[
+              styles.countryName,
+              countrySelectStyle?.countryName,
+              isSelected && styles.countryNameSelected,
+            ]}>
             {country?.translations[language]?.common}
           </Text>
         </View>

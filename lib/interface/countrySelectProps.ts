@@ -8,10 +8,9 @@ import {ISectionTitle} from './sectionTitle';
 import {ICountrySelectStyle} from './countrySelectStyles';
 import {ICountrySelectLanguages} from './countrySelectLanguages';
 
-export interface ICountrySelectProps extends ModalProps, IThemeProps {
+interface ICountrySelectBaseProps extends ModalProps, IThemeProps {
   visible: boolean;
   onClose: () => void;
-  onSelect: (country: ICountry) => void;
   modalType?: 'bottomSheet' | 'popup';
   countrySelectStyle?: ICountrySelectStyle;
   isFullScreen?: boolean;
@@ -54,3 +53,18 @@ export interface ICountrySelectProps extends ModalProps, IThemeProps {
   accessibilityLabelAlphabetLetter?: string;
   accessibilityHintAlphabetLetter?: string;
 }
+
+interface ICountrySelectSingleProps extends ICountrySelectBaseProps {
+  isMultiSelect?: false;
+  onSelect: (country: ICountry) => void;
+}
+
+interface ICountrySelectMultiProps extends ICountrySelectBaseProps {
+  isMultiSelect: true;
+  selectedCountries?: ICountry[];
+  onSelect: (country: ICountry[]) => void;
+}
+
+export type ICountrySelectProps =
+  | ICountrySelectSingleProps
+  | ICountrySelectMultiProps;
