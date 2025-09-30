@@ -134,7 +134,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
               toValue: 0,
               duration: 200,
               useNativeDriver: false,
-            }).start();
+            }).start(() => onRequestClose({} as NativeSyntheticEvent<any>));
             return;
           }
           const finalHeight = Math.min(
@@ -159,7 +159,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
           }).start();
         },
       }),
-    [bottomSheetSize.minHeight, bottomSheetSize.maxHeight, sheetHeight],
+    [bottomSheetSize, sheetHeight, onRequestClose],
   );
   return (
     <Modal
@@ -193,8 +193,6 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
             countrySelectStyle?.content,
             {
               height: sheetHeight,
-              minHeight: bottomSheetSize.minHeight,
-              maxHeight: bottomSheetSize.maxHeight,
             },
           ]}>
           <View
