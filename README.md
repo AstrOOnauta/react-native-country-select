@@ -1,7 +1,7 @@
 <br>
 
 <div align = "center">
-  <img src="lib/assets/images/preview.png" alt="React Native Country Picker and Select Lib preview">
+  <img src="https://astroonauta.github.io/react-native-country-select/lib/assets/images/preview.png" alt="React Native Country Picker and Select Lib preview">
 </div>
 
 <br>
@@ -123,8 +123,8 @@ npx react-native-asset
 - Class Component
 
 ```jsx
-import React, {Component} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import CountrySelect from 'react-native-country-select';
 
 export default class App extends Component {
@@ -138,14 +138,16 @@ export default class App extends Component {
     };
   }
 
-  handleCountrySelect = country => {
-    this.setState({country});
+  handleCountrySelect = (country) => {
+    this.setState({ country });
   };
 
   render() {
     return (
-      <View style={{flex: 1}}>
-        <TouchableOpacity onPress={() => this.setState({showPicker: true})}>
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity
+          onPress={() => this.setState({ showPicker: true })}
+        >
           <Text>Select Country</Text>
         </TouchableOpacity>
         <Text>
@@ -155,7 +157,7 @@ export default class App extends Component {
 
         <CountrySelect
           visible={this.state.showPicker}
-          onClose={() => this.setState({showPicker: false})}
+          onClose={() => this.setState({ showPicker: false })}
           onSelect={this.handleCountrySelect}
         />
       </View>
@@ -169,8 +171,8 @@ export default class App extends Component {
 - Function Component
 
 ```jsx
-import React, {useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import CountrySelect from 'react-native-country-select';
 
@@ -178,7 +180,7 @@ export default function App() {
   const [showPicker, setShowPicker] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
 
-  const handleCountrySelect = country => {
+  const handleCountrySelect = (country) => {
     setSelectedCountry(country);
   };
 
@@ -186,12 +188,14 @@ export default function App() {
     <View
       style={{
         flex: 1,
-      }}>
+      }}
+    >
       <TouchableOpacity onPress={() => setShowPicker(true)}>
         <Text>Select Country</Text>
       </TouchableOpacity>
       <Text>
-        Country: {`${selectedCountry?.name?.common} (${selectedCountry?.cca2})`}
+        Country:{' '}
+        {`${selectedCountry?.name?.common} (${selectedCountry?.cca2})`}
       </Text>
 
       <CountrySelect
@@ -209,14 +213,15 @@ export default function App() {
 - Typescript
 
 ```tsx
-import React, {useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import CountrySelect, {ICountry} from 'react-native-country-select';
+import CountrySelect, { ICountry } from 'react-native-country-select';
 
 export default function App() {
   const [showPicker, setShowPicker] = useState<boolean>(false);
-  const [selectedCountry, setSelectedCountry] = useState<ICountry | null>(null);
+  const [selectedCountry, setSelectedCountry] =
+    useState<ICountry | null>(null);
 
   const handleCountrySelect = (country: ICountry) => {
     setSelectedCountry(country);
@@ -226,12 +231,14 @@ export default function App() {
     <View
       style={{
         flex: 1,
-      }}>
+      }}
+    >
       <TouchableOpacity onPress={() => setShowPicker(true)}>
         <Text>Select Country</Text>
       </TouchableOpacity>
       <Text>
-        Country: {`${selectedCountry?.name?.common} (${selectedCountry?.cca2})`}
+        Country:{' '}
+        {`${selectedCountry?.name?.common} (${selectedCountry?.cca2})`}
       </Text>
 
       <CountrySelect
@@ -249,14 +256,16 @@ export default function App() {
 - Multi Select Country
 
 ```tsx
-import React, {useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import CountrySelect, {ICountry} from 'react-native-country-select';
+import CountrySelect, { ICountry } from 'react-native-country-select';
 
 export default function App() {
   const [showPicker, setShowPicker] = useState<boolean>(false);
-  const [selectedCountries, setSelectedCountries] = useState<ICountry[]>([]);
+  const [selectedCountries, setSelectedCountries] = useState<
+    ICountry[]
+  >([]);
 
   const handleCountrySelect = (countries: ICountry[]) => {
     setSelectedCountries(countries);
@@ -266,7 +275,8 @@ export default function App() {
     <View
       style={{
         flex: 1,
-      }}>
+      }}
+    >
       <TouchableOpacity onPress={() => setShowPicker(true)}>
         <Text>Select Countries</Text>
       </TouchableOpacity>
@@ -355,6 +365,7 @@ export default function App() {
 | allCountriesTitle            | string                                                                  | No       | 'All Countries'      | All Countries section title                                      |
 | showsVerticalScrollIndicator | boolean                                                                 | No       | false                | Displays a horizontal scroll indicator                           |
 | countryNotFoundMessage       | string                                                                  | No       | "No countries found" | Country not found in search                                      |
+| allowFontScaling             | boolean                                                                 | No       | true                 | Whether to allow font scaling for text elements                  |
 
 <br>
 
@@ -405,13 +416,19 @@ The `language` prop supports the following values:
 When utilizing this package, you may need to target the CountrySelect component in your automated tests. To facilitate this, we provide a testID props for the CountrySelect component. The testID can be integrated with popular testing libraries such as @testing-library/react-native or Maestro. This enables you to efficiently locate and interact with CountrySelect elements within your tests, ensuring a robust and reliable testing experience.
 
 ```js
-const countrySelectModalContainer = getByTestId('countrySelectContainer');
+const countrySelectModalContainer = getByTestId(
+  'countrySelectContainer'
+);
 const countrySelectModalContent = getByTestId('countrySelectContent');
 const countrySelectBackdrop = getByTestId('countrySelectBackdrop');
 const countrySelectList = getByTestId('countrySelectList');
-const countrySelectSearchInput = getByTestId('countrySelectSearchInput');
+const countrySelectSearchInput = getByTestId(
+  'countrySelectSearchInput'
+);
 const countrySelectItem = getByTestId('countrySelectItem');
-const countrySelectCloseButton = getByTestId('countrySelectCloseButton');
+const countrySelectCloseButton = getByTestId(
+  'countrySelectCloseButton'
+);
 ```
 
 <br>

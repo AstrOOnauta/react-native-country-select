@@ -7,3 +7,5 @@ npm-debug.log
 
 # Runtime data
 tmp
+
+.DS_Store
