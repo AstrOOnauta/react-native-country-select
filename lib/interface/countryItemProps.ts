@@ -1,7 +1,7 @@
-import {ICountry} from './country';
-import {IThemeProps} from './theme';
-import {ICountrySelectStyle} from './countrySelectStyles';
-import {ICountrySelectLanguages} from './countrySelectLanguages';
+import { ICountry } from './country';
+import { IThemeProps } from './theme';
+import { ICountrySelectStyle } from './countrySelectStyles';
+import { ICountrySelectLanguages } from './countrySelectLanguages';
 
 export interface ICountryItemProps {
   country: ICountry;
@@ -12,4 +12,5 @@ export interface ICountryItemProps {
   countrySelectStyle?: ICountrySelectStyle;
   accessibilityLabel?: string;
   accessibilityHint?: string;
+  allowFontScaling?: boolean;
 }

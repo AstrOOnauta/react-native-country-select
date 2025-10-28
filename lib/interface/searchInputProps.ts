@@ -1,6 +1,6 @@
-import {ICountrySelectLanguages} from './countrySelectLanguages';
-import {ICountrySelectStyle} from './countrySelectStyles';
-import {IThemeProps} from './theme';
+import { ICountrySelectLanguages } from './countrySelectLanguages';
+import { ICountrySelectStyle } from './countrySelectStyles';
+import { IThemeProps } from './theme';
 
 export interface ISearchInputProps {
   theme?: IThemeProps;
@@ -13,4 +13,5 @@ export interface ISearchInputProps {
   searchSelectionColor?: string;
   accessibilityLabelSearchInput?: string;
   accessibilityHintSearchInput?: string;
+  allowFontScaling?: boolean;
 }

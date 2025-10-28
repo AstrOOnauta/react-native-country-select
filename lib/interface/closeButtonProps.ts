@@ -1,6 +1,6 @@
-import {ICountrySelectLanguages} from './countrySelectLanguages';
-import {ICountrySelectStyle} from './countrySelectStyles';
-import {IThemeProps} from './theme';
+import { ICountrySelectLanguages } from './countrySelectLanguages';
+import { ICountrySelectStyle } from './countrySelectStyles';
+import { IThemeProps } from './theme';
 
 export interface ICloseButtonProps {
   theme?: IThemeProps;
@@ -9,4 +9,5 @@ export interface ICloseButtonProps {
   countrySelectStyle?: ICountrySelectStyle;
   accessibilityLabelCloseButton?: string;
   accessibilityHintCloseButton?: string;
+  allowFontScaling?: boolean;
 }

@@ -1,9 +1,9 @@
-import React, {memo} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import React, { memo } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 
-import {createStyles} from '../styles';
-import {translations} from '../../utils/getTranslation';
-import {ICountryItemProps} from '../../interface';
+import { createStyles } from '../styles';
+import { translations } from '../../utils/getTranslation';
+import { ICountryItemProps } from '../../interface';
 
 export const CountryItem = memo<ICountryItemProps>(
   ({
@@ -15,6 +15,7 @@ export const CountryItem = memo<ICountryItemProps>(
     countrySelectStyle,
     accessibilityLabel,
     accessibilityHint,
+    allowFontScaling = true,
   }) => {
     const styles = createStyles(theme);
 
@@ -37,10 +38,13 @@ export const CountryItem = memo<ICountryItemProps>(
           countrySelectStyle?.countryItem,
           isSelected && styles.countryItemSelected,
         ]}
-        onPress={() => onSelect(country)}>
+        onPress={() => onSelect(country)}
+      >
         <Text
           testID="countrySelectItemFlag"
-          style={[styles.flag, countrySelectStyle?.flag]}>
+          style={[styles.flag, countrySelectStyle?.flag]}
+          allowFontScaling={allowFontScaling}
+        >
           {country.flag || country.cca2}
         </Text>
         <View style={[styles.countryInfo, countrySelectStyle?.countryInfo]}>
@@ -50,7 +54,9 @@ export const CountryItem = memo<ICountryItemProps>(
               styles.callingCode,
               countrySelectStyle?.callingCode,
               isSelected && styles.callingCodeSelected,
-            ]}>
+            ]}
+            allowFontScaling={allowFontScaling}
+          >
             {country.idd.root}
           </Text>
           <Text
@@ -59,7 +65,9 @@ export const CountryItem = memo<ICountryItemProps>(
               styles.countryName,
               countrySelectStyle?.countryName,
               isSelected && styles.countryNameSelected,
-            ]}>
+            ]}
+            allowFontScaling={allowFontScaling}
+          >
             {country?.translations[language]?.common}
           </Text>
         </View>

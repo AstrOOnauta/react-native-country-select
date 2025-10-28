@@ -1,19 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback, useMemo, useState, useRef} from 'react';
-import {View, FlatList, ListRenderItem, Text} from 'react-native';
+import React, { useCallback, useMemo, useState, useRef } from 'react';
+import { View, FlatList, ListRenderItem, Text } from 'react-native';
 
-import {PopupModal} from '../PopupModal';
-import {CountryItem} from '../CountryItem';
-import {CloseButton} from '../CloseButton';
-import {SearchInput} from '../SearchInput';
-import {FullscreenModal} from '../FullscreenModal';
-import {BottomSheetModal} from '../BottomSheetModal';
-import {AlphabeticFilter} from '../AlphabeticFilter';
+import { PopupModal } from '../PopupModal';
+import { CountryItem } from '../CountryItem';
+import { CloseButton } from '../CloseButton';
+import { SearchInput } from '../SearchInput';
+import { FullscreenModal } from '../FullscreenModal';
+import { BottomSheetModal } from '../BottomSheetModal';
+import { AlphabeticFilter } from '../AlphabeticFilter';
 
-import {createStyles} from '../styles';
-import {translations} from '../../utils/getTranslation';
-import {getCountriesList} from '../../utils/getCountriesList';
+import { createStyles } from '../styles';
+import { translations } from '../../utils/getTranslation';
+import { getCountriesList } from '../../utils/getCountriesList';
 import {
   ICountry,
   ICountrySelectProps,
@@ -69,6 +69,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   accessibilityHintAlphabetFilter,
   accessibilityLabelAlphabetLetter,
   accessibilityHintAlphabetLetter,
+  allowFontScaling = true,
   ...props
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -208,6 +209,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         countrySelectStyle={countrySelectStyle}
         accessibilityLabelCloseButton={accessibilityLabelCloseButton}
         accessibilityHintCloseButton={accessibilityHintCloseButton}
+        allowFontScaling={allowFontScaling}
       />
     );
   };
@@ -224,6 +226,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       searchSelectionColor={searchSelectionColor}
       accessibilityLabelSearchInput={accessibilityLabelSearchInput}
       accessibilityHintSearchInput={accessibilityHintSearchInput}
+      allowFontScaling={allowFontScaling}
     />
   );
 
@@ -231,7 +234,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     ({
       viewableItems,
     }: {
-      viewableItems: Array<{item: IListItem; index: number | null}>;
+      viewableItems: Array<{ item: IListItem; index: number | null }>;
     }) => {
       if (isProgrammaticScroll.current) {
         // Ignore transient updates while we are animating to a specific index
@@ -260,12 +263,15 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           style={[
             styles.countryNotFoundContainer,
             countrySelectStyle?.countryNotFoundContainer,
-          ]}>
+          ]}
+        >
           <Text
             style={[
               styles.countryNotFoundMessage,
               countrySelectStyle?.countryNotFoundMessage,
-            ]}>
+            ]}
+            allowFontScaling={allowFontScaling}
+          >
             {countryNotFoundMessage ||
               translations.searchNotFoundMessage[
                 language as ICountrySelectLanguages
@@ -301,7 +307,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           // Fallback if momentum does not trigger
           isProgrammaticScroll.current = false;
         }}
-        onScrollToIndexFailed={({index, averageItemLength}) => {
+        onScrollToIndexFailed={({ index, averageItemLength }) => {
           // Simple recovery: estimate offset, then retry scrollToIndex after measurement
           const estimatedOffset = Math.max(0, (averageItemLength || 0) * index);
           flatListRef.current?.scrollToOffset({
@@ -321,7 +327,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   };
 
   const renderItem: ListRenderItem<IListItem> = useCallback(
-    ({item, index}) => {
+    ({ item, index }) => {
       if ('isSection' in item) {
         if (sectionTitleComponent) {
           return sectionTitleComponent(item);
@@ -330,7 +336,9 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           <Text
             testID="countrySelectSectionTitle"
             accessibilityRole="header"
-            style={[styles.sectionTitle, countrySelectStyle?.sectionTitle]}>
+            style={[styles.sectionTitle, countrySelectStyle?.sectionTitle]}
+            allowFontScaling={allowFontScaling}
+          >
             {popularCountriesTitle && index === 0
               ? popularCountriesTitle
               : allCountriesTitle && index > 0
@@ -356,6 +364,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           countrySelectStyle={countrySelectStyle}
           accessibilityLabel={accessibilityLabelCountryItem}
           accessibilityHint={accessibilityHintCountryItem}
+          allowFontScaling={allowFontScaling}
         />
       );
     },
@@ -383,6 +392,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         accessibilityHintAlphabetFilter={accessibilityHintAlphabetFilter}
         accessibilityLabelAlphabetLetter={accessibilityLabelAlphabetLetter}
         accessibilityHintAlphabetLetter={accessibilityHintAlphabetLetter}
+        allowFontScaling={allowFontScaling}
       />
     );
   };
@@ -390,7 +400,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   const HeaderModal =
     showSearchInput || showCloseButton ? (
       <View
-        style={[styles.searchContainer, countrySelectStyle?.searchContainer]}>
+        style={[styles.searchContainer, countrySelectStyle?.searchContainer]}
+      >
         {(showCloseButton || isFullScreen) && renderCloseButton()}
         {showSearchInput && renderSearchInput()}
       </View>
@@ -398,7 +409,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
   const ContentModal = (
     <>
-      <View style={{flex: 1}}>{renderFlatList()}</View>
+      <View style={{ flex: 1 }}>{renderFlatList()}</View>
       {showAlphabetFilter && <View>{renderAlphabetFilter()}</View>}
     </>
   );
@@ -424,7 +435,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           styles={styles}
           countrySelectStyle={countrySelectStyle}
           header={HeaderModal}
-          {...props}>
+          {...props}
+        >
           {ContentModal}
         </FullscreenModal>
       );
@@ -449,7 +461,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         styles={styles}
         countrySelectStyle={countrySelectStyle}
         header={HeaderModal}
-        {...props}>
+        {...props}
+      >
         {ContentModal}
       </PopupModal>
     );
@@ -478,7 +491,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       initialBottomsheetHeight={initialBottomsheetHeight}
       dragHandleIndicatorComponent={dragHandleIndicatorComponent}
       header={HeaderModal}
-      {...props}>
+      {...props}
+    >
       {ContentModal}
     </BottomSheetModal>
   );

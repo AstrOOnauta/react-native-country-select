@@ -1,14 +1,14 @@
 /* eslint-disable no-undef-init */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useMemo, useRef} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-import {createStyles} from '../styles';
-import {translations} from '../../utils/getTranslation';
-import {createAlphabet} from '../../utils/createAlphabet';
-import {AlphabeticFilterProps} from '../../interface/alfabeticFilterProps';
-import {normalizeCountryName} from '../../utils/normalizeCountryName';
+import { createStyles } from '../styles';
+import { translations } from '../../utils/getTranslation';
+import { createAlphabet } from '../../utils/createAlphabet';
+import { AlphabeticFilterProps } from '../../interface/alfabeticFilterProps';
+import { normalizeCountryName } from '../../utils/normalizeCountryName';
 
 const ALPHABET_VIEWPORT_HEIGHT = 0;
 const ALPHABET_ITEM_SIZE = 28;
@@ -26,6 +26,7 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
   accessibilityHintAlphabetFilter,
   accessibilityLabelAlphabetLetter,
   accessibilityHintAlphabetLetter,
+  allowFontScaling = true,
 }) => {
   const styles = createStyles(theme);
   const alphabetScrollRef = useRef<ScrollView>(null);
@@ -63,7 +64,7 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
           centerOffset +
           ALPHABET_VERTICAL_PADDING,
       );
-      alphabetScrollRef.current?.scrollTo({y, animated: true});
+      alphabetScrollRef.current?.scrollTo({ y, animated: true });
     }
   };
 
@@ -88,8 +89,9 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
       }
       ref={alphabetScrollRef}
       style={[styles.alphabetContainer, countrySelectStyle?.alphabetContainer]}
-      contentContainerStyle={{alignItems: 'center', paddingVertical: 12}}
-      showsVerticalScrollIndicator={false}>
+      contentContainerStyle={{ alignItems: 'center', paddingVertical: 12 }}
+      showsVerticalScrollIndicator={false}
+    >
       {alphabet.map(letter => {
         const enabled = letterIndexMap[letter] !== undefined;
         const isActive = activeLetter === letter;
@@ -142,13 +144,16 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
                 accessibilityLabelAlphabetLetter ||
                 translations.accessibilityLabelAlphabetLetter[language] +
                   ` ${letter}`
-              }>
+              }
+            >
               <Text
                 style={[
                   styles.alphabetLetterText,
                   isActive && styles.alphabetLetterTextActive,
                   countrySelectStyle?.alphabetLetterText,
-                ]}>
+                ]}
+                allowFontScaling={allowFontScaling}
+              >
                 {letter}
               </Text>
             </TouchableOpacity>
@@ -161,13 +166,15 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
               styles.alphabetLetter,
               styles.alphabetLetterDisabled,
               countrySelectStyle?.alphabetLetter,
-            ]}>
+            ]}
+          >
             <Text
               style={[
                 styles.alphabetLetterText,
                 styles.alphabetLetterTextDisabled,
                 countrySelectStyle?.alphabetLetterText,
-              ]}>
+              ]}
+            >
               {letter}
             </Text>
           </View>

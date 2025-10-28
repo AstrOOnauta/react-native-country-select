@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {ModalProps} from 'react-native';
+import { ModalProps } from 'react-native';
 
-import {ICountry} from './country';
-import {IThemeProps} from './theme';
-import {ICountryCca2} from './countryCca2';
-import {ISectionTitle} from './sectionTitle';
-import {ICountrySelectStyle} from './countrySelectStyles';
-import {ICountrySelectLanguages} from './countrySelectLanguages';
+import { ICountry } from './country';
+import { IThemeProps } from './theme';
+import { ICountryCca2 } from './countryCca2';
+import { ISectionTitle } from './sectionTitle';
+import { ICountrySelectStyle } from './countrySelectStyles';
+import { ICountrySelectLanguages } from './countrySelectLanguages';
 
 interface ICountrySelectBaseProps extends ModalProps, IThemeProps {
   visible: boolean;
@@ -52,6 +52,7 @@ interface ICountrySelectBaseProps extends ModalProps, IThemeProps {
   accessibilityHintAlphabetFilter?: string;
   accessibilityLabelAlphabetLetter?: string;
   accessibilityHintAlphabetLetter?: string;
+  allowFontScaling?: boolean;
 }
 
 interface ICountrySelectSingleProps extends ICountrySelectBaseProps {

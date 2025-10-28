@@ -1,7 +1,7 @@
-import {IThemeProps} from './theme';
-import {ICountrySelectStyle} from './countrySelectStyles';
-import {ICountrySelectLanguages} from './countrySelectLanguages';
-import {IListItem} from './itemList';
+import { IThemeProps } from './theme';
+import { ICountrySelectStyle } from './countrySelectStyles';
+import { ICountrySelectLanguages } from './countrySelectLanguages';
+import { IListItem } from './itemList';
 
 export interface AlphabeticFilterProps {
   theme?: IThemeProps;
@@ -15,4 +15,5 @@ export interface AlphabeticFilterProps {
   accessibilityHintAlphabetFilter?: string;
   accessibilityLabelAlphabetLetter?: string;
   accessibilityHintAlphabetLetter?: string;
+  allowFontScaling?: boolean;
 }

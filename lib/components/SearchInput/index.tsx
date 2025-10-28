@@ -1,12 +1,12 @@
 import React from 'react';
-import {TextInput} from 'react-native';
+import { TextInput } from 'react-native';
 
-import {createStyles} from '../styles';
-import {translations} from '../../utils/getTranslation';
-import {ISearchInputProps, ICountrySelectLanguages} from '../../interface';
+import { createStyles } from '../styles';
+import { translations } from '../../utils/getTranslation';
+import { ISearchInputProps, ICountrySelectLanguages } from '../../interface';
 
 export const SearchInput: React.FC<ISearchInputProps> = ({
-  theme,
+  theme = 'light',
   language,
   value,
   onChangeText,
@@ -16,6 +16,7 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
   searchSelectionColor,
   accessibilityLabelSearchInput,
   accessibilityHintSearchInput,
+  allowFontScaling = true,
 }) => {
   const styles = createStyles(theme);
   return (
@@ -42,6 +43,7 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
       selectionColor={searchSelectionColor}
       value={value}
       onChangeText={onChangeText}
+      allowFontScaling={allowFontScaling}
     />
   );
 };

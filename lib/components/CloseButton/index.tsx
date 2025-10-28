@@ -1,17 +1,18 @@
 import React from 'react';
-import {Text, TouchableOpacity} from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 
-import {createStyles} from '../styles';
-import {ICloseButtonProps} from '../../interface';
-import {translations} from '../../utils/getTranslation';
+import { createStyles } from '../styles';
+import { ICloseButtonProps } from '../../interface';
+import { translations } from '../../utils/getTranslation';
 
 export const CloseButton: React.FC<ICloseButtonProps> = ({
-  theme,
+  theme = 'light',
   language,
   onClose,
   countrySelectStyle,
   accessibilityLabelCloseButton,
   accessibilityHintCloseButton,
+  allowFontScaling = true,
 }) => {
   const styles = createStyles(theme);
   return (
@@ -28,9 +29,12 @@ export const CloseButton: React.FC<ICloseButtonProps> = ({
       }
       style={[styles.closeButton, countrySelectStyle?.closeButton]}
       activeOpacity={0.6}
-      onPress={onClose}>
+      onPress={onClose}
+    >
       <Text
-        style={[styles.closeButtonText, countrySelectStyle?.closeButtonText]}>
+        style={[styles.closeButtonText, countrySelectStyle?.closeButtonText]}
+        allowFontScaling={allowFontScaling}
+      >
         {'\u00D7'}
       </Text>
     </TouchableOpacity>
