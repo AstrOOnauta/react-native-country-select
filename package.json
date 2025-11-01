@@ -1,6 +1,6 @@
 {
   "name": "react-native-country-select",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "🌍 React Native country picker with flags, search, TypeScript, i18n, and offline support. Lightweight, customizable, and designed with a modern UI.",
   "main": "lib/index.tsx",
   "types": "lib/index.d.ts",
