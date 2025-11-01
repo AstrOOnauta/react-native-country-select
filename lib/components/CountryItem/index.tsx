@@ -13,6 +13,7 @@ export const CountryItem = memo<ICountryItemProps>(
     theme = 'light',
     language = 'eng',
     countrySelectStyle,
+    customFlag,
     accessibilityLabel,
     accessibilityHint,
     allowFontScaling = true,
@@ -40,14 +41,25 @@ export const CountryItem = memo<ICountryItemProps>(
         ]}
         onPress={() => onSelect(country)}
       >
-        <Text
-          testID="countrySelectItemFlag"
-          style={[styles.flag, countrySelectStyle?.flag]}
-          allowFontScaling={allowFontScaling}
+        {customFlag &&
+        customFlag(country) !== undefined &&
+        customFlag(country) !== null ? (
+          customFlag(country)
+        ) : (
+          <Text
+            testID="countrySelectItemFlag"
+            style={[styles.flag, countrySelectStyle?.flag]}
+            allowFontScaling={allowFontScaling}
+          >
+            {country.flag || country.cca2}
+          </Text>
+        )}
+        <View
+          style={[
+            styles.countryInfo,
+            countrySelectStyle?.countryInfo,
+          ]}
         >
-          {country.flag || country.cca2}
-        </Text>
-        <View style={[styles.countryInfo, countrySelectStyle?.countryInfo]}>
           <Text
             testID="countrySelectItemCallingCode"
             style={[
@@ -73,5 +85,5 @@ export const CountryItem = memo<ICountryItemProps>(
         </View>
       </TouchableOpacity>
     );
-  },
+  }
 );
