@@ -1,4 +1,4 @@
-import {ICountryCca2} from './countryCca2';
+import { ICountryCca2 } from './countryCca2';
 
 // Currency interface
 export interface ICountryCurrency {
@@ -107,5 +107,6 @@ export interface ICountry {
   borders: string[];
   area: number;
   flag: string;
+  customFlag?: React.ReactElement | null | undefined;
   demonyms: ICountryDemonyms;
 }

@@ -51,6 +51,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   sectionTitleComponent,
   countryItemComponent,
   closeButtonComponent,
+  customFlag,
   popularCountriesTitle,
   allCountriesTitle,
   showsVerticalScrollIndicator = false,
@@ -73,7 +74,9 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   ...props
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeLetter, setActiveLetter] = useState<string | null>(null);
+  const [activeLetter, setActiveLetter] = useState<string | null>(
+    null
+  );
 
   const flatListRef = useRef<FlatList<IListItem>>(null);
   const isProgrammaticScroll = useRef(false);
@@ -118,8 +121,9 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   }, [countriesList]);
 
   const keyExtractor = useCallback(
-    (item: IListItem) => ('isSection' in item ? item.title : item.cca2),
-    [],
+    (item: IListItem) =>
+      'isSection' in item ? item.title : item.cca2,
+    []
   );
 
   const handlePressLetter = useCallback(
@@ -132,7 +136,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       for (let i = index; i < countriesList.length; i++) {
         const item = countriesList[i];
         if (!('isSection' in item)) {
-          const name = (item as ICountry)?.translations[language]?.common || '';
+          const name =
+            (item as ICountry)?.translations[language]?.common || '';
           if (name) {
             computedLetter = name[0].toUpperCase();
           }
@@ -149,7 +154,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         viewPosition: 0,
       });
     },
-    [countriesList, language],
+    [countriesList, language]
   );
 
   const handleCloseModal = () => {
@@ -172,29 +177,38 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
   const isCountrySelected = useCallback(
     (cca2: string) => selectedCountryCodes.has(cca2),
-    [selectedCountryCodes],
+    [selectedCountryCodes]
   );
 
   const handleSelectCountry = useCallback(
     (country: ICountry) => {
+      const countryWithCustomFlag = customFlag
+        ? {
+            ...country,
+            customFlag: customFlag(country),
+          }
+        : country;
+
       if (isMultiSelect) {
         if (isCountrySelected(country.cca2)) {
           (onSelect as (countries: ICountry[]) => void)(
-            selectedCountries.filter(c => c.cca2 !== country.cca2),
+            selectedCountries.filter((c) => c.cca2 !== country.cca2)
           );
           return;
         }
         (onSelect as (countries: ICountry[]) => void)([
           ...selectedCountries,
-          country,
+          countryWithCustomFlag,
         ]);
         return;
       }
 
-      (onSelect as (country: ICountry) => void)(country);
+      (onSelect as (country: ICountry) => void)(
+        countryWithCustomFlag
+      );
       onClose();
     },
-    [isMultiSelect, isCountrySelected, selectedCountries],
+    [isMultiSelect, isCountrySelected, selectedCountries, customFlag]
   );
 
   const renderCloseButton = () => {
@@ -245,7 +259,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         const it = v.item;
         const idx = v.index ?? -1;
         if (!('isSection' in it) && idx >= allCountriesStartIndex) {
-          const name = (it as ICountry)?.translations[language]?.common || '';
+          const name =
+            (it as ICountry)?.translations[language]?.common || '';
           if (name) {
             updated = name[0].toUpperCase();
           }
@@ -253,7 +268,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         }
       }
       setActiveLetter(updated);
-    },
+    }
   ).current;
 
   const renderFlatList = () => {
@@ -297,7 +312,9 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={showsVerticalScrollIndicator || false}
+        showsVerticalScrollIndicator={
+          showsVerticalScrollIndicator || false
+        }
         style={[styles.list, countrySelectStyle?.list]}
         onViewableItemsChanged={onViewableItemsChanged}
         onMomentumScrollEnd={() => {
@@ -309,7 +326,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         }}
         onScrollToIndexFailed={({ index, averageItemLength }) => {
           // Simple recovery: estimate offset, then retry scrollToIndex after measurement
-          const estimatedOffset = Math.max(0, (averageItemLength || 0) * index);
+          const estimatedOffset = Math.max(
+            0,
+            (averageItemLength || 0) * index
+          );
           flatListRef.current?.scrollToOffset({
             offset: estimatedOffset,
             animated: false,
@@ -336,7 +356,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           <Text
             testID="countrySelectSectionTitle"
             accessibilityRole="header"
-            style={[styles.sectionTitle, countrySelectStyle?.sectionTitle]}
+            style={[
+              styles.sectionTitle,
+              countrySelectStyle?.sectionTitle,
+            ]}
             allowFontScaling={allowFontScaling}
           >
             {popularCountriesTitle && index === 0
@@ -353,7 +376,8 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       }
 
       const countryItem = item as ICountry;
-      const selected = isMultiSelect && isCountrySelected(countryItem.cca2);
+      const selected =
+        isMultiSelect && isCountrySelected(countryItem.cca2);
       return (
         <CountryItem
           country={countryItem}
@@ -362,6 +386,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           theme={theme as IThemeProps}
           language={language}
           countrySelectStyle={countrySelectStyle}
+          customFlag={customFlag}
           accessibilityLabel={accessibilityLabelCountryItem}
           accessibilityHint={accessibilityHintCountryItem}
           allowFontScaling={allowFontScaling}
@@ -375,7 +400,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       sectionTitleComponent,
       isMultiSelect,
       isCountrySelected,
-    ],
+    ]
   );
 
   const renderAlphabetFilter = () => {
@@ -388,10 +413,18 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         countries={countriesList}
         allCountriesStartIndex={allCountriesStartIndex}
         countrySelectStyle={countrySelectStyle}
-        accessibilityLabelAlphabetFilter={accessibilityLabelAlphabetFilter}
-        accessibilityHintAlphabetFilter={accessibilityHintAlphabetFilter}
-        accessibilityLabelAlphabetLetter={accessibilityLabelAlphabetLetter}
-        accessibilityHintAlphabetLetter={accessibilityHintAlphabetLetter}
+        accessibilityLabelAlphabetFilter={
+          accessibilityLabelAlphabetFilter
+        }
+        accessibilityHintAlphabetFilter={
+          accessibilityHintAlphabetFilter
+        }
+        accessibilityLabelAlphabetLetter={
+          accessibilityLabelAlphabetLetter
+        }
+        accessibilityHintAlphabetLetter={
+          accessibilityHintAlphabetLetter
+        }
         allowFontScaling={allowFontScaling}
       />
     );
@@ -400,7 +433,10 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   const HeaderModal =
     showSearchInput || showCloseButton ? (
       <View
-        style={[styles.searchContainer, countrySelectStyle?.searchContainer]}
+        style={[
+          styles.searchContainer,
+          countrySelectStyle?.searchContainer,
+        ]}
       >
         {(showCloseButton || isFullScreen) && renderCloseButton()}
         {showSearchInput && renderSearchInput()}

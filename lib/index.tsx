@@ -1,4 +1,4 @@
-import {CountrySelect} from './components';
+import { CountrySelect } from './components';
 import {
   ICountry,
   ICountryCca2,
@@ -6,6 +6,7 @@ import {
   ICountrySelectProps,
   ICountrySelectStyle,
   ICountrySelectLanguages,
+  ISectionTitle,
 } from './interface';
 import {
   getAllCountries,
@@ -40,4 +41,5 @@ export type {
   ICountrySelectProps,
   ICountrySelectStyle,
   ICountrySelectLanguages,
+  ISectionTitle,
 };

@@ -34,6 +34,9 @@ interface ICountrySelectBaseProps extends ModalProps, IThemeProps {
   countryItemComponent?: (item: ICountry) => React.ReactElement;
   sectionTitleComponent?: (item: ISectionTitle) => React.ReactElement;
   closeButtonComponent?: () => React.ReactElement;
+  customFlag?: (
+    country: ICountry
+  ) => React.ReactElement | null | undefined;
   popularCountriesTitle?: string;
   allCountriesTitle?: string;
   showsVerticalScrollIndicator?: boolean;
