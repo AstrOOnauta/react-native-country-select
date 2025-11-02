@@ -13,6 +13,7 @@ export const CountryItem = memo<ICountryItemProps>(
     theme = 'light',
     language = 'eng',
     countrySelectStyle,
+    countryItemComponent,
     customFlag,
     accessibilityLabel,
     accessibilityHint,
@@ -34,55 +35,62 @@ export const CountryItem = memo<ICountryItemProps>(
           translations.accessibilityHintCountryItem[language] +
             ` ${country.translations[language]?.common}`
         }
-        style={[
-          styles.countryItem,
-          countrySelectStyle?.countryItem,
-          isSelected && styles.countryItemSelected,
-        ]}
         onPress={() => onSelect(country)}
       >
-        {customFlag &&
-        customFlag(country) !== undefined &&
-        customFlag(country) !== null ? (
-          customFlag(country)
+        {countryItemComponent ? (
+          countryItemComponent(country)
         ) : (
-          <Text
-            testID="countrySelectItemFlag"
-            style={[styles.flag, countrySelectStyle?.flag]}
-            allowFontScaling={allowFontScaling}
+          <View
+            style={[
+              styles.countryItem,
+              countrySelectStyle?.countryItem,
+              isSelected && styles.countryItemSelected,
+            ]}
           >
-            {country.flag || country.cca2}
-          </Text>
+            {customFlag &&
+            customFlag(country) !== undefined &&
+            customFlag(country) !== null ? (
+              customFlag(country)
+            ) : (
+              <Text
+                testID="countrySelectItemFlag"
+                style={[styles.flag, countrySelectStyle?.flag]}
+                allowFontScaling={allowFontScaling}
+              >
+                {country.flag || country.cca2}
+              </Text>
+            )}
+            <View
+              style={[
+                styles.countryInfo,
+                countrySelectStyle?.countryInfo,
+              ]}
+            >
+              <Text
+                testID="countrySelectItemCallingCode"
+                style={[
+                  styles.callingCode,
+                  countrySelectStyle?.callingCode,
+                  isSelected && styles.callingCodeSelected,
+                ]}
+                allowFontScaling={allowFontScaling}
+              >
+                {country.idd.root}
+              </Text>
+              <Text
+                testID="countrySelectItemName"
+                style={[
+                  styles.countryName,
+                  countrySelectStyle?.countryName,
+                  isSelected && styles.countryNameSelected,
+                ]}
+                allowFontScaling={allowFontScaling}
+              >
+                {country?.translations[language]?.common}
+              </Text>
+            </View>
+          </View>
         )}
-        <View
-          style={[
-            styles.countryInfo,
-            countrySelectStyle?.countryInfo,
-          ]}
-        >
-          <Text
-            testID="countrySelectItemCallingCode"
-            style={[
-              styles.callingCode,
-              countrySelectStyle?.callingCode,
-              isSelected && styles.callingCodeSelected,
-            ]}
-            allowFontScaling={allowFontScaling}
-          >
-            {country.idd.root}
-          </Text>
-          <Text
-            testID="countrySelectItemName"
-            style={[
-              styles.countryName,
-              countrySelectStyle?.countryName,
-              isSelected && styles.countryNameSelected,
-            ]}
-            allowFontScaling={allowFontScaling}
-          >
-            {country?.translations[language]?.common}
-          </Text>
-        </View>
       </TouchableOpacity>
     );
   }
