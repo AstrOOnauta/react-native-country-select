@@ -14,6 +14,7 @@ export interface ICountryItemProps {
   customFlag?: (
     country: ICountry
   ) => React.ReactElement | null | undefined;
+  countryItemComponent?: (country: ICountry) => React.ReactElement;
   accessibilityLabel?: string;
   accessibilityHint?: string;
   allowFontScaling?: boolean;

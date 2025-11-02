@@ -371,10 +371,6 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         );
       }
 
-      if (countryItemComponent) {
-        return countryItemComponent(item as ICountry);
-      }
-
       const countryItem = item as ICountry;
       const selected =
         isMultiSelect && isCountrySelected(countryItem.cca2);
@@ -387,6 +383,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
           language={language}
           countrySelectStyle={countrySelectStyle}
           customFlag={customFlag}
+          countryItemComponent={countryItemComponent}
           accessibilityLabel={accessibilityLabelCountryItem}
           accessibilityHint={accessibilityHintCountryItem}
           allowFontScaling={allowFontScaling}
