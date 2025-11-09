@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Modal,
@@ -10,9 +10,13 @@ import {
   Keyboard,
   NativeSyntheticEvent,
 } from 'react-native';
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+} from 'react-native-safe-area-context';
 
 import parseHeight from '../../utils/parseHeight';
-import {ICountrySelectStyle} from '../../interface';
+import { ICountrySelectStyle } from '../../interface';
 
 interface BottomSheetModalProps extends ModalProps {
   visible: boolean;
@@ -67,19 +71,26 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
   const dragStartYRef = useRef(0);
 
   useEffect(() => {
-    const DRAG_HANDLE_HEIGHT = 20;
-    const availableHeight = Math.max(0, modalHeight - DRAG_HANDLE_HEIGHT);
-    const parsedMinHeight = parseHeight(minBottomsheetHeight, availableHeight);
-    const parsedMaxHeight = parseHeight(maxBottomsheetHeight, availableHeight);
+    const parsedMinHeight = parseHeight(
+      minBottomsheetHeight,
+      modalHeight
+    );
+    const parsedMaxHeight = parseHeight(
+      maxBottomsheetHeight,
+      modalHeight
+    );
     const parsedInitialHeight = parseHeight(
       initialBottomsheetHeight,
-      availableHeight,
+      modalHeight
     );
     setBottomSheetSize({
-      minHeight: parsedMinHeight || MIN_HEIGHT_PERCENTAGE * availableHeight,
-      maxHeight: parsedMaxHeight || MAX_HEIGHT_PERCENTAGE * availableHeight,
+      minHeight:
+        parsedMinHeight || MIN_HEIGHT_PERCENTAGE * modalHeight,
+      maxHeight:
+        parsedMaxHeight || MAX_HEIGHT_PERCENTAGE * modalHeight,
       initialHeight:
-        parsedInitialHeight || INITIAL_HEIGHT_PERCENTAGE * availableHeight,
+        parsedInitialHeight ||
+        INITIAL_HEIGHT_PERCENTAGE * modalHeight,
     });
   }, [
     modalHeight,
@@ -115,17 +126,17 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
         onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: (_evt, gestureState) =>
           Math.abs(gestureState.dy) > 5,
-        onPanResponderGrant: e => {
+        onPanResponderGrant: (e) => {
           dragStartYRef.current = e.nativeEvent.pageY;
           sheetHeight.stopAnimation();
         },
-        onPanResponderMove: e => {
+        onPanResponderMove: (e) => {
           const currentY = e.nativeEvent.pageY;
           const dy = currentY - dragStartYRef.current;
           const proposedHeight = lastHeightRef.current - dy;
           sheetHeight.setValue(proposedHeight);
         },
-        onPanResponderRelease: e => {
+        onPanResponderRelease: (e) => {
           const currentY = e.nativeEvent.pageY;
           const dy = currentY - dragStartYRef.current;
           const currentHeight = lastHeightRef.current - dy;
@@ -134,12 +145,14 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
               toValue: 0,
               duration: 200,
               useNativeDriver: false,
-            }).start(() => onRequestClose({} as NativeSyntheticEvent<any>));
+            }).start(() =>
+              onRequestClose({} as NativeSyntheticEvent<any>)
+            );
             return;
           }
           const finalHeight = Math.min(
             Math.max(currentHeight, bottomSheetSize.minHeight),
-            bottomSheetSize.maxHeight,
+            bottomSheetSize.maxHeight
           );
           Animated.spring(sheetHeight, {
             toValue: finalHeight,
@@ -159,7 +172,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
           }).start();
         },
       }),
-    [bottomSheetSize, sheetHeight, onRequestClose],
+    [bottomSheetSize, sheetHeight, onRequestClose]
   );
   return (
     <Modal
@@ -168,56 +181,68 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
       animationType="slide"
       onRequestClose={onRequestClose}
       statusBarTranslucent={statusBarTranslucent}
-      {...props}>
-      <View
-        testID="countrySelectContainer"
-        style={[styles.container, countrySelectStyle?.container]}
-        onLayout={e => setModalHeight(e.nativeEvent.layout.height)}>
-        <Pressable
-          testID="countrySelectBackdrop"
-          accessibilityRole="button"
-          accessibilityLabel={accessibilityLabelBackdrop}
-          accessibilityHint={accessibilityHintBackdrop}
-          disabled={disabledBackdropPress || removedBackdrop}
-          style={[
-            styles.backdrop,
-            countrySelectStyle?.backdrop,
-            removedBackdrop && {backgroundColor: 'transparent'},
-          ]}
-          onPress={onBackdropPress || onRequestClose}
-        />
-        <Animated.View
-          testID="countrySelectContent"
-          style={[
-            styles.content,
-            countrySelectStyle?.content,
-            {
-              height: sheetHeight,
-            },
-          ]}>
+      {...props}
+    >
+      <SafeAreaProvider>
+        <SafeAreaView style={{ flex: 1 }}>
           <View
-            {...panHandlers.panHandlers}
-            style={[
-              styles.dragHandleContainer,
-              countrySelectStyle?.dragHandleContainer,
-            ]}>
-            {dragHandleIndicatorComponent ? (
-              dragHandleIndicatorComponent()
-            ) : (
+            testID="countrySelectContainer"
+            style={[styles.container, countrySelectStyle?.container]}
+            onLayout={(e) =>
+              setModalHeight(e.nativeEvent.layout.height)
+            }
+          >
+            <Pressable
+              testID="countrySelectBackdrop"
+              accessibilityRole="button"
+              accessibilityLabel={accessibilityLabelBackdrop}
+              accessibilityHint={accessibilityHintBackdrop}
+              disabled={disabledBackdropPress || removedBackdrop}
+              style={[
+                styles.backdrop,
+                countrySelectStyle?.backdrop,
+                removedBackdrop && { backgroundColor: 'transparent' },
+              ]}
+              onPress={onBackdropPress || onRequestClose}
+            />
+            <Animated.View
+              testID="countrySelectContent"
+              style={[
+                styles.content,
+                countrySelectStyle?.content,
+                {
+                  height: sheetHeight,
+                },
+              ]}
+            >
               <View
+                {...panHandlers.panHandlers}
                 style={[
-                  styles.dragHandleIndicator,
-                  countrySelectStyle?.dragHandleIndicator,
+                  styles.dragHandleContainer,
+                  countrySelectStyle?.dragHandleContainer,
                 ]}
-              />
-            )}
+              >
+                {dragHandleIndicatorComponent ? (
+                  dragHandleIndicatorComponent()
+                ) : (
+                  <View
+                    style={[
+                      styles.dragHandleIndicator,
+                      countrySelectStyle?.dragHandleIndicator,
+                    ]}
+                  />
+                )}
+              </View>
+              {header}
+              <Animated.View
+                style={{ flex: 1, flexDirection: 'row' }}
+              >
+                {children}
+              </Animated.View>
+            </Animated.View>
           </View>
-          {header}
-          <Animated.View style={{flex: 1, flexDirection: 'row'}}>
-            {children}
-          </Animated.View>
-        </Animated.View>
-      </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </Modal>
   );
 };
