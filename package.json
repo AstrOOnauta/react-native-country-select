@@ -39,7 +39,9 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {},
+  "dependencies": {
+    "react-native-safe-area-context": "*"
+  },
   "devDependencies": {},
   "peerDependencies": {
     "react": "*",
