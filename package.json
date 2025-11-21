@@ -26,9 +26,6 @@
     "react native country picker",
     "react native country select"
   ],
-  "scripts": {
-    "postinstall": "node scripts/install-react-native-safe-area-context.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AstrOOnauta/react-native-country-select.git"
@@ -46,10 +43,5 @@
     "react": "*",
     "react-native": "*",
     "react-native-safe-area-context": ">=4.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react-native-safe-area-context": {
-      "optional": false
-    }
   }
 }
