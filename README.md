@@ -69,6 +69,8 @@
 npm install react-native-country-select
 # or
 yarn add react-native-country-select
+# and
+cd ios && pod install
 ```
 
 <br>
