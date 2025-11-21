@@ -65,12 +65,16 @@
 
 ## Installation
 
-```sh
-npm install react-native-country-select
-# or
-yarn add react-native-country-select
-# and
-cd ios && pod install
+To use this library, make sure you have **react-native-country-select** installed along with its required dependency **react-native-safe-area-context**:
+
+```bash
+npm install react-native-country-select react-native-safe-area-context
+```
+
+Since **react-native-safe-area-context** includes native code, you’ll need to install the iOS pods on macOS to complete the linking:
+
+```bash
+npx pod-install ios
 ```
 
 <br>
