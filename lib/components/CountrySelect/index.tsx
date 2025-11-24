@@ -1,7 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useMemo, useState, useRef } from 'react';
-import { View, FlatList, ListRenderItem, Text } from 'react-native';
+import {
+  View,
+  FlatList,
+  ListRenderItem,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 
 import { PopupModal } from '../PopupModal';
 import { CountryItem } from '../CountryItem';
@@ -213,7 +219,11 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
   const renderCloseButton = () => {
     if (closeButtonComponent) {
-      return closeButtonComponent();
+      return (
+        <TouchableOpacity onPress={handleCloseModal}>
+          {closeButtonComponent()}
+        </TouchableOpacity>
+      );
     }
     return (
       <CloseButton
