@@ -7,6 +7,7 @@ import {
   ListRenderItem,
   Text,
   TouchableOpacity,
+  NativeSyntheticEvent,
 } from 'react-native';
 
 import { PopupModal } from '../PopupModal';
@@ -53,6 +54,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   disabledBackdropPress,
   removedBackdrop,
   onBackdropPress,
+  onRequestClose,
   dragHandleIndicatorComponent,
   sectionTitleComponent,
   countryItemComponent,
@@ -462,7 +464,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       return (
         <FullscreenModal
           visible={visible}
-          onRequestClose={handleCloseModal}
+          onRequestClose={() => {
+            handleCloseModal();
+            if (onRequestClose) {
+              onRequestClose({} as NativeSyntheticEvent<any>);
+            }
+          }}
           statusBarTranslucent
           removedBackdrop={removedBackdrop}
           disabledBackdropPress={disabledBackdropPress}
@@ -488,7 +495,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     return (
       <PopupModal
         visible={visible}
-        onRequestClose={handleCloseModal}
+        onRequestClose={() => {
+          handleCloseModal();
+          if (onRequestClose) {
+            onRequestClose({} as NativeSyntheticEvent<any>);
+          }
+        }}
         statusBarTranslucent
         removedBackdrop={removedBackdrop}
         disabledBackdropPress={disabledBackdropPress}
@@ -514,7 +526,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   return (
     <BottomSheetModal
       visible={visible}
-      onRequestClose={handleCloseModal}
+      onRequestClose={() => {
+        handleCloseModal();
+        if (onRequestClose) {
+          onRequestClose({} as NativeSyntheticEvent<any>);
+        }
+      }}
       statusBarTranslucent
       removedBackdrop={removedBackdrop}
       disabledBackdropPress={disabledBackdropPress}

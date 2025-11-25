@@ -29,7 +29,7 @@ interface ICountrySelectBaseProps extends ModalProps, IThemeProps {
   initialBottomsheetHeight?: number | string;
   disabledBackdropPress?: boolean;
   removedBackdrop?: boolean;
-  onBackdropPress?: () => void;
+  onBackdropPress?: (closeModal: () => void) => void;
   dragHandleIndicatorComponent?: () => React.ReactElement;
   countryItemComponent?: (item: ICountry) => React.ReactElement;
   sectionTitleComponent?: (item: ISectionTitle) => React.ReactElement;
