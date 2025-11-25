@@ -24,7 +24,7 @@ interface BottomSheetModalProps extends ModalProps {
   statusBarTranslucent?: boolean;
   removedBackdrop?: boolean;
   disabledBackdropPress?: boolean;
-  onBackdropPress?: () => void;
+  onBackdropPress?: (closeModal: () => void) => void;
   accessibilityLabelBackdrop?: string;
   accessibilityHintBackdrop?: string;
   styles: ICountrySelectStyle;
@@ -203,7 +203,16 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
                 countrySelectStyle?.backdrop,
                 removedBackdrop && { backgroundColor: 'transparent' },
               ]}
-              onPress={onBackdropPress || onRequestClose}
+              onPress={
+                onBackdropPress
+                  ? () =>
+                      onBackdropPress(() =>
+                        onRequestClose(
+                          {} as NativeSyntheticEvent<any>
+                        )
+                      )
+                  : onRequestClose
+              }
             />
             <Animated.View
               testID="countrySelectContent"
