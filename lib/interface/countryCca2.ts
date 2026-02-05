@@ -34,6 +34,7 @@ export type ICountryCca2 =
   | 'BR'
   | 'BB'
   | 'BN'
+  | 'BQ'
   | 'BT'
   | 'BV'
   | 'BW'
