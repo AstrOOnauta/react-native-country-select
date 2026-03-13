@@ -133,6 +133,7 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
                 styles.alphabetLetter,
                 isActive && styles.alphabetLetterActive,
                 countrySelectStyle?.alphabetLetter,
+                isActive && countrySelectStyle?.alphabetLetterActive,
               ]}
               accessibilityRole="button"
               accessibilityHint={
@@ -151,6 +152,7 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
                   styles.alphabetLetterText,
                   isActive && styles.alphabetLetterTextActive,
                   countrySelectStyle?.alphabetLetterText,
+                  isActive && countrySelectStyle?.alphabetLetterTextActive,
                 ]}
                 allowFontScaling={allowFontScaling}
               >
@@ -166,6 +168,7 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
               styles.alphabetLetter,
               styles.alphabetLetterDisabled,
               countrySelectStyle?.alphabetLetter,
+              countrySelectStyle?.alphabetLetterDisabled,
             ]}
           >
             <Text
@@ -173,6 +176,7 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
                 styles.alphabetLetterText,
                 styles.alphabetLetterTextDisabled,
                 countrySelectStyle?.alphabetLetterText,
+                countrySelectStyle?.alphabetLetterTextDisabled,
               ]}
             >
               {letter}
