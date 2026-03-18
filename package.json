@@ -1,12 +1,12 @@
 {
-  "name": "react-native-country-select",
+  "name": "rn-country-select",
   "version": "0.4.0",
   "description": "🌍 React Native country picker with flags, search, TypeScript, i18n, and offline support. Lightweight, customizable, and designed with a modern UI.",
   "main": "lib/index.tsx",
   "types": "lib/index.d.ts",
   "keywords": [
     "react-native-country-picker",
-    "react-native-country-select",
+    "rn-country-select",
     "react-native-country-codes",
     "country-picker",
     "country-select",

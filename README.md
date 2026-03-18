@@ -15,11 +15,11 @@
 <br>
 
 <div align="center">
-  <a href="https://www.npmjs.com/package/react-native-country-select">
-    <img src="https://img.shields.io/npm/v/react-native-country-select.svg?style=flat-square">
+  <a href="https://www.npmjs.com/package/rn-country-select">
+    <img src="https://img.shields.io/npm/v/rn-country-select.svg?style=flat-square">
   </a>
-  <a href="https://www.npmjs.com/package/react-native-country-select">
-    <img src="https://img.shields.io/npm/dt/react-native-country-select.svg?style=flat-square&color=success">
+  <a href="https://www.npmjs.com/package/rn-country-select">
+    <img src="https://img.shields.io/npm/dt/rn-country-select.svg?style=flat-square&color=success">
   </a>
   <a href="https://github.com/AstrOOnauta/react-native-country-select">
     <img src="https://img.shields.io/github/stars/AstrOOnauta/react-native-country-select?style=flat-square&color=success"/>
@@ -59,16 +59,16 @@
 
 ## Try it out
 
-- [Demo](https://snack.expo.dev/@astroonauta/react-native-country-select)
+- [Demo](https://snack.expo.dev/rn-country-select)
 
 <br>
 
 ## Installation
 
-To use this library, make sure you have **react-native-country-select** installed along with its required dependency **react-native-safe-area-context**:
+To use this library, make sure you have **rn-country-select** installed along with its required dependency **react-native-safe-area-context**:
 
 ```bash
-npm install react-native-country-select react-native-safe-area-context
+npm install rn-country-select react-native-safe-area-context
 ```
 
 Since **react-native-safe-area-context** includes native code, you’ll need to install the iOS pods on macOS to complete the linking:
@@ -92,7 +92,7 @@ module.exports = {
     android: {},
   },
   assets: [
-    './node_modules/react-native-country-select/lib/assets/fonts',
+    './node_modules/rn-country-select/lib/assets/fonts',
   ],
 };
 ```
@@ -114,7 +114,7 @@ npx react-native-asset
   ...
 
   useFonts({
-    'TwemojiMozilla': require('./node_modules/react-native-country-select/lib/assets/fonts/TwemojiMozilla.woff2'),
+    'TwemojiMozilla': require('./node_modules/rn-country-select/lib/assets/fonts/TwemojiMozilla.woff2'),
   });
 
   ...
@@ -131,7 +131,7 @@ npx react-native-asset
 ```jsx
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import CountrySelect from 'react-native-country-select';
+import CountrySelect from 'rn-country-select';
 
 export default class App extends Component {
   countryRef = null;
@@ -180,7 +180,7 @@ export default class App extends Component {
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import CountrySelect from 'react-native-country-select';
+import CountrySelect from 'rn-country-select';
 
 export default function App() {
   const [showPicker, setShowPicker] = useState(false);
@@ -222,7 +222,7 @@ export default function App() {
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import CountrySelect, { ICountry } from 'react-native-country-select';
+import CountrySelect, { ICountry } from 'rn-country-select';
 
 export default function App() {
   const [showPicker, setShowPicker] = useState<boolean>(false);
@@ -265,7 +265,7 @@ export default function App() {
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import CountrySelect, { ICountry } from 'react-native-country-select';
+import CountrySelect, { ICountry } from 'rn-country-select';
 
 export default function App() {
   const [showPicker, setShowPicker] = useState<boolean>(false);
@@ -465,7 +465,7 @@ Ensure your app is inclusive and usable by everyone by leveraging built-in React
 
 ## Contributing
 
-Thank you for considering contributing to **react-native-country-select**!
+Thank you for considering contributing to **rn-country-select**!
 
 - Fork or clone this repository
 
