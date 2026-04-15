@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextInput } from 'react-native';
 
 import { createStyles } from '../styles';
@@ -14,11 +14,16 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
   searchPlaceholder,
   searchPlaceholderTextColor,
   searchSelectionColor,
+  searchFocusedBorderColor,
   accessibilityLabelSearchInput,
   accessibilityHintSearchInput,
   allowFontScaling = true,
 }) => {
   const styles = createStyles(theme);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const focusedBorderColor = searchFocusedBorderColor || theme === 'dark' ? '#60A5FA' : '#3B82F6';
+
   return (
     <TextInput
       testID="countrySelectSearchInput"
@@ -31,7 +36,7 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
         accessibilityHintSearchInput ||
         translations.accessibilityHintSearchInput[language]
       }
-      style={[styles.searchInput, countrySelectStyle?.searchInput]}
+      style={[styles.searchInput, countrySelectStyle?.searchInput, isFocused && { borderColor: focusedBorderColor }]}
       placeholder={
         searchPlaceholder ||
         translations.searchPlaceholder[language as ICountrySelectLanguages]
@@ -44,6 +49,8 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
       value={value}
       onChangeText={onChangeText}
       allowFontScaling={allowFontScaling}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
     />
   );
 };

@@ -23,6 +23,7 @@ interface ICountrySelectBaseProps extends ModalProps, IThemeProps {
   searchPlaceholder?: string;
   searchPlaceholderTextColor?: string;
   searchSelectionColor?: string;
+  searchFocusedBorderColor?: string;
   showCloseButton?: boolean;
   minBottomsheetHeight?: number | string;
   maxBottomsheetHeight?: number | string;

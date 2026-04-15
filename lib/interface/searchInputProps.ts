@@ -11,6 +11,7 @@ export interface ISearchInputProps {
   searchPlaceholder?: string;
   searchPlaceholderTextColor?: string;
   searchSelectionColor?: string;
+  searchFocusedBorderColor?: string;
   accessibilityLabelSearchInput?: string;
   accessibilityHintSearchInput?: string;
   allowFontScaling?: boolean;

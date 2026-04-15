@@ -47,6 +47,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   searchPlaceholder,
   searchPlaceholderTextColor,
   searchSelectionColor,
+  searchFocusedBorderColor,
   showCloseButton = false,
   minBottomsheetHeight,
   maxBottomsheetHeight,
@@ -250,6 +251,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       searchPlaceholder={searchPlaceholder}
       searchPlaceholderTextColor={searchPlaceholderTextColor}
       searchSelectionColor={searchSelectionColor}
+      searchFocusedBorderColor={searchFocusedBorderColor}
       accessibilityLabelSearchInput={accessibilityLabelSearchInput}
       accessibilityHintSearchInput={accessibilityHintSearchInput}
       allowFontScaling={allowFontScaling}
