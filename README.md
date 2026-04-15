@@ -38,7 +38,7 @@
 <br>
 
 <div align="center">
-    <a href="https://www.buymeacoffee.com/astroonauta" target="_blank">
+    <a href="https://www.buymeacoffee.com/astroonautadev" target="_blank">
         <img src="https://survivingmexico.files.wordpress.com/2018/07/button-gif.gif" alt="Buy Me A Coffee" style="height: auto !important;width: 60% !important;">
     </a>
 </div>
@@ -355,7 +355,8 @@ export default function App() {
 | showAlphabetFilter           | boolean                                                                 | No       | false                | Whether to show the alphabetic filter on modal                                         |
 | searchPlaceholder            | string                                                                  | No       | 'Search country...'  | Placeholder text for search input                                                      |
 | searchPlaceholderTextColor   | string                                                                  | No       | '#00000080'          | Placeholder text color for search input                                                |
-| searchSelectionColor         | string                                                                  | No       | default              | Highlight, selection handle and cursor color of the search input                       |
+| searchSelectionColor         | string                                                                  | No       | -                    | Passed to the search `TextInput` as `selectionColor` (cursor and selection highlight) |
+| searchFocusedBorderColor     | string                                                                  | No       | -                    | Border color of the search field when focused (defaults: light `#3B82F6`, dark `#60A5FA`) |
 | minBottomsheetHeight         | number \| string                                                        | No       | 30%                  | Minimum height for bottom sheet modal                                                  |
 | maxBottomsheetHeight         | number \| string                                                        | No       | 80%                  | Maximum height for bottom sheet modal                                                  |
 | initialBottomsheetHeight     | number \| string                                                        | No       | 50%                  | Initial height for bottom sheet modal                                                  |
@@ -370,7 +371,7 @@ export default function App() {
 | showCloseButton              | boolean                                                                 | No       | false                | Whether to show the close button                                                       |
 | popularCountriesTitle        | string                                                                  | No       | 'Popular Countries'  | Popular Countries section title                                                        |
 | allCountriesTitle            | string                                                                  | No       | 'All Countries'      | All Countries section title                                                            |
-| showsVerticalScrollIndicator | boolean                                                                 | No       | false                | Displays a horizontal scroll indicator                                                 |
+| showsVerticalScrollIndicator | boolean                                                                 | No       | false                | Shows the vertical scroll indicator on the countries list                              |
 | countryNotFoundMessage       | string                                                                  | No       | "No countries found" | Country not found in search                                                            |
 | allowFontScaling             | boolean                                                                 | No       | true                 | Whether to allow font scaling for text elements                                        |
 
