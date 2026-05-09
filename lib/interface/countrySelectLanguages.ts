@@ -1,4 +1,4 @@
-export type ICountrySelectLanguages =
+export type ICountrySelectLanguagesISO2 =
   | 'ara' // Arabic
   | 'bel' // Belarusian
   | 'bre' // Breton
@@ -32,3 +32,42 @@ export type ICountrySelectLanguages =
   | 'zho' // Chinese
   | 'zho-Hans' // Simplified Chinese
   | 'zho-Hant'; // Traditional Chinese
+
+export type ICountrySelectLanguagesISO1 =
+  | 'ar' // Arabic
+  | 'be' // Belarusian
+  | 'br' // Breton
+  | 'bg' // Bulgarian
+  | 'cs' // Czech
+  | 'de' // German
+  | 'el' // Greek
+  | 'en' // English
+  | 'et' // Estonian
+  | 'fi' // Finnish
+  | 'fr' // French
+  | 'he' // Hebrew
+  | 'hr' // Croatian
+  | 'hu' // Hungarian
+  | 'it' // Italian
+  | 'ja' // Japanese
+  | 'ko' // Korean
+  | 'nl' // Dutch
+  | 'fa' // Persian
+  | 'pl' // Polish
+  | 'pt' // Portuguese
+  | 'ro' // Romanian
+  | 'ru' // Russian
+  | 'sk' // Slovak
+  | 'es' // Spanish
+  | 'sr' // Serbian
+  | 'sv' // Swedish
+  | 'tr' // Turkish
+  | 'uk' // Ukrainian
+  | 'ur' // Urdu
+  | 'zh' // Chinese
+  | 'zh-Hans' // Simplified Chinese
+  | 'zh-Hant'; // Traditional Chinese
+
+export type ICountrySelectLanguages =
+  | ICountrySelectLanguagesISO2
+  | ICountrySelectLanguagesISO1;

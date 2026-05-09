@@ -27,6 +27,10 @@ export function useCountriesData({
   visibleCountries,
   hiddenCountries,
 }: UseCountriesDataParams): UseCountriesDataResult {
+  const popularKey = popularCountries.join('|');
+  const visibleKey = (visibleCountries as string[]).join('|');
+  const hiddenKey = (hiddenCountries as string[]).join('|');
+
   return useMemo(() => {
     const countriesList = getCountriesList({
       searchQuery,
@@ -53,11 +57,6 @@ export function useCountriesData({
       secondSection !== -1 ? secondSection + 1 : 0;
 
     return { countriesList, allCountriesStartIndex };
-  }, [
-    searchQuery,
-    popularCountries,
-    language,
-    visibleCountries,
-    hiddenCountries,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, popularKey, language, visibleKey, hiddenKey]);
 }

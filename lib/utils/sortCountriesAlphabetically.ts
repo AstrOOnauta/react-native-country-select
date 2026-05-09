@@ -1,16 +1,17 @@
-import {normalizeCountryName} from './normalizeCountryName';
-import {ICountry, ICountrySelectLanguages} from '../interface';
+import { normalizeCountryName } from './normalizeCountryName';
+import { getCountryName } from './getCountryName';
+import { ICountry, ICountrySelectLanguages } from '../interface';
 
 export const sortCountriesAlphabetically = (
   countriesList: ICountry[],
-  language: ICountrySelectLanguages,
+  language: ICountrySelectLanguages
 ): ICountry[] => {
   return [...countriesList].sort((a, b) => {
     const nameA = normalizeCountryName(
-      (a.translations[language]?.common || a.name.common || '').toLowerCase(),
+      getCountryName(a, language).toLowerCase()
     );
     const nameB = normalizeCountryName(
-      (b.translations[language]?.common || b.name.common || '').toLowerCase(),
+      getCountryName(b, language).toLowerCase()
     );
     return nameA.localeCompare(nameB);
   });
