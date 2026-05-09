@@ -14,3 +14,12 @@ tmp
 
 # Gitignore
 .gitignore
+
+# Source/build configs (not needed at runtime)
+scripts/
+tsconfig.json
+tsup.config.ts
+
+# Mac
+.DS_Store
+**/.DS_Store

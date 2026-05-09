@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react-native",
+    "lib": ["es2020", "dom"],
+    "strict": true,
+    "noUnusedLocals": false,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
+    "rootDir": "lib",
+    "stripInternal": true
+  },
+  "include": ["lib"],
+  "exclude": ["node_modules", "dist", "scripts"]
+}
