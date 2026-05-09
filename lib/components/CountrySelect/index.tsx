@@ -1,25 +1,26 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  NativeSyntheticEvent,
-} from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 
-import { PopupModal } from '../PopupModal';
+import { StaticModal } from '../StaticModal';
 import { CloseButton } from '../CloseButton';
 import { SearchInput } from '../SearchInput';
-import { FullscreenModal } from '../FullscreenModal';
 import { BottomSheetModal } from '../BottomSheetModal';
 
 import { createStyles } from '../styles';
-import { translations } from '../../utils/getTranslation';
+import { t } from '../../utils/getTranslation';
+import {
+  isLanguageLoaded,
+  loadLanguage,
+} from '../../constants/registry';
 import {
   ICountry,
   ICountrySelectProps,
-  IThemeProps,
 } from '../../interface';
 
 import { CountriesList } from '../CountriesList';
+
+type SingleSelectFn = (country: ICountry) => void;
+type MultiSelectFn = (countries: ICountry[]) => void;
 
 export const CountrySelect: React.FC<ICountrySelectProps> = ({
   visible,
@@ -75,6 +76,36 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   ...props
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+  const [isLanguageReady, setIsLanguageReady] = useState(() =>
+    isLanguageLoaded(language)
+  );
+
+  useEffect(() => {
+    if (isLanguageLoaded(language)) {
+      setIsLanguageReady(true);
+      return;
+    }
+    setIsLanguageReady(false);
+    let cancelled = false;
+    loadLanguage(language).then(() => {
+      if (!cancelled) setIsLanguageReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [language]);
+
+  useEffect(() => {
+    if (searchQuery === '') {
+      setDebouncedSearchQuery('');
+      return;
+    }
+    const timeout = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 150);
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
 
   const styles = useMemo(
     () => createStyles(theme, modalType, isFullScreen),
@@ -109,21 +140,16 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         : country;
 
       if (isMultiSelect) {
+        const onSelectMulti = onSelect as MultiSelectFn;
         const isSelected = selectedCountryCodes.has(country.cca2);
-        if (isSelected) {
-          (onSelect as (countries: ICountry[]) => void)(
-            selectedCountries.filter((c) => c.cca2 !== country.cca2)
-          );
-          return;
-        }
-        (onSelect as (countries: ICountry[]) => void)([
-          ...selectedCountries,
-          countryWithCustomFlag,
-        ]);
+        const next = isSelected
+          ? selectedCountries.filter((c) => c.cca2 !== country.cca2)
+          : [...selectedCountries, countryWithCustomFlag];
+        onSelectMulti(next);
         return;
       }
 
-      (onSelect as (country: ICountry) => void)(countryWithCustomFlag);
+      (onSelect as SingleSelectFn)(countryWithCustomFlag);
       onClose();
     },
     [
@@ -146,7 +172,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     }
     return (
       <CloseButton
-        theme={theme as IThemeProps}
+        theme={theme}
         language={language}
         onClose={handleCloseModal}
         countrySelectStyle={countrySelectStyle}
@@ -168,7 +194,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         {(showCloseButton || isFullScreen) && renderCloseButton()}
         {showSearchInput && (
           <SearchInput
-            theme={theme as IThemeProps}
+            theme={theme}
             language={language}
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -188,12 +214,13 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   const ContentModal = (
     <CountriesList
       visible={visible}
-      searchQuery={searchQuery}
+      isLanguageReady={isLanguageReady}
+      searchQuery={debouncedSearchQuery}
       popularCountries={popularCountries}
       visibleCountries={visibleCountries}
       hiddenCountries={hiddenCountries}
       language={language}
-      theme={theme as IThemeProps}
+      theme={theme}
       styles={styles}
       countrySelectStyle={countrySelectStyle}
       isMultiSelect={!!isMultiSelect}
@@ -221,42 +248,17 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
   const handleRequestClose = useCallback(() => {
     handleCloseModal();
-    if (onRequestClose) {
-      onRequestClose({} as NativeSyntheticEvent<any>);
-    }
+    (onRequestClose as undefined | (() => void))?.();
   }, [handleCloseModal, onRequestClose]);
 
   const backdropLabel =
-    accessibilityLabelBackdrop ||
-    translations.accessibilityLabelBackdrop[language];
+    accessibilityLabelBackdrop || t('accessibilityLabelBackdrop', language);
   const backdropHint =
-    accessibilityHintBackdrop ||
-    translations.accessibilityHintBackdrop[language];
+    accessibilityHintBackdrop || t('accessibilityHintBackdrop', language);
 
   if (modalType === 'popup' || isFullScreen) {
-    if (isFullScreen) {
-      return (
-        <FullscreenModal
-          visible={visible}
-          onRequestClose={handleRequestClose}
-          statusBarTranslucent
-          removedBackdrop={removedBackdrop}
-          disabledBackdropPress={disabledBackdropPress}
-          onBackdropPress={onBackdropPress}
-          accessibilityLabelBackdrop={backdropLabel}
-          accessibilityHintBackdrop={backdropHint}
-          styles={styles}
-          countrySelectStyle={countrySelectStyle}
-          header={HeaderModal}
-          {...props}
-        >
-          {ContentModal}
-        </FullscreenModal>
-      );
-    }
-
     return (
-      <PopupModal
+      <StaticModal
         visible={visible}
         onRequestClose={handleRequestClose}
         statusBarTranslucent
@@ -267,11 +269,12 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         accessibilityHintBackdrop={backdropHint}
         styles={styles}
         countrySelectStyle={countrySelectStyle}
+        isFullScreen={isFullScreen}
         header={HeaderModal}
         {...props}
       >
         {ContentModal}
-      </PopupModal>
+      </StaticModal>
     );
   }
 

@@ -3,8 +3,7 @@ import { ICountrySelectStyle } from './countrySelectStyles';
 import { ICountrySelectLanguages } from './countrySelectLanguages';
 import { IListItem } from './itemList';
 
-export interface AlphabeticFilterProps {
-  theme?: IThemeProps;
+export interface AlphabeticFilterProps extends IThemeProps {
   activeLetter: string | null;
   onPressLetter: (index: number) => void;
   language: ICountrySelectLanguages;

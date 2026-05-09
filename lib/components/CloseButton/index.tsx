@@ -3,7 +3,7 @@ import { Text, TouchableOpacity } from 'react-native';
 
 import { createStyles } from '../styles';
 import { ICloseButtonProps } from '../../interface';
-import { translations } from '../../utils/getTranslation';
+import { t } from '../../utils/getTranslation';
 
 export const CloseButton: React.FC<ICloseButtonProps> = ({
   theme = 'light',
@@ -21,11 +21,11 @@ export const CloseButton: React.FC<ICloseButtonProps> = ({
       accessibilityRole="button"
       accessibilityLabel={
         accessibilityLabelCloseButton ||
-        translations.accessibilityLabelCloseButton[language]
+        t('accessibilityLabelCloseButton', language)
       }
       accessibilityHint={
         accessibilityHintCloseButton ||
-        translations.accessibilityHintCloseButton[language]
+        t('accessibilityHintCloseButton', language)
       }
       style={[styles.closeButton, countrySelectStyle?.closeButton]}
       activeOpacity={0.6}

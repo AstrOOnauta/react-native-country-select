@@ -2,7 +2,8 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 import { createStyles } from '../styles';
-import { translations } from '../../utils/getTranslation';
+import { t } from '../../utils/getTranslation';
+import { getCountryName } from '../../utils/getCountryName';
 import { ICountryItemProps } from '../../interface';
 
 export const CountryItem = memo<ICountryItemProps>(
@@ -29,21 +30,20 @@ export const CountryItem = memo<ICountryItemProps>(
     const hasCustomFlag =
       customFlagElement !== undefined && customFlagElement !== null;
 
-    const commonName = country.translations[language]?.common;
+    const commonName = getCountryName(country, language);
 
     return (
       <TouchableOpacity
-        testID="countrySelectItem"
+        testID={`countrySelectItem-${country.cca2}`}
         accessibilityRole="button"
+        accessibilityState={{ selected: !!isSelected }}
         accessibilityLabel={
           accessibilityLabel ||
-          translations.accessibilityLabelCountryItem[language] +
-            ` ${commonName}`
+          `${t('accessibilityLabelCountryItem', language)} ${commonName}`
         }
         accessibilityHint={
           accessibilityHint ||
-          translations.accessibilityHintCountryItem[language] +
-            ` ${commonName}`
+          `${t('accessibilityHintCountryItem', language)} ${commonName}`
         }
         onPress={handlePress}
       >
@@ -61,7 +61,7 @@ export const CountryItem = memo<ICountryItemProps>(
               customFlagElement
             ) : (
               <Text
-                testID="countrySelectItemFlag"
+                testID={`countrySelectItemFlag-${country.cca2}`}
                 style={[styles.flag, countrySelectStyle?.flag]}
                 allowFontScaling={allowFontScaling}
               >
@@ -75,7 +75,7 @@ export const CountryItem = memo<ICountryItemProps>(
               ]}
             >
               <Text
-                testID="countrySelectItemCallingCode"
+                testID={`countrySelectItemCallingCode-${country.cca2}`}
                 style={[
                   styles.callingCode,
                   countrySelectStyle?.callingCode,
@@ -86,7 +86,7 @@ export const CountryItem = memo<ICountryItemProps>(
                 {country.idd.root}
               </Text>
               <Text
-                testID="countrySelectItemName"
+                testID={`countrySelectItemName-${country.cca2}`}
                 style={[
                   styles.countryName,
                   countrySelectStyle?.countryName,

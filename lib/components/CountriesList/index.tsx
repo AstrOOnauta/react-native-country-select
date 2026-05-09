@@ -1,11 +1,12 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
+  ActivityIndicator,
   View,
   FlatList,
   ListRenderItem,
-  Text,
   StyleProp,
+  StyleSheet,
+  Text,
   TextStyle,
   ViewStyle,
 } from 'react-native';
@@ -13,7 +14,7 @@ import {
 import { CountryItem } from '../CountryItem';
 import { AlphabeticFilter } from '../AlphabeticFilter';
 
-import { translations } from '../../utils/getTranslation';
+import { t } from '../../utils/getTranslation';
 import {
   ICountry,
   ICountryCca2,
@@ -38,16 +39,24 @@ const FLATLIST_TUNING = {
 
 const VIEWABILITY_CONFIG = { itemVisiblePercentThreshold: 50 };
 
+const localStyles = StyleSheet.create({
+  flex1: { flex: 1 },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
 const keyExtractor = (item: IListItem) =>
   'isSection' in item ? item.title : item.cca2;
 
-export interface CountriesListProps {
+export interface CountriesListProps extends IThemeProps {
   searchQuery: string;
   popularCountries: string[];
   visibleCountries: ICountryCca2[];
   hiddenCountries: ICountryCca2[];
   language: ICountrySelectLanguages;
-  theme: IThemeProps;
   styles: {
     list: StyleProp<ViewStyle>;
     sectionTitle: StyleProp<TextStyle>;
@@ -78,16 +87,18 @@ export interface CountriesListProps {
   accessibilityHintAlphabetLetter?: string;
   allowFontScaling: boolean;
   visible: boolean;
+  isLanguageReady: boolean;
 }
 
 export const CountriesList: React.FC<CountriesListProps> = ({
   visible,
+  isLanguageReady,
   searchQuery,
   popularCountries,
   visibleCountries,
   hiddenCountries,
   language,
-  theme,
+  theme = 'light',
   styles,
   countrySelectStyle,
   isMultiSelect,
@@ -215,9 +226,23 @@ export const CountriesList: React.FC<CountriesListProps> = ({
     ]
   );
 
+  if (!isLanguageReady) {
+    return (
+      <View
+        testID="countrySelectLanguageLoading"
+        style={localStyles.loadingContainer}
+      >
+        <ActivityIndicator
+          size="large"
+          color={theme === 'dark' ? '#FFFFFF' : '#000000'}
+        />
+      </View>
+    );
+  }
+
   if (countriesList.length === 0) {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={localStyles.flex1}>
         <View
           style={[
             styles.countryNotFoundContainer,
@@ -231,8 +256,7 @@ export const CountriesList: React.FC<CountriesListProps> = ({
             ]}
             allowFontScaling={allowFontScaling}
           >
-            {countryNotFoundMessage ||
-              translations.searchNotFoundMessage[language]}
+            {countryNotFoundMessage || t('searchNotFoundMessage', language)}
           </Text>
         </View>
       </View>
@@ -241,18 +265,18 @@ export const CountriesList: React.FC<CountriesListProps> = ({
 
   return (
     <>
-      <View style={{ flex: 1 }}>
+      <View style={localStyles.flex1}>
         <FlatList
           ref={flatListRef}
           testID="countrySelectList"
           accessibilityRole="list"
           accessibilityLabel={
             accessibilityLabelCountriesList ||
-            translations.accessibilityLabelCountriesList[language]
+            t('accessibilityLabelCountriesList', language)
           }
           accessibilityHint={
             accessibilityHintCountriesList ||
-            translations.accessibilityHintCountriesList[language]
+            t('accessibilityHintCountriesList', language)
           }
           data={countriesList}
           keyExtractor={keyExtractor}

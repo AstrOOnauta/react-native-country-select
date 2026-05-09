@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { TextInput } from 'react-native';
 
 import { createStyles } from '../styles';
-import { translations } from '../../utils/getTranslation';
-import { ISearchInputProps, ICountrySelectLanguages } from '../../interface';
+import { t } from '../../utils/getTranslation';
+import { ISearchInputProps } from '../../interface';
 
 export const SearchInput: React.FC<ISearchInputProps> = ({
   theme = 'light',
@@ -22,7 +22,8 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
   const styles = useMemo(() => createStyles(theme), [theme]);
   const [isFocused, setIsFocused] = useState(false);
 
-  const focusedBorderColor = searchFocusedBorderColor || theme === 'dark' ? '#60A5FA' : '#3B82F6';
+  const focusedBorderColor =
+    searchFocusedBorderColor ?? (theme === 'dark' ? '#60A5FA' : '#3B82F6');
 
   return (
     <TextInput
@@ -30,16 +31,15 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
       accessibilityRole="text"
       accessibilityLabel={
         accessibilityLabelSearchInput ||
-        translations.accessibilityLabelSearchInput[language]
+        t('accessibilityLabelSearchInput', language)
       }
       accessibilityHint={
         accessibilityHintSearchInput ||
-        translations.accessibilityHintSearchInput[language]
+        t('accessibilityHintSearchInput', language)
       }
       style={[styles.searchInput, countrySelectStyle?.searchInput, isFocused && { borderColor: focusedBorderColor }]}
       placeholder={
-        searchPlaceholder ||
-        translations.searchPlaceholder[language as ICountrySelectLanguages]
+        searchPlaceholder || t('searchPlaceholder', language)
       }
       placeholderTextColor={
         searchPlaceholderTextColor ||

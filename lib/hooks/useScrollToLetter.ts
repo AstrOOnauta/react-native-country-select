@@ -1,6 +1,8 @@
 import { MutableRefObject, useCallback, useRef } from 'react';
 import { FlatList } from 'react-native';
 
+import { getCountryName } from '../utils/getCountryName';
+import { normalizeCountryName } from '../utils/normalizeCountryName';
 import {
   ICountry,
   ICountrySelectLanguages,
@@ -32,10 +34,11 @@ export function useScrollToLetter({
       for (let i = index; i < countriesList.length; i++) {
         const item = countriesList[i];
         if (!('isSection' in item)) {
-          const name =
-            (item as ICountry)?.translations[language]?.common || '';
+          const name = getCountryName(item as ICountry, language);
           if (name) {
-            computedLetter = name[0].toUpperCase();
+            const normalized = normalizeCountryName(name.toLowerCase());
+            const first = normalized[0] || '';
+            if (first) computedLetter = first.toUpperCase();
           }
           break;
         }

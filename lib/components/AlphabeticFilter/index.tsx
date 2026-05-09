@@ -1,13 +1,19 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { createStyles } from '../styles';
-import { translations } from '../../utils/getTranslation';
+import { t } from '../../utils/getTranslation';
 import { createAlphabet } from '../../utils/createAlphabet';
 import { AlphabeticFilterProps } from '../../interface/alfabeticFilterProps';
 import { normalizeCountryName } from '../../utils/normalizeCountryName';
-import { ICountry, IListItem } from '../../interface';
+import { getCountryName } from '../../utils/getCountryName';
+import { ICountry, ICountrySelectLanguages, IListItem } from '../../interface';
 
 const ALPHABET = createAlphabet();
 const ALPHABET_VIEWPORT_HEIGHT = 0;
@@ -17,10 +23,13 @@ const SCROLL_CENTER_OFFSET = Math.max(
   0,
   ALPHABET_VIEWPORT_HEIGHT / 2 - ALPHABET_ITEM_SIZE / 2
 );
-const ALPHABET_CONTENT_CONTAINER_STYLE = {
-  alignItems: 'center' as const,
-  paddingVertical: 12,
-};
+
+const localStyles = StyleSheet.create({
+  contentContainer: {
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+});
 
 interface LetterEntry {
   letter: string;
@@ -31,19 +40,14 @@ interface LetterEntry {
 function buildLetterEntries(
   countries: IListItem[],
   allCountriesStartIndex: number,
-  language: string
+  language: ICountrySelectLanguages
 ): LetterEntry[] {
   const map: Record<string, number> = {};
-  const lower = language;
   for (let i = allCountriesStartIndex; i < countries.length; i++) {
     const item = countries[i];
     if ('isSection' in item) continue;
     const country = item as ICountry;
-    const displayName =
-      country.translations[lower as keyof typeof country.translations]
-        ?.common ||
-      country.name?.common ||
-      '';
+    const displayName = getCountryName(country, language);
     if (!displayName) continue;
     const normalized = normalizeCountryName(displayName.toLowerCase());
     const first = (normalized[0] || '').toUpperCase();
@@ -105,18 +109,18 @@ export const AlphabeticFilter = memo<AlphabeticFilterProps>(
         accessibilityRole="list"
         accessibilityLabel={
           accessibilityLabelAlphabetFilter ||
-          translations.accessibilityLabelAlphabetFilter[language]
+          t('accessibilityLabelAlphabetFilter', language)
         }
         accessibilityHint={
           accessibilityHintAlphabetFilter ||
-          translations.accessibilityHintAlphabetFilter[language]
+          t('accessibilityHintAlphabetFilter', language)
         }
         ref={alphabetScrollRef}
         style={[
           styles.alphabetContainer,
           countrySelectStyle?.alphabetContainer,
         ]}
-        contentContainerStyle={ALPHABET_CONTENT_CONTAINER_STYLE}
+        contentContainerStyle={localStyles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
         {letterEntries.map(({ letter, enabled, index }) => {
@@ -162,13 +166,11 @@ export const AlphabeticFilter = memo<AlphabeticFilterProps>(
               accessibilityRole="button"
               accessibilityHint={
                 accessibilityHintAlphabetLetter ||
-                translations.accessibilityHintAlphabetLetter[language] +
-                  ` ${letter}`
+                `${t('accessibilityHintAlphabetLetter', language)} ${letter}`
               }
               accessibilityLabel={
                 accessibilityLabelAlphabetLetter ||
-                translations.accessibilityLabelAlphabetLetter[language] +
-                  ` ${letter}`
+                `${t('accessibilityLabelAlphabetLetter', language)} ${letter}`
               }
             >
               <Text
