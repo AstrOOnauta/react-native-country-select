@@ -1,6 +1,15 @@
 import { Platform, StyleSheet } from 'react-native';
 
-export const createStyles = (theme, modalType, isFullScreen) =>
+type Theme = 'light' | 'dark';
+type ModalType = 'bottomSheet' | 'popup' | undefined;
+
+const stylesCache = new Map<string, ReturnType<typeof buildStyles>>();
+
+const buildStyles = (
+  theme: Theme,
+  modalType?: ModalType,
+  isFullScreen?: boolean
+) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -181,3 +190,17 @@ export const createStyles = (theme, modalType, isFullScreen) =>
       color: theme === 'dark' ? '#FFFFFF80' : '#00000080',
     },
   });
+
+export const createStyles = (
+  theme: Theme,
+  modalType?: ModalType,
+  isFullScreen?: boolean
+) => {
+  const key = `${theme}|${modalType ?? '_'}|${isFullScreen ? 1 : 0}`;
+  let cached = stylesCache.get(key);
+  if (!cached) {
+    cached = buildStyles(theme, modalType, isFullScreen);
+    stylesCache.set(key, cached);
+  }
+  return cached;
+};

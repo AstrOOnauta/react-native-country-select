@@ -1,10 +1,9 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {
   Modal,
   ModalProps,
-  NativeSyntheticEvent,
   Pressable,
+  StyleSheet,
   View,
 } from 'react-native';
 import {
@@ -14,9 +13,9 @@ import {
 
 import { ICountrySelectStyle } from '../../interface';
 
-interface PopupModalProps extends ModalProps {
+interface StaticModalProps extends ModalProps {
   visible: boolean;
-  onRequestClose: (event: NativeSyntheticEvent<any>) => void;
+  onRequestClose: () => void;
   statusBarTranslucent?: boolean;
   removedBackdrop?: boolean;
   disabledBackdropPress?: boolean;
@@ -25,11 +24,21 @@ interface PopupModalProps extends ModalProps {
   accessibilityHintBackdrop?: string;
   styles: ICountrySelectStyle;
   countrySelectStyle?: ICountrySelectStyle;
+  isFullScreen?: boolean;
   header?: React.ReactNode;
   children: React.ReactNode;
 }
 
-export const PopupModal: React.FC<PopupModalProps> = ({
+const localStyles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  childrenWrapper: { flex: 1, flexDirection: 'row' },
+  centeredBackdrop: { alignItems: 'center', justifyContent: 'center' },
+  transparentBackdrop: { backgroundColor: 'transparent' },
+  fullSize: { flex: 1, width: '100%', height: '100%' },
+  fullScreenContent: { borderRadius: 0, width: '100%', height: '100%' },
+});
+
+export const StaticModal: React.FC<StaticModalProps> = ({
   visible,
   onRequestClose,
   statusBarTranslucent,
@@ -40,10 +49,13 @@ export const PopupModal: React.FC<PopupModalProps> = ({
   accessibilityHintBackdrop,
   styles,
   countrySelectStyle,
+  isFullScreen,
   header,
   children,
   ...props
 }) => {
+  const backdropDisabled = disabledBackdropPress || removedBackdrop;
+
   return (
     <Modal
       visible={visible}
@@ -54,40 +66,48 @@ export const PopupModal: React.FC<PopupModalProps> = ({
       {...props}
     >
       <SafeAreaProvider>
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={localStyles.safeArea}>
           <View
             testID="countrySelectContainer"
-            style={[styles.container, countrySelectStyle?.container]}
+            style={[
+              styles.container,
+              countrySelectStyle?.container,
+              isFullScreen && localStyles.fullSize,
+            ]}
           >
             <Pressable
               testID="countrySelectBackdrop"
               accessibilityRole="button"
               accessibilityLabel={accessibilityLabelBackdrop}
               accessibilityHint={accessibilityHintBackdrop}
-              disabled={disabledBackdropPress || removedBackdrop}
+              accessibilityElementsHidden={backdropDisabled}
+              importantForAccessibility={
+                backdropDisabled ? 'no-hide-descendants' : 'yes'
+              }
+              disabled={backdropDisabled}
               style={[
                 styles.backdrop,
-                { alignItems: 'center', justifyContent: 'center' },
+                localStyles.centeredBackdrop,
                 countrySelectStyle?.backdrop,
-                removedBackdrop && { backgroundColor: 'transparent' },
+                removedBackdrop && localStyles.transparentBackdrop,
               ]}
               onPress={
                 onBackdropPress
-                  ? () =>
-                      onBackdropPress(() =>
-                        onRequestClose(
-                          {} as NativeSyntheticEvent<any>
-                        )
-                      )
+                  ? () => onBackdropPress(onRequestClose)
                   : onRequestClose
               }
             />
             <View
               testID="countrySelectContent"
-              style={[styles.content, countrySelectStyle?.content]}
+              accessibilityViewIsModal
+              style={[
+                styles.content,
+                countrySelectStyle?.content,
+                isFullScreen && localStyles.fullScreenContent,
+              ]}
             >
               {header}
-              <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={localStyles.childrenWrapper}>
                 {children}
               </View>
             </View>
