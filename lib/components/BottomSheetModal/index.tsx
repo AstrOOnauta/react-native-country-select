@@ -1,14 +1,13 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   Modal,
   ModalProps,
   Pressable,
+  StyleSheet,
   View,
   PanResponder,
   Keyboard,
-  NativeSyntheticEvent,
 } from 'react-native';
 import {
   SafeAreaProvider,
@@ -20,7 +19,7 @@ import { ICountrySelectStyle } from '../../interface';
 
 interface BottomSheetModalProps extends ModalProps {
   visible: boolean;
-  onRequestClose: (event: NativeSyntheticEvent<any>) => void;
+  onRequestClose: () => void;
   statusBarTranslucent?: boolean;
   removedBackdrop?: boolean;
   disabledBackdropPress?: boolean;
@@ -40,6 +39,12 @@ interface BottomSheetModalProps extends ModalProps {
 const MIN_HEIGHT_PERCENTAGE = 0.3;
 const MAX_HEIGHT_PERCENTAGE = 0.9;
 const INITIAL_HEIGHT_PERCENTAGE = 0.5;
+
+const localStyles = StyleSheet.create({
+  safeArea: { flex: 1 },
+  childrenWrapper: { flex: 1, flexDirection: 'row' },
+  transparentBackdrop: { backgroundColor: 'transparent' },
+});
 
 export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
   visible,
@@ -145,9 +150,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
               toValue: 0,
               duration: 200,
               useNativeDriver: false,
-            }).start(() =>
-              onRequestClose({} as NativeSyntheticEvent<any>)
-            );
+            }).start(() => onRequestClose());
             return;
           }
           const finalHeight = Math.min(
@@ -174,6 +177,9 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
       }),
     [bottomSheetSize, sheetHeight, onRequestClose]
   );
+
+  const backdropDisabled = disabledBackdropPress || removedBackdrop;
+
   return (
     <Modal
       visible={visible}
@@ -184,7 +190,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
       {...props}
     >
       <SafeAreaProvider>
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={localStyles.safeArea}>
           <View
             testID="countrySelectContainer"
             style={[styles.container, countrySelectStyle?.container]}
@@ -197,31 +203,29 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
               accessibilityRole="button"
               accessibilityLabel={accessibilityLabelBackdrop}
               accessibilityHint={accessibilityHintBackdrop}
-              disabled={disabledBackdropPress || removedBackdrop}
+              accessibilityElementsHidden={backdropDisabled}
+              importantForAccessibility={
+                backdropDisabled ? 'no-hide-descendants' : 'yes'
+              }
+              disabled={backdropDisabled}
               style={[
                 styles.backdrop,
                 countrySelectStyle?.backdrop,
-                removedBackdrop && { backgroundColor: 'transparent' },
+                removedBackdrop && localStyles.transparentBackdrop,
               ]}
               onPress={
                 onBackdropPress
-                  ? () =>
-                      onBackdropPress(() =>
-                        onRequestClose(
-                          {} as NativeSyntheticEvent<any>
-                        )
-                      )
+                  ? () => onBackdropPress(onRequestClose)
                   : onRequestClose
               }
             />
             <Animated.View
               testID="countrySelectContent"
+              accessibilityViewIsModal
               style={[
                 styles.content,
                 countrySelectStyle?.content,
-                {
-                  height: sheetHeight,
-                },
+                { height: sheetHeight },
               ]}
             >
               <View
@@ -243,11 +247,9 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
                 )}
               </View>
               {header}
-              <Animated.View
-                style={{ flex: 1, flexDirection: 'row' }}
-              >
+              <View style={localStyles.childrenWrapper}>
                 {children}
-              </Animated.View>
+              </View>
             </Animated.View>
           </View>
         </SafeAreaView>
