@@ -2,8 +2,7 @@ import { ICountrySelectLanguages } from './countrySelectLanguages';
 import { ICountrySelectStyle } from './countrySelectStyles';
 import { IThemeProps } from './theme';
 
-export interface ISearchInputProps {
-  theme?: IThemeProps;
+export interface ISearchInputProps extends IThemeProps {
   language: ICountrySelectLanguages;
   value: string;
   onChangeText: (text: string) => void;

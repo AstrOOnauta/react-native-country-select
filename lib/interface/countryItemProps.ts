@@ -4,9 +4,8 @@ import { IThemeProps } from './theme';
 import { ICountrySelectStyle } from './countrySelectStyles';
 import { ICountrySelectLanguages } from './countrySelectLanguages';
 
-export interface ICountryItemProps {
+export interface ICountryItemProps extends IThemeProps {
   country: ICountry;
-  theme?: IThemeProps;
   isSelected?: boolean;
   onSelect: (country: ICountry) => void;
   language: ICountrySelectLanguages;

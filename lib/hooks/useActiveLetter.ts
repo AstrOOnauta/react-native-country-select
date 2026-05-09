@@ -1,5 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 
+import { getCountryName } from '../utils/getCountryName';
+import { normalizeCountryName } from '../utils/normalizeCountryName';
 import {
   ICountry,
   ICountrySelectLanguages,
@@ -48,10 +50,11 @@ export function useActiveLetter({
       for (const v of viewableItems) {
         const idx = v.index ?? -1;
         if (!('isSection' in v.item) && idx >= startIdx) {
-          const name =
-            (v.item as ICountry)?.translations[lang]?.common || '';
+          const name = getCountryName(v.item as ICountry, lang);
           if (name) {
-            updated = name[0].toUpperCase();
+            const normalized = normalizeCountryName(name.toLowerCase());
+            const first = normalized[0] || '';
+            if (first) updated = first.toUpperCase();
           }
           break;
         }
