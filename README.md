@@ -1,7 +1,7 @@
 <br>
 
-<div align = "center">
-  <img src="https://astroonauta.github.io/react-native-country-select/lib/assets/images/preview.png" alt="React Native Country Picker and Select Lib preview">
+<div align="center">
+  <img src="https://astroonauta.github.io/react-native-country-select/lib/assets/images/preview.png" alt="rn-country-select preview - React Native country picker, country code selector, dial code dropdown, flag picker with search, multi-select, dark mode and i18n (33 languages)">
 </div>
 
 <br>
@@ -9,29 +9,29 @@
 <h1 align="center">React Native Country Select</h1>
 
 <p>
-  🌍 React Native country picker with flags, search, TypeScript, i18n, and offline support. Lightweight, customizable, and designed with a modern UI.
+  🌍 React Native country picker with flags, search, multi-select, dial codes, TypeScript, full i18n (33 languages, ISO 639-1 & ISO 639-2), and offline support. Lightweight, lazy-loaded translations, customizable, and designed with a modern UI.
 </p>
 
 <br>
 
 <div align="center">
   <a href="https://www.npmjs.com/package/rn-country-select">
-    <img src="https://img.shields.io/npm/v/rn-country-select.svg?style=flat-square">
+    <img src="https://img.shields.io/npm/v/rn-country-select.svg?style=flat-square" alt="rn-country-select npm version - React Native country picker">
   </a>
   <a href="https://www.npmjs.com/package/rn-country-select">
-    <img src="https://img.shields.io/npm/dt/rn-country-select.svg?style=flat-square&color=success">
+    <img src="https://img.shields.io/npm/dt/rn-country-select.svg?style=flat-square&color=success" alt="rn-country-select npm downloads - React Native country picker">
   </a>
   <a href="https://github.com/AstrOOnauta/react-native-country-select">
-    <img src="https://img.shields.io/github/stars/AstrOOnauta/react-native-country-select?style=flat-square&color=success"/>
+    <img src="https://img.shields.io/github/stars/AstrOOnauta/react-native-country-select?style=flat-square&color=success" alt="GitHub stars - React Native country select"/>
   </a>
   <a href="https://github.com/AstrOOnauta/react-native-country-select/issues">
-    <img src="https://img.shields.io/github/issues/AstrOOnauta/react-native-country-select?style=flat-square&color=blue"/>
+    <img src="https://img.shields.io/github/issues/AstrOOnauta/react-native-country-select?style=flat-square&color=blue" alt="GitHub issues - React Native country picker"/>
   </a>
   <a href="https://github.com/AstrOOnauta/react-native-country-select/pulls">
-    <img src="https://img.shields.io/github/issues-pr/AstrOOnauta/react-native-country-select?style=flat-square&color=blue"/>
+    <img src="https://img.shields.io/github/issues-pr/AstrOOnauta/react-native-country-select?style=flat-square&color=blue" alt="GitHub pull requests - rn-country-select"/>
   </a>
   <a href="LICENSE.md">
-    <img src="https://img.shields.io/:license-isc-yellow.svg?style=flat-square"/>
+    <img src="https://img.shields.io/:license-isc-yellow.svg?style=flat-square" alt="ISC License"/>
   </a>
 </div>
 
@@ -39,7 +39,7 @@
 
 <div align="center">
     <a href="https://www.buymeacoffee.com/astroonautadev" target="_blank">
-        <img src="https://survivingmexico.files.wordpress.com/2018/07/button-gif.gif" alt="Buy Me A Coffee" style="height: auto !important;width: 60% !important;">
+        <img src="https://survivingmexico.files.wordpress.com/2018/07/button-gif.gif" alt="Buy Me A Coffee - Support rn-country-select" style="height: auto !important;width: 60% !important;">
     </a>
 </div>
 
@@ -49,10 +49,15 @@
 
 - 📱 **Cross-Platform** – Works seamlessly on **iOS, Android and Web**;
 - 🧩 **Flexible Integration** – Supports both **React Native CLI & Expo**;
-- 🎨 **Modern UI** - Custom component with sleek design;
+- 🎨 **Modern UI** - Custom component with sleek design and dark mode;
 - 👨‍💻 **Component Versatility** - Works with **functional & class components**;
-- 🈶 **internationalization** - Supports **32 languages**;
-- 🧪 **Test Ready** – Smooth testing integration;
+- 🈶 **Internationalization** - Supports **33 languages**, accepts both **ISO 639-1** (`pt`, `en`, `es`) and **ISO 639-2** (`por`, `eng`, `spa`);
+- 🔍 **Smart search** - Search by name (diacritic-insensitive), calling code, flag, alpha-2 (`BR`) and alpha-3 (`BRA`);
+- 🔠 **Alphabet filter** - Jump-to-letter sidebar;
+- ⭐ **Popular section, whitelist & blacklist** of countries;
+- ⚡ **Lazy-loaded translations** - small initial bundle, additional languages loaded on demand;
+- 🟢 **Offline-first** - Full ISO 3166-1 dataset bundled, no network calls;
+- 🧪 **Test Ready** – Smooth testing integration with stable `testID`s per country;
 - ♿ **Accessibility** – Accessibility standards to screen readers.
 
 <br>
@@ -71,7 +76,7 @@ To use this library, make sure you have **rn-country-select** installed along wi
 npm install rn-country-select react-native-safe-area-context
 ```
 
-Since **react-native-safe-area-context** includes native code, you’ll need to install the iOS pods on macOS to complete the linking:
+Since **react-native-safe-area-context** includes native code, you'll need to install the iOS pods on macOS to complete the linking:
 
 ```bash
 npx pod-install ios
@@ -350,7 +355,7 @@ export default function App() {
 | visibleCountries             | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                   | Array of country codes to show (whitelist)                                             |
 | hiddenCountries              | [ICountryCca2[]](lib/interfaces/countryCca2.ts)                         | No       | []                   | Array of country codes to hide (blacklist)                                             |
 | theme                        | 'light' \| 'dark'                                                       | No       | 'light'              | Theme for the country picker                                                           |
-| language                     | [ICountrySelectLanguages](lib/interfaces/countrySelectLanguages.ts)     | No       | 'eng'                | Language for country names (see supported languages below)                             |
+| language                     | [ICountrySelectLanguages](lib/interfaces/countrySelectLanguages.ts)     | No       | 'eng'                | Language for country names. Accepts ISO 639-1 (`pt`) or ISO 639-2 (`por`)              |
 | showSearchInput              | boolean                                                                 | No       | true                 | Whether to show the search input field                                                 |
 | showAlphabetFilter           | boolean                                                                 | No       | false                | Whether to show the alphabetic filter on modal                                         |
 | searchPlaceholder            | string                                                                  | No       | 'Search country...'  | Placeholder text for search input                                                      |
@@ -379,43 +384,45 @@ export default function App() {
 
 ### Supported Languages
 
-The `language` prop supports the following values:
+The `language` prop accepts both **ISO 639-1** (2-letter) and **ISO 639-2** (3-letter) codes:
 
-| Code       | Language            |
-| ---------- | ------------------- |
-| `ara`      | Arabic              |
-| `bel`      | Belarusian          |
-| `bre`      | Breton              |
-| `bul`      | Bulgarian           |
-| `ces`      | Czech               |
-| `deu`      | German              |
-| `ell`      | Greek               |
-| `eng`      | English             |
-| `est`      | Estonian            |
-| `fin`      | Finnish             |
-| `fra`      | French              |
-| `heb`      | Hebrew              |
-| `hrv`      | Croatian            |
-| `hun`      | Hungarian           |
-| `ita`      | Italian             |
-| `jpn`      | Japanese            |
-| `kor`      | Korean              |
-| `nld`      | Dutch               |
-| `per`      | Persian             |
-| `pol`      | Polish              |
-| `por`      | Portuguese          |
-| `ron`      | Romanian            |
-| `rus`      | Russian             |
-| `slk`      | Slovak              |
-| `spa`      | Spanish             |
-| `srp`      | Serbian             |
-| `swe`      | Swedish             |
-| `tur`      | Turkish             |
-| `ukr`      | Ukrainian           |
-| `urd`      | Urdu                |
-| `zho`      | Chinese             |
-| `zho-Hans` | Simplified Chinese  |
-| `zho-Hant` | Traditional Chinese |
+| ISO 639-1 | ISO 639-2  | Language            |
+| --------- | ---------- | ------------------- |
+| `ar`      | `ara`      | Arabic              |
+| `be`      | `bel`      | Belarusian          |
+| `br`      | `bre`      | Breton              |
+| `bg`      | `bul`      | Bulgarian           |
+| `cs`      | `ces`      | Czech               |
+| `de`      | `deu`      | German              |
+| `el`      | `ell`      | Greek               |
+| `en`      | `eng`      | English (default)   |
+| `et`      | `est`      | Estonian            |
+| `fi`      | `fin`      | Finnish             |
+| `fr`      | `fra`      | French              |
+| `he`      | `heb`      | Hebrew              |
+| `hr`      | `hrv`      | Croatian            |
+| `hu`      | `hun`      | Hungarian           |
+| `it`      | `ita`      | Italian             |
+| `ja`      | `jpn`      | Japanese            |
+| `ko`      | `kor`      | Korean              |
+| `nl`      | `nld`      | Dutch               |
+| `fa`      | `per`      | Persian             |
+| `pl`      | `pol`      | Polish              |
+| `pt`      | `por`      | Portuguese          |
+| `ro`      | `ron`      | Romanian            |
+| `ru`      | `rus`      | Russian             |
+| `sk`      | `slk`      | Slovak              |
+| `es`      | `spa`      | Spanish             |
+| `sr`      | `srp`      | Serbian             |
+| `sv`      | `swe`      | Swedish             |
+| `tr`      | `tur`      | Turkish             |
+| `uk`      | `ukr`      | Ukrainian           |
+| `ur`      | `urd`      | Urdu                |
+| `zh`      | `zho`      | Chinese             |
+| `zh-Hans` | `zho-Hans` | Simplified Chinese  |
+| `zh-Hant` | `zho-Hant` | Traditional Chinese |
+
+> Only English is bundled by default. Other languages are loaded on demand the first time they are used.
 
 <br>
 
@@ -433,10 +440,26 @@ const countrySelectList = getByTestId('countrySelectList');
 const countrySelectSearchInput = getByTestId(
   'countrySelectSearchInput'
 );
-const countrySelectItem = getByTestId('countrySelectItem');
 const countrySelectCloseButton = getByTestId(
   'countrySelectCloseButton'
 );
+const countrySelectAlphabetFilter = getByTestId(
+  'countrySelectAlphabetFilter'
+);
+const countrySelectSectionTitle = getByTestId(
+  'countrySelectSectionTitle'
+);
+const countrySelectLanguageLoading = getByTestId(
+  'countrySelectLanguageLoading'
+);
+
+// Per-country (suffix is the cca2 code)
+const brazilItem = getByTestId('countrySelectItem-BR');
+const brazilFlag = getByTestId('countrySelectItemFlag-BR');
+const brazilCallingCode = getByTestId(
+  'countrySelectItemCallingCode-BR'
+);
+const brazilName = getByTestId('countrySelectItemName-BR');
 ```
 
 <br>
@@ -490,7 +513,7 @@ Thank you for considering contributing to **rn-country-select**!
 
 <br>
 
-<div align = "center">
+<div align="center">
 	<br>
 	  Thanks for stopping by! 😁
 	<br>
