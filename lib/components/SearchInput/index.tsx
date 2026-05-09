@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { TextInput } from 'react-native';
 
 import { createStyles } from '../styles';
@@ -19,7 +19,7 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
   accessibilityHintSearchInput,
   allowFontScaling = true,
 }) => {
-  const styles = createStyles(theme);
+  const styles = useMemo(() => createStyles(theme), [theme]);
   const [isFocused, setIsFocused] = useState(false);
 
   const focusedBorderColor = searchFocusedBorderColor || theme === 'dark' ? '#60A5FA' : '#3B82F6';

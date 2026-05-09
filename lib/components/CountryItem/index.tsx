@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 import { createStyles } from '../styles';
@@ -19,7 +19,17 @@ export const CountryItem = memo<ICountryItemProps>(
     accessibilityHint,
     allowFontScaling = true,
   }) => {
-    const styles = createStyles(theme);
+    const styles = useMemo(() => createStyles(theme), [theme]);
+    const handlePress = useCallback(() => onSelect(country), [
+      onSelect,
+      country,
+    ]);
+
+    const customFlagElement = customFlag ? customFlag(country) : null;
+    const hasCustomFlag =
+      customFlagElement !== undefined && customFlagElement !== null;
+
+    const commonName = country.translations[language]?.common;
 
     return (
       <TouchableOpacity
@@ -28,14 +38,14 @@ export const CountryItem = memo<ICountryItemProps>(
         accessibilityLabel={
           accessibilityLabel ||
           translations.accessibilityLabelCountryItem[language] +
-            ` ${country.translations[language]?.common}`
+            ` ${commonName}`
         }
         accessibilityHint={
           accessibilityHint ||
           translations.accessibilityHintCountryItem[language] +
-            ` ${country.translations[language]?.common}`
+            ` ${commonName}`
         }
-        onPress={() => onSelect(country)}
+        onPress={handlePress}
       >
         {countryItemComponent ? (
           countryItemComponent(country)
@@ -47,10 +57,8 @@ export const CountryItem = memo<ICountryItemProps>(
               isSelected && styles.countryItemSelected,
             ]}
           >
-            {customFlag &&
-            customFlag(country) !== undefined &&
-            customFlag(country) !== null ? (
-              customFlag(country)
+            {hasCustomFlag ? (
+              customFlagElement
             ) : (
               <Text
                 testID="countrySelectItemFlag"
@@ -86,7 +94,7 @@ export const CountryItem = memo<ICountryItemProps>(
                 ]}
                 allowFontScaling={allowFontScaling}
               >
-                {country?.translations[language]?.common}
+                {commonName}
               </Text>
             </View>
           </View>
