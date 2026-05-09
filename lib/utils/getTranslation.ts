@@ -1,4 +1,8 @@
-import {ICountrySelectLanguages} from '../interface';
+import {
+  ICountrySelectLanguages,
+  ICountrySelectLanguagesISO2,
+} from '../interface';
+import { normalizeLanguage } from './normalizeLanguage';
 
 type TranslationKey =
   | 'searchPlaceholder'
@@ -21,8 +25,15 @@ type TranslationKey =
   | 'accessibilityHintAlphabetLetter';
 type TranslationMap = Record<
   TranslationKey,
-  Record<ICountrySelectLanguages, string>
+  Record<ICountrySelectLanguagesISO2, string>
 >;
+
+export function t(
+  key: TranslationKey,
+  language: ICountrySelectLanguages
+): string {
+  return translations[key][normalizeLanguage(language)];
+}
 
 export const translations: TranslationMap = {
   searchPlaceholder: {

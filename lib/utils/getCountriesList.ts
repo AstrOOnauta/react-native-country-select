@@ -1,8 +1,9 @@
-import {translations} from './getTranslation';
-import countries from '../constants/countries.json';
-import {normalizeCountryName} from './normalizeCountryName';
-import {ICountry, ICountrySelectLanguages, IListItem} from '../interface';
-import {sortCountriesAlphabetically} from './sortCountriesAlphabetically';
+import { t } from './getTranslation';
+import { baseCountries } from '../constants/registry';
+import { normalizeCountryName } from './normalizeCountryName';
+import { getCountryName } from './getCountryName';
+import { ICountry, ICountrySelectLanguages, IListItem } from '../interface';
+import { sortCountriesAlphabetically } from './sortCountriesAlphabetically';
 
 type Params = {
   searchQuery: string;
@@ -21,37 +22,31 @@ export function getCountriesList({
 }: Params): IListItem[] {
   const query = searchQuery.toLowerCase().trim();
 
-  let countriesData = countries as unknown as ICountry[];
+  let countriesData = baseCountries as unknown as ICountry[];
 
   if (visibleCountries.length > 0 && hiddenCountries.length > 0) {
-    countriesData = (countries as unknown as ICountry[]).filter(country => {
-      return (
+    countriesData = countriesData.filter(
+      (country) =>
         visibleCountries.includes(country.cca2) &&
         !hiddenCountries.includes(country.cca2)
-      );
-    });
-  }
-
-  if (visibleCountries.length > 0 && hiddenCountries.length === 0) {
-    countriesData = (countries as unknown as ICountry[]).filter(country =>
-      visibleCountries.includes(country.cca2),
     );
-  }
-
-  if (hiddenCountries.length > 0 && visibleCountries.length === 0) {
-    countriesData = (countries as unknown as ICountry[]).filter(
-      country => !hiddenCountries.includes(country.cca2),
+  } else if (visibleCountries.length > 0) {
+    countriesData = countriesData.filter((country) =>
+      visibleCountries.includes(country.cca2)
+    );
+  } else if (hiddenCountries.length > 0) {
+    countriesData = countriesData.filter(
+      (country) => !hiddenCountries.includes(country.cca2)
     );
   }
 
   if (query.length > 0) {
-    const filteredCountries = countriesData.filter(country => {
-      const countryName =
-        country.translations[language]?.common || country.name.common || '';
+    const normalizedQuery = normalizeCountryName(query);
+    const filteredCountries = countriesData.filter((country) => {
+      const countryName = getCountryName(country, language);
       const normalizedCountryName = normalizeCountryName(
-        countryName.toLowerCase(),
+        countryName.toLowerCase()
       );
-      const normalizedQuery = normalizeCountryName(query);
       const callingCode = country.idd.root.toLowerCase();
       const flag = country.flag.toLowerCase();
       const countryCode = country.cca2.toLowerCase();
@@ -69,13 +64,13 @@ export function getCountriesList({
   }
 
   const popularCountriesData = sortCountriesAlphabetically(
-    countriesData.filter(country => popularCountries.includes(country.cca2)),
-    language,
+    countriesData.filter((country) => popularCountries.includes(country.cca2)),
+    language
   );
 
   const otherCountriesData = sortCountriesAlphabetically(
-    countriesData.filter(country => !popularCountries.includes(country.cca2)),
-    language,
+    countriesData.filter((country) => !popularCountries.includes(country.cca2)),
+    language
   );
 
   const result: IListItem[] = [];
@@ -83,15 +78,13 @@ export function getCountriesList({
   if (popularCountriesData.length > 0) {
     result.push({
       isSection: true as const,
-      title:
-        translations.popularCountriesTitle[language as ICountrySelectLanguages],
+      title: t('popularCountriesTitle', language),
     });
 
     result.push(...popularCountriesData);
     result.push({
       isSection: true as const,
-      title:
-        translations.allCountriesTitle[language as ICountrySelectLanguages],
+      title: t('allCountriesTitle', language),
     });
   }
 

@@ -16,8 +16,9 @@ import {
   getCountriesByName,
   getCountriesByRegion,
   getCountriesBySubregion,
-  getContriesDependents,
+  getCountriesDependents,
   getCountriesIndependents,
+  loadLanguage,
 } from './utils/countryHelpers';
 
 export default CountrySelect;
@@ -30,8 +31,9 @@ export {
   getCountriesByName,
   getCountriesByRegion,
   getCountriesBySubregion,
-  getContriesDependents,
+  getCountriesDependents,
   getCountriesIndependents,
+  loadLanguage,
 };
 
 export type {

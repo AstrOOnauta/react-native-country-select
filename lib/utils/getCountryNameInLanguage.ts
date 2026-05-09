@@ -1,8 +1,9 @@
-import {ICountrySelectLanguages, ICountry} from '../interface';
+import { ICountrySelectLanguages, ICountry } from '../interface';
+import { getCountryName } from './getCountryName';
 
 export const getCountryNameInLanguage = (
   country: ICountry,
-  language: ICountrySelectLanguages = 'eng',
+  language: ICountrySelectLanguages = 'eng'
 ): string => {
-  return country.translations[language]?.common || country.name.common || '';
+  return getCountryName(country, language);
 };

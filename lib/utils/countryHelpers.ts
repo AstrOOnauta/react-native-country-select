@@ -1,59 +1,63 @@
-import {ICountry, ICountryCca2} from '../interface';
-import countriesData from '../constants/countries.json';
+import { ICountry, ICountryCca2, ICountrySelectLanguages } from '../interface';
+import {
+  baseCountries,
+  getTranslation,
+  loadLanguage,
+} from '../constants/registry';
 
-const countries: ICountry[] = countriesData as unknown as ICountry[];
+const countries: ICountry[] = baseCountries as unknown as ICountry[];
 
 export const getAllCountries = (): ICountry[] => {
   return countries;
 };
 
 export const getCountriesByCallingCode = (callingCode: string): ICountry[] => {
-  return countries.filter(
-    (country: ICountry) => country.idd.root === callingCode,
-  );
+  return countries.filter((country) => country.idd.root === callingCode);
 };
 
-export const getCountriesByName = (
+export const getCountryByCca2 = (cca2: ICountryCca2): ICountry | undefined => {
+  return countries.find((country) => country.cca2 === cca2);
+};
+
+export const getCountryByCca3 = (cca3: string): ICountry | undefined => {
+  return countries.find((country) => country.cca3 === cca3);
+};
+
+export const getCountriesByRegion = (region: string): ICountry[] => {
+  return countries.filter((country) => country.region === region);
+};
+
+export const getCountriesBySubregion = (subregion: string): ICountry[] => {
+  return countries.filter((country) => country.subregion === subregion);
+};
+
+export const getCountriesIndependents = (): ICountry[] => {
+  return countries.filter((country) => country.independent);
+};
+
+export const getCountriesDependents = (): ICountry[] => {
+  return countries.filter((country) => !country.independent);
+};
+
+export const getCountriesByName = async (
   name: string,
-  language: keyof ICountry['translations'] = 'eng',
-): ICountry[] => {
-  return countries.filter((country: ICountry) => {
-    const translation = country.translations[language];
+  language: ICountrySelectLanguages = 'eng'
+): Promise<ICountry[]> => {
+  await loadLanguage(language);
+  const query = name.toLowerCase();
+  return countries.filter((country) => {
+    const translation = getTranslation(country.cca2, language);
     if (translation) {
       return (
-        translation.common.toLowerCase().includes(name.toLowerCase()) ||
-        translation.official.toLowerCase().includes(name.toLowerCase())
+        translation.common.toLowerCase().includes(query) ||
+        translation.official.toLowerCase().includes(query)
       );
     }
     return (
-      country.name.common.toLowerCase().includes(name.toLowerCase()) ||
-      country.name.official.toLowerCase().includes(name.toLowerCase())
+      (country.name?.common?.toLowerCase() ?? '').includes(query) ||
+      (country.name?.official?.toLowerCase() ?? '').includes(query)
     );
   });
 };
 
-export const getCountryByCca2 = (cca2: ICountryCca2): ICountry | undefined => {
-  return countries.find((country: ICountry) => country.cca2 === cca2);
-};
-
-export const getCountryByCca3 = (cca3: string): ICountry | undefined => {
-  return countries.find((country: ICountry) => country.cca3 === cca3);
-};
-
-export const getCountriesByRegion = (region: string): ICountry[] => {
-  return countries.filter((country: ICountry) => country.region === region);
-};
-
-export const getCountriesBySubregion = (subregion: string): ICountry[] => {
-  return countries.filter(
-    (country: ICountry) => country.subregion === subregion,
-  );
-};
-
-export const getCountriesIndependents = (): ICountry[] => {
-  return countries.filter((country: ICountry) => country.independent);
-};
-
-export const getContriesDependents = (): ICountry[] => {
-  return countries.filter((country: ICountry) => !country.independent);
-};
+export { loadLanguage };

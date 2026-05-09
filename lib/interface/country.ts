@@ -101,7 +101,7 @@ export interface ICountry {
   region: string;
   subregion: string;
   languages: ICountryLanguages;
-  translations: ICountryTranslations;
+  translations?: ICountryTranslations;
   latlng: [number, number];
   landlocked: boolean;
   borders: string[];
