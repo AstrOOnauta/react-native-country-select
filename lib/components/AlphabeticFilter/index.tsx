@@ -1,7 +1,5 @@
-/* eslint-disable no-undef-init */
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { createStyles } from '../styles';
@@ -9,124 +7,150 @@ import { translations } from '../../utils/getTranslation';
 import { createAlphabet } from '../../utils/createAlphabet';
 import { AlphabeticFilterProps } from '../../interface/alfabeticFilterProps';
 import { normalizeCountryName } from '../../utils/normalizeCountryName';
+import { ICountry, IListItem } from '../../interface';
 
+const ALPHABET = createAlphabet();
 const ALPHABET_VIEWPORT_HEIGHT = 0;
 const ALPHABET_ITEM_SIZE = 28;
 const ALPHABET_VERTICAL_PADDING = 12;
+const SCROLL_CENTER_OFFSET = Math.max(
+  0,
+  ALPHABET_VIEWPORT_HEIGHT / 2 - ALPHABET_ITEM_SIZE / 2
+);
+const ALPHABET_CONTENT_CONTAINER_STYLE = {
+  alignItems: 'center' as const,
+  paddingVertical: 12,
+};
 
-export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
-  activeLetter,
-  onPressLetter,
-  theme = 'light',
-  language,
-  countries,
-  allCountriesStartIndex,
-  countrySelectStyle,
-  accessibilityLabelAlphabetFilter,
-  accessibilityHintAlphabetFilter,
-  accessibilityLabelAlphabetLetter,
-  accessibilityHintAlphabetLetter,
-  allowFontScaling = true,
-}) => {
-  const styles = createStyles(theme);
-  const alphabetScrollRef = useRef<ScrollView>(null);
+interface LetterEntry {
+  letter: string;
+  enabled: boolean;
+  index: number;
+}
 
-  const letterIndexMap = useMemo(() => {
-    const map: Record<string, number> = {};
-    for (let i = allCountriesStartIndex; i < countries.length; i++) {
-      const item = countries[i];
-      if ('isSection' in item) {
-        continue;
-      }
-      const country: any = item as any;
-      // Use English/common name to anchor alphabet jumps consistently
-      const name = country?.name?.common || '';
-      const first = (name?.[0] || '').toUpperCase();
-      if (first && map[first] === undefined) {
-        map[first] = i;
-      }
+function buildLetterEntries(
+  countries: IListItem[],
+  allCountriesStartIndex: number,
+  language: string
+): LetterEntry[] {
+  const map: Record<string, number> = {};
+  const lower = language;
+  for (let i = allCountriesStartIndex; i < countries.length; i++) {
+    const item = countries[i];
+    if ('isSection' in item) continue;
+    const country = item as ICountry;
+    const displayName =
+      country.translations[lower as keyof typeof country.translations]
+        ?.common ||
+      country.name?.common ||
+      '';
+    if (!displayName) continue;
+    const normalized = normalizeCountryName(displayName.toLowerCase());
+    const first = (normalized[0] || '').toUpperCase();
+    if (first && map[first] === undefined) {
+      map[first] = i;
     }
-    return map;
-  }, [countries, allCountriesStartIndex, language]);
+  }
+  return ALPHABET.map((letter) => ({
+    letter,
+    enabled: map[letter] !== undefined,
+    index: map[letter] ?? -1,
+  }));
+}
 
-  const alphabet = createAlphabet();
+export const AlphabeticFilter = memo<AlphabeticFilterProps>(
+  ({
+    activeLetter,
+    onPressLetter,
+    theme = 'light',
+    language,
+    countries,
+    allCountriesStartIndex,
+    countrySelectStyle,
+    accessibilityLabelAlphabetFilter,
+    accessibilityHintAlphabetFilter,
+    accessibilityLabelAlphabetLetter,
+    accessibilityHintAlphabetLetter,
+    allowFontScaling = true,
+  }) => {
+    const styles = useMemo(() => createStyles(theme), [theme]);
+    const alphabetScrollRef = useRef<ScrollView>(null);
 
-  const scrollAlphabetToLetter = (letter: string) => {
-    const letterIdx = alphabet.indexOf(letter);
-    if (letterIdx >= 0) {
-      const centerOffset = Math.max(
-        0,
-        ALPHABET_VIEWPORT_HEIGHT / 2 - ALPHABET_ITEM_SIZE / 2,
-      );
+    const letterEntries = useMemo(
+      () =>
+        buildLetterEntries(countries, allCountriesStartIndex, language),
+      [countries, allCountriesStartIndex, language]
+    );
+
+    const scrollAlphabetToLetter = useCallback((letter: string) => {
+      const letterIdx = ALPHABET.indexOf(letter);
+      if (letterIdx < 0) return;
       const y = Math.max(
         0,
         letterIdx * ALPHABET_ITEM_SIZE -
-          centerOffset +
-          ALPHABET_VERTICAL_PADDING,
+          SCROLL_CENTER_OFFSET +
+          ALPHABET_VERTICAL_PADDING
       );
       alphabetScrollRef.current?.scrollTo({ y, animated: true });
-    }
-  };
+    }, []);
 
-  useEffect(() => {
-    if (!activeLetter) {
-      return;
-    }
-    scrollAlphabetToLetter(activeLetter);
-  }, [activeLetter, alphabet]);
+    useEffect(() => {
+      if (!activeLetter) return;
+      scrollAlphabetToLetter(activeLetter);
+    }, [activeLetter, scrollAlphabetToLetter]);
 
-  return (
-    <ScrollView
-      testID="countrySelectAlphabetFilter"
-      accessibilityRole="list"
-      accessibilityLabel={
-        accessibilityLabelAlphabetFilter ||
-        translations.accessibilityLabelAlphabetFilter[language]
-      }
-      accessibilityHint={
-        accessibilityHintAlphabetFilter ||
-        translations.accessibilityHintAlphabetFilter[language]
-      }
-      ref={alphabetScrollRef}
-      style={[styles.alphabetContainer, countrySelectStyle?.alphabetContainer]}
-      contentContainerStyle={{ alignItems: 'center', paddingVertical: 12 }}
-      showsVerticalScrollIndicator={false}
-    >
-      {alphabet.map(letter => {
-        const enabled = letterIndexMap[letter] !== undefined;
-        const isActive = activeLetter === letter;
-        if (enabled) {
+    return (
+      <ScrollView
+        testID="countrySelectAlphabetFilter"
+        accessibilityRole="list"
+        accessibilityLabel={
+          accessibilityLabelAlphabetFilter ||
+          translations.accessibilityLabelAlphabetFilter[language]
+        }
+        accessibilityHint={
+          accessibilityHintAlphabetFilter ||
+          translations.accessibilityHintAlphabetFilter[language]
+        }
+        ref={alphabetScrollRef}
+        style={[
+          styles.alphabetContainer,
+          countrySelectStyle?.alphabetContainer,
+        ]}
+        contentContainerStyle={ALPHABET_CONTENT_CONTAINER_STYLE}
+        showsVerticalScrollIndicator={false}
+      >
+        {letterEntries.map(({ letter, enabled, index }) => {
+          const isActive = activeLetter === letter;
+          if (!enabled) {
+            return (
+              <View
+                key={letter}
+                style={[
+                  styles.alphabetLetter,
+                  styles.alphabetLetterDisabled,
+                  countrySelectStyle?.alphabetLetter,
+                  countrySelectStyle?.alphabetLetterDisabled,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.alphabetLetterText,
+                    styles.alphabetLetterTextDisabled,
+                    countrySelectStyle?.alphabetLetterText,
+                    countrySelectStyle?.alphabetLetterTextDisabled,
+                  ]}
+                  allowFontScaling={allowFontScaling}
+                >
+                  {letter}
+                </Text>
+              </View>
+            );
+          }
           return (
             <TouchableOpacity
               key={letter}
               onPress={() => {
-                // Compute first index for this letter using normalized display name (same as sorting)
-                const lower = letter.toLowerCase();
-                let idxToGo: number | undefined = undefined;
-                for (
-                  let i = allCountriesStartIndex;
-                  i < countries.length;
-                  i++
-                ) {
-                  const it = countries[i] as any;
-                  if ('isSection' in it) {
-                    continue;
-                  }
-                  const displayName =
-                    it?.translations?.[language]?.common ||
-                    it?.name?.common ||
-                    '';
-                  const normalized = normalizeCountryName(
-                    displayName.toLowerCase(),
-                  );
-                  if (normalized.startsWith(lower)) {
-                    idxToGo = i;
-                    break;
-                  }
-                }
-                if (idxToGo !== undefined) {
-                  onPressLetter(idxToGo);
-                }
+                onPressLetter(index);
                 scrollAlphabetToLetter(letter);
               }}
               style={[
@@ -160,32 +184,10 @@ export const AlphabeticFilter: React.FC<AlphabeticFilterProps> = ({
               </Text>
             </TouchableOpacity>
           );
-        }
-        return (
-          <View
-            key={letter}
-            style={[
-              styles.alphabetLetter,
-              styles.alphabetLetterDisabled,
-              countrySelectStyle?.alphabetLetter,
-              countrySelectStyle?.alphabetLetterDisabled,
-            ]}
-          >
-            <Text
-              style={[
-                styles.alphabetLetterText,
-                styles.alphabetLetterTextDisabled,
-                countrySelectStyle?.alphabetLetterText,
-                countrySelectStyle?.alphabetLetterTextDisabled,
-              ]}
-            >
-              {letter}
-            </Text>
-          </View>
-        );
-      })}
-    </ScrollView>
-  );
-};
+        })}
+      </ScrollView>
+    );
+  }
+);
 
 export default AlphabeticFilter;

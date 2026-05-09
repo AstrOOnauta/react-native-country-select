@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 
 import { createStyles } from '../styles';
@@ -14,7 +14,7 @@ export const CloseButton: React.FC<ICloseButtonProps> = ({
   accessibilityHintCloseButton,
   allowFontScaling = true,
 }) => {
-  const styles = createStyles(theme);
+  const styles = useMemo(() => createStyles(theme), [theme]);
   return (
     <TouchableOpacity
       testID="countrySelectCloseButton"
