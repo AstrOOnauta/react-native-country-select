@@ -1,4 +1,5 @@
 import { ICountryCca2 } from './countryCca2';
+import { ICountrySelectLanguagesISO2 } from './countrySelectLanguages';
 
 // Currency interface
 export interface ICountryCurrency {
@@ -31,47 +32,17 @@ export interface ICountryNativeName {
   [key: string]: ICountryNameTranslation | undefined;
 }
 
+export interface ICountryNameLocalized {
+  language: ICountrySelectLanguagesISO2;
+  common: string;
+  official: string;
+}
+
 export interface ICountryName {
   common: string;
   official: string;
   native: ICountryNativeName;
-}
-
-// Country name translation interface
-export interface ICountryTranslations {
-  ara?: ICountryNameTranslation; // Arabic
-  bel?: ICountryNameTranslation; // Belarusian
-  bre?: ICountryNameTranslation; // Breton
-  bul?: ICountryNameTranslation; // Bulgarian
-  ces?: ICountryNameTranslation; // Czech
-  deu?: ICountryNameTranslation; // German
-  ell?: ICountryNameTranslation; // Greek
-  eng?: ICountryNameTranslation; // English
-  est?: ICountryNameTranslation; // Estonian
-  fin?: ICountryNameTranslation; // Finnish
-  fra?: ICountryNameTranslation; // French
-  heb?: ICountryNameTranslation; // Hebrew
-  hrv?: ICountryNameTranslation; // Croatian
-  hun?: ICountryNameTranslation; // Hungarian
-  ita?: ICountryNameTranslation; // Italian
-  jpn?: ICountryNameTranslation; // Japanese
-  kor?: ICountryNameTranslation; // Korean
-  nld?: ICountryNameTranslation; // Dutch
-  per?: ICountryNameTranslation; // Persian
-  pol?: ICountryNameTranslation; // Polish
-  por?: ICountryNameTranslation; // Portuguese
-  ron?: ICountryNameTranslation; // Romanian
-  rus?: ICountryNameTranslation; // Russian
-  slk?: ICountryNameTranslation; // Slovak
-  spa?: ICountryNameTranslation; // Spanish
-  srp?: ICountryNameTranslation; // Serbian
-  swe?: ICountryNameTranslation; // Swedish
-  tur?: ICountryNameTranslation; // Turkish
-  ukr?: ICountryNameTranslation; // Ukrainian
-  urd?: ICountryNameTranslation; // Urdu
-  zho?: ICountryNameTranslation; // Chinese
-  'zho-Hans'?: ICountryNameTranslation; // Simplified Chinese
-  'zho-Hant'?: ICountryNameTranslation; // Traditional Chinese
+  translation?: ICountryNameLocalized;
 }
 
 // Languages object interface
@@ -101,7 +72,6 @@ export interface ICountry {
   region: string;
   subregion: string;
   languages: ICountryLanguages;
-  translations?: ICountryTranslations;
   latlng: [number, number];
   landlocked: boolean;
   borders: string[];

@@ -9,9 +9,11 @@ import { BottomSheetModal } from '../BottomSheetModal';
 import { createStyles } from '../styles';
 import { t } from '../../utils/getTranslation';
 import {
+  getTranslation,
   isLanguageLoaded,
   loadLanguage,
 } from '../../constants/registry';
+import { normalizeLanguage } from '../../utils/normalizeLanguage';
 import {
   ICountry,
   ICountrySelectProps,
@@ -135,9 +137,24 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
   const handleSelectCountry = useCallback(
     (country: ICountry) => {
-      const countryWithCustomFlag = customFlag
-        ? { ...country, customFlag: customFlag(country) }
+      const translation = getTranslation(country.cca2, language);
+      const enriched: ICountry = translation
+        ? {
+            ...country,
+            name: {
+              ...country.name,
+              translation: {
+                language: normalizeLanguage(language),
+                common: translation.common,
+                official: translation.official,
+              },
+            },
+          }
         : country;
+
+      const countryWithCustomFlag = customFlag
+        ? { ...enriched, customFlag: customFlag(enriched) }
+        : enriched;
 
       if (isMultiSelect) {
         const onSelectMulti = onSelect as MultiSelectFn;
@@ -157,6 +174,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       selectedCountryCodes,
       selectedCountries,
       customFlag,
+      language,
       onSelect,
       onClose,
     ]
