@@ -21,7 +21,7 @@ declare function getCountriesByCallingCode(callingCode: string): ICountry[];
 declare function getCountriesByName(
   name: string,
   language?: ICountrySelectLanguages
-): Promise<ICountry[]>;
+): ICountry[];
 
 declare function getCountriesByRegion(region: string): ICountry[];
 
@@ -30,10 +30,6 @@ declare function getCountriesBySubregion(subregion: string): ICountry[];
 declare function getCountriesDependents(): ICountry[];
 
 declare function getCountriesIndependents(): ICountry[];
-
-declare function loadLanguage(
-  language: ICountrySelectLanguages
-): Promise<void>;
 
 declare const CountrySelect: React.FC<ICountrySelectProps>;
 
@@ -56,5 +52,4 @@ export {
   getCountriesBySubregion,
   getCountriesDependents,
   getCountriesIndependents,
-  loadLanguage,
 };

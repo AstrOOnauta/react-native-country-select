@@ -18,7 +18,6 @@ import {
   getCountriesBySubregion,
   getCountriesDependents,
   getCountriesIndependents,
-  loadLanguage,
 } from './utils/countryHelpers';
 
 export default CountrySelect;
@@ -33,7 +32,6 @@ export {
   getCountriesBySubregion,
   getCountriesDependents,
   getCountriesIndependents,
-  loadLanguage,
 };
 
 export type {
