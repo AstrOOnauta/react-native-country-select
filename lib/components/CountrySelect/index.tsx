@@ -9,12 +9,6 @@ import { BottomSheetModal } from '../BottomSheetModal';
 import { createStyles } from '../styles';
 import { t } from '../../utils/getTranslation';
 import {
-  getTranslation,
-  isLanguageLoaded,
-  loadLanguage,
-} from '../../constants/registry';
-import { normalizeLanguage } from '../../utils/normalizeLanguage';
-import {
   ICountry,
   ICountrySelectProps,
 } from '../../interface';
@@ -79,24 +73,6 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
-  const [isLanguageReady, setIsLanguageReady] = useState(() =>
-    isLanguageLoaded(language)
-  );
-
-  useEffect(() => {
-    if (isLanguageLoaded(language)) {
-      setIsLanguageReady(true);
-      return;
-    }
-    setIsLanguageReady(false);
-    let cancelled = false;
-    loadLanguage(language).then(() => {
-      if (!cancelled) setIsLanguageReady(true);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [language]);
 
   useEffect(() => {
     if (searchQuery === '') {
@@ -137,24 +113,9 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
 
   const handleSelectCountry = useCallback(
     (country: ICountry) => {
-      const translation = getTranslation(country.cca2, language);
-      const enriched: ICountry = translation
-        ? {
-            ...country,
-            name: {
-              ...country.name,
-              translation: {
-                language: normalizeLanguage(language),
-                common: translation.common,
-                official: translation.official,
-              },
-            },
-          }
-        : country;
-
       const countryWithCustomFlag = customFlag
-        ? { ...enriched, customFlag: customFlag(enriched) }
-        : enriched;
+        ? { ...country, customFlag: customFlag(country) }
+        : country;
 
       if (isMultiSelect) {
         const onSelectMulti = onSelect as MultiSelectFn;
@@ -174,7 +135,6 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       selectedCountryCodes,
       selectedCountries,
       customFlag,
-      language,
       onSelect,
       onClose,
     ]
@@ -232,7 +192,6 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
   const ContentModal = (
     <CountriesList
       visible={visible}
-      isLanguageReady={isLanguageReady}
       searchQuery={debouncedSearchQuery}
       popularCountries={popularCountries}
       visibleCountries={visibleCountries}

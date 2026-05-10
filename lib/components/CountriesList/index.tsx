@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
-  ActivityIndicator,
   View,
   FlatList,
   ListRenderItem,
@@ -41,11 +40,6 @@ const VIEWABILITY_CONFIG = { itemVisiblePercentThreshold: 50 };
 
 const localStyles = StyleSheet.create({
   flex1: { flex: 1 },
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 });
 
 const keyExtractor = (item: IListItem) =>
@@ -87,12 +81,10 @@ export interface CountriesListProps extends IThemeProps {
   accessibilityHintAlphabetLetter?: string;
   allowFontScaling: boolean;
   visible: boolean;
-  isLanguageReady: boolean;
 }
 
 export const CountriesList: React.FC<CountriesListProps> = ({
   visible,
-  isLanguageReady,
   searchQuery,
   popularCountries,
   visibleCountries,
@@ -225,20 +217,6 @@ export const CountriesList: React.FC<CountriesListProps> = ({
       accessibilityHintCountryItem,
     ]
   );
-
-  if (!isLanguageReady) {
-    return (
-      <View
-        testID="countrySelectLanguageLoading"
-        style={localStyles.loadingContainer}
-      >
-        <ActivityIndicator
-          size="large"
-          color={theme === 'dark' ? '#FFFFFF' : '#000000'}
-        />
-      </View>
-    );
-  }
 
   if (countriesList.length === 0) {
     return (

@@ -1,5 +1,5 @@
 import { t } from './getTranslation';
-import { baseCountries } from '../constants/registry';
+import countriesJson from '../constants/countries.json';
 import { normalizeCountryName } from './normalizeCountryName';
 import { getCountryName } from './getCountryName';
 import { ICountry, ICountrySelectLanguages, IListItem } from '../interface';
@@ -22,7 +22,7 @@ export function getCountriesList({
 }: Params): IListItem[] {
   const query = searchQuery.toLowerCase().trim();
 
-  let countriesData = baseCountries as unknown as ICountry[];
+  let countriesData = countriesJson as unknown as ICountry[];
 
   if (visibleCountries.length > 0 && hiddenCountries.length > 0) {
     countriesData = countriesData.filter(

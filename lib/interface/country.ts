@@ -32,18 +32,16 @@ export interface ICountryNativeName {
   [key: string]: ICountryNameTranslation | undefined;
 }
 
-export interface ICountryNameLocalized {
-  language: ICountrySelectLanguagesISO2;
-  common: string;
-  official: string;
-}
-
 export interface ICountryName {
   common: string;
   official: string;
   native: ICountryNativeName;
-  translation?: ICountryNameLocalized;
 }
+
+export type ICountryTranslations = Record<
+  ICountrySelectLanguagesISO2,
+  ICountryNameTranslation
+>;
 
 // Languages object interface
 export interface ICountryLanguages {
@@ -72,6 +70,7 @@ export interface ICountry {
   region: string;
   subregion: string;
   languages: ICountryLanguages;
+  translations: ICountryTranslations;
   latlng: [number, number];
   landlocked: boolean;
   borders: string[];
