@@ -9,7 +9,7 @@
 <h1 align="center">React Native Country Select</h1>
 
 <p>
-  🌍 React Native country picker with flags, search, multi-select, dial codes, TypeScript, full i18n (33 languages, ISO 639-1 & ISO 639-2), and offline support. Lightweight, lazy-loaded translations, customizable, and designed with a modern UI.
+  🌍 React Native country picker with flags, search, multi-select, dial codes, TypeScript, full i18n (33 languages, ISO 639-1 & ISO 639-2), and offline support. Lightweight, translations, customizable, and designed with a modern UI.
 </p>
 
 <br>
@@ -55,7 +55,6 @@
 - 🔍 **Smart search** - Search by name (diacritic-insensitive), calling code, flag, alpha-2 (`BR`) and alpha-3 (`BRA`);
 - 🔠 **Alphabet filter** - Jump-to-letter sidebar;
 - ⭐ **Popular section, whitelist & blacklist** of countries;
-- ⚡ **Lazy-loaded translations** - small initial bundle, additional languages loaded on demand;
 - 🟢 **Offline-first** - Full ISO 3166-1 dataset bundled, no network calls;
 - 🧪 **Test Ready** – Smooth testing integration with stable `testID`s per country;
 - ♿ **Accessibility** – Accessibility standards to screen readers.
@@ -422,8 +421,6 @@ The `language` prop accepts both **ISO 639-1** (2-letter) and **ISO 639-2** (3-l
 | `zh-Hans` | `zho-Hans` | Simplified Chinese  |
 | `zh-Hant` | `zho-Hant` | Traditional Chinese |
 
-> Only English is bundled by default. Other languages are loaded on demand the first time they are used.
-
 <br>
 
 ## Testing
@@ -448,9 +445,6 @@ const countrySelectAlphabetFilter = getByTestId(
 );
 const countrySelectSectionTitle = getByTestId(
   'countrySelectSectionTitle'
-);
-const countrySelectLanguageLoading = getByTestId(
-  'countrySelectLanguageLoading'
 );
 
 // Per-country (suffix is the cca2 code)
