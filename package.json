@@ -23,7 +23,6 @@
     "LICENSE.md"
   ],
   "scripts": {
-    "split-countries": "node scripts/split-countries.js",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run typecheck && npm run build"
