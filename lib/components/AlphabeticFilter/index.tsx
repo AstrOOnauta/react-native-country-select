@@ -9,20 +9,14 @@ import {
 
 import { createStyles } from '../styles';
 import { t } from '../../utils/getTranslation';
-import { createAlphabet } from '../../utils/createAlphabet';
+import { getAlphabetForLanguage } from '../../utils/getAlphabetForLanguage';
 import { AlphabeticFilterProps } from '../../interface/alfabeticFilterProps';
 import { normalizeCountryName } from '../../utils/normalizeCountryName';
 import { getCountryName } from '../../utils/getCountryName';
 import { ICountry, ICountrySelectLanguages, IListItem } from '../../interface';
 
-const ALPHABET = createAlphabet();
-const ALPHABET_VIEWPORT_HEIGHT = 0;
 const ALPHABET_ITEM_SIZE = 28;
 const ALPHABET_VERTICAL_PADDING = 12;
-const SCROLL_CENTER_OFFSET = Math.max(
-  0,
-  ALPHABET_VIEWPORT_HEIGHT / 2 - ALPHABET_ITEM_SIZE / 2
-);
 
 const localStyles = StyleSheet.create({
   contentContainer: {
@@ -40,7 +34,8 @@ interface LetterEntry {
 function buildLetterEntries(
   countries: IListItem[],
   allCountriesStartIndex: number,
-  language: ICountrySelectLanguages
+  language: ICountrySelectLanguages,
+  alphabet: string[]
 ): LetterEntry[] {
   const map: Record<string, number> = {};
   for (let i = allCountriesStartIndex; i < countries.length; i++) {
@@ -55,7 +50,7 @@ function buildLetterEntries(
       map[first] = i;
     }
   }
-  return ALPHABET.map((letter) => ({
+  return alphabet.map((letter) => ({
     letter,
     enabled: map[letter] !== undefined,
     index: map[letter] ?? -1,
@@ -80,28 +75,43 @@ export const AlphabeticFilter = memo<AlphabeticFilterProps>(
     const styles = useMemo(() => createStyles(theme), [theme]);
     const alphabetScrollRef = useRef<ScrollView>(null);
 
-    const letterEntries = useMemo(
-      () =>
-        buildLetterEntries(countries, allCountriesStartIndex, language),
-      [countries, allCountriesStartIndex, language]
+    const alphabet = useMemo(
+      () => getAlphabetForLanguage(language),
+      [language]
     );
 
-    const scrollAlphabetToLetter = useCallback((letter: string) => {
-      const letterIdx = ALPHABET.indexOf(letter);
-      if (letterIdx < 0) return;
-      const y = Math.max(
-        0,
-        letterIdx * ALPHABET_ITEM_SIZE -
-          SCROLL_CENTER_OFFSET +
-          ALPHABET_VERTICAL_PADDING
-      );
-      alphabetScrollRef.current?.scrollTo({ y, animated: true });
-    }, []);
+    const letterEntries = useMemo(
+      () =>
+        buildLetterEntries(
+          countries,
+          allCountriesStartIndex,
+          language,
+          alphabet
+        ),
+      [countries, allCountriesStartIndex, language, alphabet]
+    );
+
+    const scrollAlphabetToLetter = useCallback(
+      (letter: string) => {
+        const letterIdx = alphabet.indexOf(letter);
+        if (letterIdx < 0) return;
+        const y = Math.max(
+          0,
+          letterIdx * ALPHABET_ITEM_SIZE + ALPHABET_VERTICAL_PADDING
+        );
+        alphabetScrollRef.current?.scrollTo({ y, animated: true });
+      },
+      [alphabet]
+    );
 
     useEffect(() => {
       if (!activeLetter) return;
       scrollAlphabetToLetter(activeLetter);
     }, [activeLetter, scrollAlphabetToLetter]);
+
+    if (letterEntries.length === 0) {
+      return null;
+    }
 
     return (
       <ScrollView
