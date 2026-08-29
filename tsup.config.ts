@@ -4,7 +4,9 @@ export default defineConfig({
   entry: ['lib/index.tsx'],
   format: ['cjs', 'esm'],
   dts: true,
-  sourcemap: true,
+  // Source maps are ~5.6 MB of the published tarball and are not usable by a
+  // consumer debugging their own app.
+  sourcemap: false,
   clean: true,
   splitting: true,
   treeshake: true,
