@@ -28,11 +28,20 @@ type TranslationMap = Record<
   Record<ICountrySelectLanguagesISO2, string>
 >;
 
+const FALLBACK_LANGUAGE: ICountrySelectLanguagesISO2 = 'eng';
+
+// Falls back to English rather than returning `undefined` for a code outside the map —
+// a runtime i18n library easily produces one ("pt-BR", a locale carrying a region), and
+// the result feeds placeholders and every screen reader label.
 export function t(
   key: TranslationKey,
   language: ICountrySelectLanguages
 ): string {
-  return translations[key][normalizeLanguage(language)];
+  const byLanguage = translations[key];
+
+  return (
+    byLanguage[normalizeLanguage(language)] ?? byLanguage[FALLBACK_LANGUAGE]
+  );
 }
 
 export const translations: TranslationMap = {
