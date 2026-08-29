@@ -28,7 +28,6 @@ export const SearchInput: React.FC<ISearchInputProps> = ({
   return (
     <TextInput
       testID="countrySelectSearchInput"
-      accessibilityRole="text"
       accessibilityLabel={
         accessibilityLabelSearchInput ||
         t('accessibilityLabelSearchInput', language)
