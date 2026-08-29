@@ -5152,8 +5152,8 @@
       }
     },
     "idd": {
-      "root": "+2",
-      "suffixes": ["90", "47"]
+      "root": "+290",
+      "suffixes": []
     },
     "capital": ["Jamestown"],
     "altSpellings": [
@@ -13329,8 +13329,8 @@
       }
     },
     "idd": {
-      "root": "+2",
-      "suffixes": ["125288", "125289"]
+      "root": "+212",
+      "suffixes": []
     },
     "capital": ["El Aai\u00fan"],
     "altSpellings": ["EH", "Tane\u1e93roft Tutrimt"],
@@ -45957,8 +45957,8 @@
       }
     },
     "idd": {
-      "root": "+3",
-      "suffixes": ["906698", "79"]
+      "root": "+39",
+      "suffixes": []
     },
     "capital": ["Vatican City"],
     "altSpellings": [
