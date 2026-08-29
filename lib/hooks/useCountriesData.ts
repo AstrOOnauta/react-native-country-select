@@ -9,7 +9,7 @@ import {
 
 interface UseCountriesDataParams {
   searchQuery: string;
-  popularCountries: string[];
+  popularCountries: ICountryCca2[];
   language: ICountrySelectLanguages;
   visibleCountries: ICountryCca2[];
   hiddenCountries: ICountryCca2[];
@@ -34,7 +34,7 @@ export function useCountriesData({
   return useMemo(() => {
     const countriesList = getCountriesList({
       searchQuery,
-      popularCountries,
+      popularCountries: popularCountries as string[],
       language,
       visibleCountries: visibleCountries as string[],
       hiddenCountries: hiddenCountries as string[],

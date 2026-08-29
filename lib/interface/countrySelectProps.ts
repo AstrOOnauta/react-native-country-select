@@ -14,7 +14,7 @@ interface ICountrySelectBaseProps extends ModalProps, IThemeProps {
   modalType?: 'bottomSheet' | 'popup';
   countrySelectStyle?: ICountrySelectStyle;
   isFullScreen?: boolean;
-  popularCountries?: string[];
+  popularCountries?: ICountryCca2[];
   visibleCountries?: ICountryCca2[];
   hiddenCountries?: ICountryCca2[];
   language?: ICountrySelectLanguages;

@@ -47,7 +47,7 @@ const keyExtractor = (item: IListItem) =>
 
 export interface CountriesListProps extends IThemeProps {
   searchQuery: string;
-  popularCountries: string[];
+  popularCountries: ICountryCca2[];
   visibleCountries: ICountryCca2[];
   hiddenCountries: ICountryCca2[];
   language: ICountrySelectLanguages;
