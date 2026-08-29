@@ -73,6 +73,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
   });
   const sheetHeight = useRef(new Animated.Value(0)).current;
   const lastHeightRef = useRef(0);
+  const heightBeforeKeyboardRef = useRef(0);
   const dragStartYRef = useRef(0);
 
   useEffect(() => {
@@ -112,18 +113,30 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
   }, [visible, bottomSheetSize.initialHeight, sheetHeight]);
 
   useEffect(() => {
+    if (!visible) {
+      return;
+    }
+
     const show = Keyboard.addListener('keyboardDidShow', () => {
+      // Kept apart from lastHeightRef, which the expansion below overwrites: restoring
+      // from it would leave the sheet stuck at its full height once the keyboard closes.
+      heightBeforeKeyboardRef.current = lastHeightRef.current;
       sheetHeight.setValue(bottomSheetSize.maxHeight);
       lastHeightRef.current = bottomSheetSize.maxHeight;
     });
     const hide = Keyboard.addListener('keyboardDidHide', () => {
-      sheetHeight.setValue(lastHeightRef.current);
+      const restored = heightBeforeKeyboardRef.current;
+      if (!restored) {
+        return;
+      }
+      sheetHeight.setValue(restored);
+      lastHeightRef.current = restored;
     });
     return () => {
       show?.remove();
       hide?.remove();
     };
-  }, [bottomSheetSize.maxHeight, sheetHeight]);
+  }, [visible, bottomSheetSize.maxHeight, sheetHeight]);
 
   const panHandlers = useMemo(
     () =>
@@ -139,7 +152,15 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
           const currentY = e.nativeEvent.pageY;
           const dy = currentY - dragStartYRef.current;
           const proposedHeight = lastHeightRef.current - dy;
-          sheetHeight.setValue(proposedHeight);
+          // Only the release was clamped, so dragging up stretched the sheet past the
+          // screen. The floor stays at 0 rather than minHeight so the drag still reads
+          // as a dismiss when the release decides to close.
+          sheetHeight.setValue(
+            Math.min(
+              Math.max(proposedHeight, 0),
+              bottomSheetSize.maxHeight
+            )
+          );
         },
         onPanResponderRelease: (e) => {
           const currentY = e.nativeEvent.pageY;
