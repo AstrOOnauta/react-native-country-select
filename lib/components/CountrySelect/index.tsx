@@ -15,6 +15,11 @@ import {
 
 import { CountriesList } from '../CountriesList';
 
+// A fresh `[]` per render would give `selectedCountryCodes` a new identity every time,
+// rebuilding the Set, `handleSelectCountry` and `renderItem` — which re-renders every
+// visible row on each keystroke in the search box.
+const NO_SELECTED_COUNTRIES: ICountry[] = [];
+
 type SingleSelectFn = (country: ICountry) => void;
 type MultiSelectFn = (countries: ICountry[]) => void;
 
@@ -90,10 +95,15 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     [theme, modalType, isFullScreen]
   );
 
+  // `selectedCountries` belongs to this component, not to the Modal that the remaining
+  // props are spread onto.
+  const { selectedCountries: selectedCountriesProp, ...modalProps } =
+    props as typeof props & { selectedCountries?: ICountry[] };
+
   const selectedCountries =
-    isMultiSelect && 'selectedCountries' in props
-      ? props.selectedCountries ?? []
-      : [];
+    isMultiSelect && selectedCountriesProp
+      ? selectedCountriesProp
+      : NO_SELECTED_COUNTRIES;
 
   const selectedCountryCodes = useMemo(() => {
     if (selectedCountries.length === 0) {
@@ -248,7 +258,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
         countrySelectStyle={countrySelectStyle}
         isFullScreen={isFullScreen}
         header={HeaderModal}
-        {...props}
+        {...modalProps}
       >
         {ContentModal}
       </StaticModal>
@@ -272,7 +282,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       initialBottomsheetHeight={initialBottomsheetHeight}
       dragHandleIndicatorComponent={dragHandleIndicatorComponent}
       header={HeaderModal}
-      {...props}
+      {...modalProps}
     >
       {ContentModal}
     </BottomSheetModal>
