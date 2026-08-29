@@ -1,4 +1,4 @@
-import { MutableRefObject, useCallback, useRef } from 'react';
+import { MutableRefObject, useCallback, useEffect, useRef } from 'react';
 import { FlatList } from 'react-native';
 
 import { getCountryName } from '../utils/getCountryName';
@@ -17,6 +17,8 @@ interface UseScrollToLetterParams {
   isProgrammaticScrollRef: MutableRefObject<boolean>;
 }
 
+const RETRY_DELAY = 50;
+
 export function useScrollToLetter({
   flatListRef,
   countriesList,
@@ -25,6 +27,37 @@ export function useScrollToLetter({
   isProgrammaticScrollRef,
 }: UseScrollToLetterParams) {
   const averageItemLengthRef = useRef(0);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Read at scroll time rather than closed over: the retry below fires later, and the
+  // list may have shrunk since (a search typed while it was pending).
+  const listLengthRef = useRef(countriesList.length);
+  listLengthRef.current = countriesList.length;
+
+  useEffect(
+    () => () => {
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+      }
+    },
+    []
+  );
+
+  // VirtualizedList throws on an out-of-range index instead of reporting it through
+  // onScrollToIndexFailed, so the bound is checked here.
+  const scrollToIndexSafely = useCallback(
+    (index: number) => {
+      if (index < 0 || index >= listLengthRef.current) {
+        return;
+      }
+      flatListRef.current?.scrollToIndex({
+        index,
+        animated: true,
+        viewPosition: 0,
+      });
+    },
+    [flatListRef]
+  );
 
   const handlePressLetter = useCallback(
     (index: number) => {
@@ -47,18 +80,14 @@ export function useScrollToLetter({
         setActiveLetter(computedLetter);
       }
 
-      flatListRef.current?.scrollToIndex({
-        index,
-        animated: true,
-        viewPosition: 0,
-      });
+      scrollToIndexSafely(index);
     },
     [
       countriesList,
       language,
-      flatListRef,
       setActiveLetter,
       isProgrammaticScrollRef,
+      scrollToIndexSafely,
     ]
   );
 
@@ -80,15 +109,16 @@ export function useScrollToLetter({
         offset: estimatedOffset,
         animated: false,
       });
-      setTimeout(() => {
-        flatListRef.current?.scrollToIndex({
-          index,
-          animated: true,
-          viewPosition: 0,
-        });
-      }, 50);
+
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+      }
+      retryTimeoutRef.current = setTimeout(() => {
+        retryTimeoutRef.current = null;
+        scrollToIndexSafely(index);
+      }, RETRY_DELAY);
     },
-    [flatListRef]
+    [flatListRef, scrollToIndexSafely]
   );
 
   return { handlePressLetter, onScrollToIndexFailed };
