@@ -29,8 +29,8 @@ export function useScrollToLetter({
   const averageItemLengthRef = useRef(0);
   const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Read at scroll time rather than closed over: the retry below fires later, and the
-  // list may have shrunk since (a search typed while it was pending).
+  // Read at scroll time, not closed over: the retry below fires later, and the list may
+  // have shrunk since.
   const listLengthRef = useRef(countriesList.length);
   listLengthRef.current = countriesList.length;
 
@@ -44,19 +44,19 @@ export function useScrollToLetter({
   );
 
   // VirtualizedList throws on an out-of-range index instead of reporting it through
-  // onScrollToIndexFailed, so the bound is checked here.
+  // onScrollToIndexFailed. Bailing out must also clear the programmatic flag — nothing
+  // will scroll, so no momentum or drag end arrives to clear it, and the active letter
+  // would stop tracking the list for good.
   const scrollToIndexSafely = useCallback(
     (index: number) => {
-      if (index < 0 || index >= listLengthRef.current) {
+      const list = flatListRef.current;
+      if (!list || index < 0 || index >= listLengthRef.current) {
+        isProgrammaticScrollRef.current = false;
         return;
       }
-      flatListRef.current?.scrollToIndex({
-        index,
-        animated: true,
-        viewPosition: 0,
-      });
+      list.scrollToIndex({ index, animated: true, viewPosition: 0 });
     },
-    [flatListRef]
+    [flatListRef, isProgrammaticScrollRef]
   );
 
   const handlePressLetter = useCallback(
