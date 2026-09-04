@@ -2,9 +2,8 @@ import { normalizeCountryName } from './normalizeCountryName';
 import { getCountryName } from './getCountryName';
 import { ICountry, ICountrySelectLanguages } from '../interface';
 
-// The sort key is built once per country instead of inside the comparator, which ran
-// getCountryName + an NFD normalization on both sides of every comparison — roughly
-// 4000 normalizations per search over 250 countries, twice per list build.
+// Keep the key out of the comparator: computing it inline ran an NFD normalization on
+// both sides of every comparison, ~4000 per search instead of 250.
 export const sortCountriesAlphabetically = (
   countriesList: ICountry[],
   language: ICountrySelectLanguages

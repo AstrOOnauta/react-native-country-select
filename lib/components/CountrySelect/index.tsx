@@ -15,9 +15,8 @@ import {
 
 import { CountriesList } from '../CountriesList';
 
-// A fresh `[]` per render would give `selectedCountryCodes` a new identity every time,
-// rebuilding the Set, `handleSelectCountry` and `renderItem` — which re-renders every
-// visible row on each keystroke in the search box.
+// A fresh `[]` per render gives `selectedCountryCodes` a new identity, which cascades
+// into `renderItem` and re-renders every visible row on each keystroke.
 const NO_SELECTED_COUNTRIES: ICountry[] = [];
 
 type SingleSelectFn = (country: ICountry) => void;
@@ -95,8 +94,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
     [theme, modalType, isFullScreen]
   );
 
-  // `selectedCountries` belongs to this component, not to the Modal that the remaining
-  // props are spread onto.
+  // Belongs to this component, not to the Modal the rest of the props are spread onto.
   const { selectedCountries: selectedCountriesProp, ...modalProps } =
     props as typeof props & { selectedCountries?: ICountry[] };
 
