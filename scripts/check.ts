@@ -386,6 +386,15 @@ check('name search matches the translated and English names', () => {
   assert.equal(codes('').length, countries.length);
 });
 
+check('name search ignores diacritics, like the modal search', () => {
+  const codes = (name: string) => getCountriesByName(name).map((c) => c.cca2);
+
+  assert.deepEqual(codes('sao tome'), ['ST']);
+  assert.deepEqual(codes('curacao'), ['CW']);
+  assert.deepEqual(codes('reunion'), ['RE']);
+  assert.deepEqual(codes('SAO TOME'), ['ST']);
+});
+
 check('region, subregion and independence filters partition the data', () => {
   const all = getAllCountries();
 

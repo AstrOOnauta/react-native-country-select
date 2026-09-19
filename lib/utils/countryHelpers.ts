@@ -1,6 +1,7 @@
 import { ICountry, ICountryCca2, ICountrySelectLanguages } from '../interface';
 import countriesData from '../constants/countries.json';
 import { normalizeLanguage } from './normalizeLanguage';
+import { normalizeCountryName } from './normalizeCountryName';
 
 const countries: ICountry[] = countriesData as unknown as ICountry[];
 
@@ -29,23 +30,22 @@ export const getCountriesIndependents = (): ICountry[] =>
 export const getCountriesDependents = (): ICountry[] =>
   countries.filter((country) => !country.independent);
 
+// Diacritics are dropped on both sides, like the modal search: "sao tome" finds
+// "São Tomé and Príncipe".
 export const getCountriesByName = (
   name: string,
   language: ICountrySelectLanguages = 'eng'
 ): ICountry[] => {
-  const query = name.toLowerCase();
+  const query = normalizeCountryName(name.toLowerCase());
   const lang = normalizeLanguage(language);
+  const matches = (value?: string) =>
+    normalizeCountryName(value?.toLowerCase() ?? '').includes(query);
+
   return countries.filter((country) => {
     const translation = country.translations?.[lang];
     if (translation) {
-      return (
-        translation.common.toLowerCase().includes(query) ||
-        translation.official.toLowerCase().includes(query)
-      );
+      return matches(translation.common) || matches(translation.official);
     }
-    return (
-      (country.name?.common?.toLowerCase() ?? '').includes(query) ||
-      (country.name?.official?.toLowerCase() ?? '').includes(query)
-    );
+    return matches(country.name?.common) || matches(country.name?.official);
   });
 };
