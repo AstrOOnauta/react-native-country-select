@@ -10,6 +10,17 @@ import { normalizeCountryName } from '../lib/utils/normalizeCountryName';
 import { normalizeLanguage } from '../lib/utils/normalizeLanguage';
 import { t } from '../lib/utils/getTranslation';
 import parseHeight from '../lib/utils/parseHeight';
+import {
+  getAllCountries,
+  getCountryByCca2,
+  getCountryByCca3,
+  getCountriesByCallingCode,
+  getCountriesByName,
+  getCountriesByRegion,
+  getCountriesBySubregion,
+  getCountriesDependents,
+  getCountriesIndependents,
+} from '../lib/utils/countryHelpers';
 import { ICountry, ICountrySelectLanguages } from '../lib/interface';
 
 const countries = countriesJson as unknown as ICountry[];
@@ -253,6 +264,143 @@ check('sorting keeps every country exactly once', () => {
   assert.equal(new Set(codes).size, countries.length);
 });
 
+check('a hidden country never shows up as popular', () => {
+  const list = getCountriesList({
+    searchQuery: '',
+    popularCountries: ['BR', 'US'],
+    language: 'eng',
+    visibleCountries: [],
+    hiddenCountries: ['BR'],
+  });
+
+  assert.ok(!list.some((item) => 'cca2' in item && item.cca2 === 'BR'));
+  assert.ok(list.some((item) => 'cca2' in item && item.cca2 === 'US'));
+});
+
+check('no section headers when no popular country is left to show', () => {
+  // An unknown code, or every popular country hidden, would otherwise leave an empty
+  // "Popular" section sitting on top of the list.
+  for (const [popularCountries, hiddenCountries] of [[['XX'], []], [['BR'], ['BR']]]) {
+    const list = getCountriesList({
+      searchQuery: '',
+      popularCountries,
+      language: 'eng',
+      visibleCountries: [],
+      hiddenCountries,
+    });
+    assert.ok(!list.some((item) => 'isSection' in item), JSON.stringify(popularCountries));
+  }
+});
+
+check('search results are a flat list, without popular sections', () => {
+  const list = getCountriesList({
+    searchQuery: 'bra',
+    popularCountries: ['BR'],
+    language: 'eng',
+    visibleCountries: [],
+    hiddenCountries: [],
+  });
+
+  assert.ok(list.length > 0);
+  assert.ok(!list.some((item) => 'isSection' in item));
+});
+
+check('search is trimmed, case-insensitive and follows the language', () => {
+  const list = (searchQuery: string, language: ICountrySelectLanguages = 'eng') =>
+    (getCountriesList({
+      searchQuery,
+      popularCountries: [],
+      language,
+      visibleCountries: [],
+      hiddenCountries: [],
+    }) as ICountry[]).map((c) => c.cca2);
+
+  assert.deepEqual(list('  brazil  '), ['BR']);
+  assert.deepEqual(list('BRAZIL'), ['BR']);
+  assert.deepEqual(list('🇧🇷'), ['BR']);
+  // The displayed name is what people type.
+  assert.deepEqual(list('alemanha', 'por'), ['DE']);
+});
+
+// --- public helpers -------------------------------------------------------------------
+
+check('country data has one entry per country code', () => {
+  const all = getAllCountries();
+  assert.equal(all.length, countries.length);
+  assert.equal(new Set(all.map((c) => c.cca2)).size, all.length, 'duplicate cca2');
+  assert.equal(new Set(all.map((c) => c.cca3)).size, all.length, 'duplicate cca3');
+  for (const country of all) {
+    assert.ok(country.name?.common, `${country.cca2} has no name`);
+  }
+});
+
+check('lookup by cca2 and cca3 finds the country, undefined when unknown', () => {
+  assert.equal(getCountryByCca2('BR')?.cca3, 'BRA');
+  assert.equal(getCountryByCca3('BRA')?.cca2, 'BR');
+  assert.equal(getCountryByCca2('ZZ' as ICountry['cca2']), undefined);
+  assert.equal(getCountryByCca3('ZZZ'), undefined);
+});
+
+check('a calling code finds every country that shares it', () => {
+  // The phone input falls back to this to pick a country for a pasted number.
+  const codes = (callingCode: string) =>
+    getCountriesByCallingCode(callingCode).map((c) => c.cca2).sort();
+
+  assert.deepEqual(codes('+55'), ['BR']);
+  assert.deepEqual(codes('+7'), ['KZ', 'RU']);
+  assert.deepEqual(codes('+44'), ['GB', 'GG', 'IM', 'JE']);
+  assert.deepEqual(codes('+39'), ['IT', 'VA']);
+  for (const cca2 of ['US', 'CA', 'BS', 'PR'] as const) {
+    assert.ok(codes('+1').includes(cca2), `+1 misses ${cca2}`);
+  }
+});
+
+check('calling codes are stored whole, never as a truncated root', () => {
+  // The source data once split some codes into a root plus suffixes ("+2" + "90" for
+  // Saint Helena), so a lookup by the real code found nothing.
+  assert.equal(getCountryByCca2('SH')?.idd.root, '+290');
+  assert.equal(getCountryByCca2('EH')?.idd.root, '+212');
+  assert.deepEqual(getCountriesByCallingCode('+2'), []);
+  assert.deepEqual(getCountriesByCallingCode('+3'), []);
+
+  for (const country of getAllCountries()) {
+    if (!country.idd.root) continue; // Antarctica and Heard Island have none.
+    assert.match(country.idd.root, /^\+\d+$/, country.cca2);
+    assert.ok(
+      getCountriesByCallingCode(country.idd.root).includes(country),
+      `${country.cca2} not found by its own calling code`
+    );
+  }
+});
+
+check('name search matches the translated and English names', () => {
+  const codes = (name: string, language?: ICountrySelectLanguages) =>
+    getCountriesByName(name, language).map((c) => c.cca2);
+
+  assert.deepEqual(codes('brazil'), ['BR']);
+  assert.deepEqual(codes('BRAZIL'), ['BR']);
+  assert.deepEqual(codes('Brasil', 'por'), ['BR']);
+  assert.deepEqual(codes('brasil', 'pt'), ['BR']);
+  assert.deepEqual(codes('são tomé'), ['ST']);
+  assert.deepEqual(codes('日本', 'jpn'), ['JP']);
+  assert.equal(codes('').length, countries.length);
+});
+
+check('region, subregion and independence filters partition the data', () => {
+  const all = getAllCountries();
+
+  assert.equal(
+    getCountriesIndependents().length + getCountriesDependents().length,
+    all.length
+  );
+  assert.ok(getCountriesByRegion('Americas').every((c) => c.region === 'Americas'));
+  assert.ok(getCountriesByRegion('Americas').some((c) => c.cca2 === 'BR'));
+  assert.ok(
+    getCountriesBySubregion('South America').every((c) => c.subregion === 'South America')
+  );
+  assert.deepEqual(getCountriesByRegion('Nowhere'), []);
+});
+
 // --- bottom sheet sizing --------------------------------------------------------------
 
 check('parseHeight handles percentages, pixels and junk', () => {
@@ -262,6 +410,15 @@ check('parseHeight handles percentages, pixels and junk', () => {
   // Clamped to the window and to a 10% floor.
   assert.equal(parseHeight('150%', 800), 800);
   assert.equal(parseHeight(10, 800), 80);
+});
+
+check('parseHeight accepts fractional percentages and ignores unit strings', () => {
+  assert.equal(parseHeight('10.5%', 800), 84);
+  assert.equal(parseHeight('100%', 800), 800);
+  assert.equal(parseHeight('0%', 800), 80);
+  // Only "<n>%" strings are understood; anything else means "not set".
+  assert.equal(parseHeight('300px', 800), 0);
+  assert.equal(parseHeight('300', 800), 0);
 });
 
 if (process.exitCode) {
