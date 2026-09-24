@@ -56,7 +56,11 @@ describe('search', () => {
 });
 
 describe('single select', () => {
-  test('reports the country and closes', async () => {
+  // Selecting clears the search, and the list re-renders its full page in timed
+  // batches. Waiting for it keeps those updates inside the test (no act() warning).
+  const listIsReset = () => item('AF');
+
+  test('reports the country, closes and clears the search', async () => {
     const user = userEvent.setup();
     const { onSelect, onClose } = await renderSingle();
     await user.type(searchInput(), 'Uruguay');
@@ -64,6 +68,8 @@ describe('single select', () => {
     expect(onSelect).toHaveBeenCalledTimes(1);
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ cca2: 'UY' }));
     expect(onClose).toHaveBeenCalledTimes(1);
+    expect(await listIsReset()).toBeOnTheScreen();
+    expect(searchInput()).toHaveDisplayValue('');
   });
 
   test('customFlag travels with the selected country', async () => {
@@ -75,6 +81,7 @@ describe('single select', () => {
     expect(onSelect).toHaveBeenCalledWith(
       expect.objectContaining({ cca2: 'UY', customFlag: flag })
     );
+    expect(await listIsReset()).toBeOnTheScreen();
   });
 });
 

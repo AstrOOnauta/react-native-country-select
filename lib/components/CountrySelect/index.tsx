@@ -136,7 +136,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       }
 
       (onSelect as SingleSelectFn)(countryWithCustomFlag);
-      onClose();
+      handleCloseModal();
     },
     [
       isMultiSelect,
@@ -144,7 +144,7 @@ export const CountrySelect: React.FC<ICountrySelectProps> = ({
       selectedCountries,
       customFlag,
       onSelect,
-      onClose,
+      handleCloseModal,
     ]
   );
 
