@@ -1,29 +1,27 @@
 import assert from 'node:assert/strict';
 import { test } from '@jest/globals';
 import { normalizeLanguage } from '../../lib/utils/normalizeLanguage';
-import { t } from '../../lib/utils/getTranslation';
+import { t, translations } from '../../lib/utils/getTranslation';
 import {
   ICountrySelectLanguages,
 } from '../../lib/interface';
 
 import { ISO2_LANGUAGES } from '../helpers';
 
-test('every translation key resolves in every language', () => {
+test('every translation key has a non-empty entry in every language', () => {
+  // Read the table itself: t() falls back to English, so it can never report a gap.
   const missing: string[] = [];
-  const keys = ['searchPlaceholder', 'popularCountriesTitle', 'allCountriesTitle',
-    'searchNotFoundMessage', 'accessibilityLabelCloseButton',
-    'accessibilityLabelSearchInput', 'accessibilityLabelCountriesList',
-    'accessibilityLabelCountryItem', 'accessibilityLabelAlphabetFilter',
-    'accessibilityLabelAlphabetLetter'] as const;
 
-  for (const key of keys) {
+  for (const [key, byLanguage] of Object.entries(translations)) {
     for (const language of ISO2_LANGUAGES) {
-      if (typeof t(key, language) !== 'string') {
+      const entry = (byLanguage as Record<string, string | undefined>)[language];
+      if (typeof entry !== 'string' || entry.trim() === '') {
         missing.push(`${key}/${language}`);
       }
     }
   }
 
+  assert.ok(Object.keys(translations).length > 0);
   assert.deepEqual(missing, []);
 });
 
