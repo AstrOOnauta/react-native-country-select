@@ -21,6 +21,9 @@
   <a href="https://www.npmjs.com/package/rn-country-select">
     <img src="https://img.shields.io/npm/dt/rn-country-select.svg?style=flat-square&color=success" alt="rn-country-select npm downloads - React Native country picker">
   </a>
+  <a href="https://github.com/AstrOOnauta/react-native-country-select/actions/workflows/test.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/AstrOOnauta/react-native-country-select/test.yml?branch=main&style=flat-square&label=tests" alt="rn-country-select tests - React Native country picker"/>
+  </a>
   <a href="https://github.com/AstrOOnauta/react-native-country-select">
     <img src="https://img.shields.io/github/stars/AstrOOnauta/react-native-country-select?style=flat-square&color=success" alt="GitHub stars - React Native country select"/>
   </a>
