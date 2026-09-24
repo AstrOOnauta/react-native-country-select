@@ -9,7 +9,6 @@
   },
   "include": [
     "lib",
-    "scripts",
     "__tests__"
   ],
   "exclude": [

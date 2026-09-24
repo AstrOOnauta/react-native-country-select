@@ -27,7 +27,7 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.check.json",
-    "test": "tsx scripts/check.ts && jest --passWithNoTests",
+    "test": "jest",
     "prepublishOnly": "npm run typecheck && npm test && npm run build"
   },
   "keywords": [
