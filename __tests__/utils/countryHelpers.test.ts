@@ -122,3 +122,10 @@ test('currencies follow the current ISO 4217 list', () => {
   assert.deepEqual(codes('CU'), ['CUP']);
   assert.ok(codes('ZW').includes('ZWG'));
 });
+
+test('the South African rand uses the R symbol in every country', () => {
+  for (const country of getAllCountries()) {
+    const zar = country.currencies.ZAR;
+    if (zar) assert.equal(zar.symbol, 'R', `${country.cca2} ZAR symbol`);
+  }
+});
