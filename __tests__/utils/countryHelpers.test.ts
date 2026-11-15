@@ -103,3 +103,22 @@ test('region, subregion and independence filters partition the data', () => {
   );
   assert.deepEqual(getCountriesByRegion('Nowhere'), []);
 });
+
+test('currencies follow the current ISO 4217 list', () => {
+  // Codes withdrawn from ISO 4217 List One; mledoze/countries already replaced them.
+  const withdrawn = ['BGN', 'SLL', 'ANG', 'CUC', 'ZWB'];
+  for (const country of getAllCountries()) {
+    for (const code of Object.keys(country.currencies)) {
+      assert.ok(!withdrawn.includes(code), `${country.cca2} lists withdrawn ${code}`);
+    }
+  }
+
+  const codes = (cca2: ICountry['cca2']) =>
+    Object.keys(getCountryByCca2(cca2)?.currencies ?? {});
+  assert.deepEqual(codes('BG'), ['EUR']);
+  assert.deepEqual(codes('SL'), ['SLE']);
+  assert.deepEqual(codes('CW'), ['XCG']);
+  assert.deepEqual(codes('SX'), ['XCG']);
+  assert.deepEqual(codes('CU'), ['CUP']);
+  assert.ok(codes('ZW').includes('ZWG'));
+});
